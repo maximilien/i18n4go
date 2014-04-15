@@ -5,5 +5,5 @@ This project contains all code and changes related to the project of enabling i1
 
 The directories correspond to CF projects that are targeted.
 
-cli - GO CLI
-cloud_controller - the CC APIs
+# cli - GO CLI
+# cloud_controller - the CC APIs
