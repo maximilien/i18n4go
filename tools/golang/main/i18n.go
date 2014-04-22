@@ -10,6 +10,7 @@ import (
 	"../extract_strings"
 )
 
+var extractStringsCmdFlag bool
 var fileNameFlag string
 var dirNameFlag string
 var recurseFlag	bool
@@ -17,19 +18,31 @@ var recurseFlag	bool
 func main() {
 	defer handlePanic()
 
+	if extractStringsCmdFlag {
+		extractStringsCmd()
+	} else {
+		usage()
+		return
+	}
+}
+
+func extractStringsCmd() {
 	if fileNameFlag == "" && dirNameFlag == "" {
 		usage()
 		return
 	}
 
+	extractStrings := extract_strings.NewExtractStrings()
+
 	if fileNameFlag != "" {
-		extract_strings.InspectFile(fileNameFlag)
+		extractStrings.InspectFile(fileNameFlag)
 	} else {
-		extract_strings.InspectDir(dirNameFlag, recurseFlag)
-	}
+		extractStrings.InspectDir(dirNameFlag, recurseFlag)
+	}	
 }
 
 func init() {
+	flag.BoolVar(&extractStringsCmdFlag, "extract_strings", true, "want to extract strings from file or directory")
 	flag.StringVar(&fileNameFlag, "f", "", "the file name for which strings are extracted")
 	flag.StringVar(&dirNameFlag, "d", "", "the dir name for which all .go files will have their strings extracted")
 	flag.BoolVar(&recurseFlag, "r", false, "recursesively extract strings from all files in the same directory as filename or dirName")
@@ -39,7 +52,7 @@ func init() {
 
 func usage() {
 	usageString := `
-gi18n -f <fileName> | [-d <dirName> | -r -d <dirName>]
+gi18n -extract_strings -f <fileName> | [-d <dirName> | -r -d <dirName>]
 	-f the go file name to extract strings
 	-d the directory containing the go files to extract strings
 	-r recursesively extract strings from all subdirectories

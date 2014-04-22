@@ -14,7 +14,7 @@ type StringInfo struct {
 	Pos int
 }
 
-type ExtactString struct {
+type ExtractStrings struct {
 	ExtractedStrings map[string]StringInfo
 	FilteredStrings map[string]StringInfo
 }
@@ -23,7 +23,11 @@ var BLANKS = []string{"\"\"", "\" \"", "\"\\t\"", "\"\\n\"", "\"\\n\\t\"", "\"\\
 
 var filteredStrings map[string]string
 
-func InspectFile(fileName string) error {
+func NewExtractStrings() ExtractStrings {
+	return ExtractStrings{ExtractedStrings : make(map[string]StringInfo), FilteredStrings : make(map[string]StringInfo)}
+}
+
+func (es * ExtractStrings) InspectFile(fileName string) error {
 	fmt.Println("Extracting strings from file:", fileName)
 
 	fset := token.NewFileSet()
@@ -35,14 +39,14 @@ func InspectFile(fileName string) error {
 	}
 
 	filteredStrings = make(map[string]string)
-	addImports(astFile)
+	es.addImports(astFile)
 
-	extractString(astFile, fset)
+	es.extractString(astFile, fset)
 
 	return nil
 }
 
-func InspectDir(dirName string, recursive bool) error {
+func (es * ExtractStrings)  InspectDir(dirName string, recursive bool) error {
 	fmt.Println("Inspecting dir:", dirName)
 	fmt.Println("recursive:", recursive)
 
@@ -57,21 +61,20 @@ func InspectDir(dirName string, recursive bool) error {
 	for k, pkg := range packages {
 		fmt.Println("Extracting string in package:", k)
 		for file := range pkg.Files {
-			InspectFile(file)
+			es.InspectFile(file)
 		}		
 	}
 
 	return nil
 }
 
-func extractString(f *ast.File, fset *token.FileSet) {
+func (es * ExtractStrings) extractString(f *ast.File, fset *token.FileSet) {
 		ast.Inspect(f, func(n ast.Node) bool {
 		var s string
 		switch x := n.(type) {
 		case *ast.BasicLit:			
 			s = x.Value
-			if len(s) > 0 && x.Kind == token.STRING && s != "\t" && s != "\n" && s != " " && !filter(s) {
-				fmt.Println("length:", len(s))
+			if len(s) > 0 && x.Kind == token.STRING && s != "\t" && s != "\n" && s != " " && !es.filter(s) {
 				fmt.Printf("%s:\t%s\n", fset.Position(n.Pos()), s)
 			}
 		}
@@ -79,14 +82,14 @@ func extractString(f *ast.File, fset *token.FileSet) {
 	})
 }
 
-func addImports(astFile *ast.File) {
+func (es * ExtractStrings) addImports(astFile *ast.File) {
 		for i := range astFile.Imports {
 		filteredStrings[astFile.Imports[i].Path.Value] = astFile.Imports[i].Path.Value
 	}
 
 }
 
-func filter(aString string) bool {
+func (es * ExtractStrings) filter(aString string) bool {
 	for i := range BLANKS {
 		if aString == BLANKS[i] {
 			return true

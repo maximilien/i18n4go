@@ -1,0 +1,6 @@
+[submodule "cli"]
+	path = cli
+	url = git://github.com/cloudfoundry/cli.git
+[submodule "cloudcontroller_ng"]
+	path = cloudcontroller_ng
+	url = https://github.com/cloudfoundry/cloud_controller_ng.git
