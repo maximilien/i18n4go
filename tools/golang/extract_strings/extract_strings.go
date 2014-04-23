@@ -6,42 +6,63 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+
+	"io/ioutil"
+	"encoding/json"
 )
 
 type StringInfo struct {
-	Value string
-	Filename string
-	Pos int
+	Value string "json:value"
+	LineNo int "json:lineNo"
+	Pos int "json:pos"
 }
 
 type ExtractStrings struct {
+	Filename string
+	ExcludedFilename string
 	ExtractedStrings map[string]StringInfo
-	FilteredStrings map[string]StringInfo
+	FilteredStrings map[string]string
+}
+
+type ExcludedStrings struct {
+	ExcludedStrings []string "json:excludedStrings"
 }
 
 var BLANKS = []string{"\"\"", "\" \"", "\"\\t\"", "\"\\n\"", "\"\\n\\t\"", "\"\\t\\n\""}
 
-var filteredStrings map[string]string
-
-func NewExtractStrings() ExtractStrings {
-	return ExtractStrings{ExtractedStrings : make(map[string]StringInfo), FilteredStrings : make(map[string]StringInfo)}
+func NewExtractStrings(excludedFilename string) ExtractStrings {
+	return ExtractStrings{Filename : "extracted_strings.json", 
+					      ExcludedFilename : excludedFilename, 
+					      ExtractedStrings : make(map[string]StringInfo), 
+					      FilteredStrings : make(map[string]string)}
 }
 
-func (es * ExtractStrings) InspectFile(fileName string) error {
-	fmt.Println("Extracting strings from file:", fileName)
+func (es * ExtractStrings) InspectFile(filename string) error {
+	fmt.Println("Extracting strings from file:", filename)
+
+	es.setFilename(filename)
 
 	fset := token.NewFileSet()
 
-	astFile, err := parser.ParseFile(fset, fileName, nil, 0)
+	astFile, err := parser.ParseFile(fset, filename, nil, 0)
 	if err != nil {
 		fmt.Println(err)
 		return err
 	}
 
-	filteredStrings = make(map[string]string)
-	es.addImports(astFile)
+	err = es.loadExcludedStrings()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	es.excludeImports(astFile)
 
 	es.extractString(astFile, fset)
+
+	//TODO: save
+	fmt.Println("TODO: Saving to file:", es.Filename)
+	//END
 
 	return nil
 }
@@ -68,6 +89,33 @@ func (es * ExtractStrings)  InspectDir(dirName string, recursive bool) error {
 	return nil
 }
 
+func (es *ExtractStrings) setFilename(filename string) {
+	es.Filename = filename + ".extracted.json"
+}
+
+func (es *ExtractStrings) loadExcludedStrings() error {
+	fmt.Println("Excluding strings in file:", es.ExcludedFilename)
+	
+	content, err := ioutil.ReadFile(es.ExcludedFilename)
+    if err != nil {
+        fmt.Print(err)
+        return err
+    }
+
+    var excludedStrings ExcludedStrings
+    err = json.Unmarshal(content, &excludedStrings)
+    if err != nil {
+        fmt.Print(err)
+        return err
+    }
+
+    for i := range excludedStrings.ExcludedStrings {
+    	es.FilteredStrings[excludedStrings.ExcludedStrings[i]] = excludedStrings.ExcludedStrings[i]
+    }
+
+	return nil
+}
+
 func (es * ExtractStrings) extractString(f *ast.File, fset *token.FileSet) {
 		ast.Inspect(f, func(n ast.Node) bool {
 		var s string
@@ -82,9 +130,9 @@ func (es * ExtractStrings) extractString(f *ast.File, fset *token.FileSet) {
 	})
 }
 
-func (es * ExtractStrings) addImports(astFile *ast.File) {
+func (es * ExtractStrings) excludeImports(astFile *ast.File) {
 		for i := range astFile.Imports {
-		filteredStrings[astFile.Imports[i].Path.Value] = astFile.Imports[i].Path.Value
+		es.FilteredStrings[astFile.Imports[i].Path.Value] = astFile.Imports[i].Path.Value
 	}
 
 }
@@ -96,7 +144,7 @@ func (es * ExtractStrings) filter(aString string) bool {
 		}
 	}
 
-	if filteredStrings[aString] != "" {
+	if es.FilteredStrings[aString] != "" {
 		return true
 	}
 	return false

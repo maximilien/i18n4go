@@ -11,6 +11,7 @@ import (
 )
 
 var extractStringsCmdFlag bool
+var excludedFileNameFlag string
 var fileNameFlag string
 var dirNameFlag string
 var recurseFlag	bool
@@ -32,7 +33,7 @@ func extractStringsCmd() {
 		return
 	}
 
-	extractStrings := extract_strings.NewExtractStrings()
+	extractStrings := extract_strings.NewExtractStrings(excludedFileNameFlag)
 
 	if fileNameFlag != "" {
 		extractStrings.InspectFile(fileNameFlag)
@@ -43,6 +44,7 @@ func extractStringsCmd() {
 
 func init() {
 	flag.BoolVar(&extractStringsCmdFlag, "extract_strings", true, "want to extract strings from file or directory")
+	flag.StringVar(&excludedFileNameFlag, "e", "excluded.json", "the excluded JSON file name, all strings there will be excluded")
 	flag.StringVar(&fileNameFlag, "f", "", "the file name for which strings are extracted")
 	flag.StringVar(&dirNameFlag, "d", "", "the dir name for which all .go files will have their strings extracted")
 	flag.BoolVar(&recurseFlag, "r", false, "recursesively extract strings from all files in the same directory as filename or dirName")
@@ -53,6 +55,7 @@ func init() {
 func usage() {
 	usageString := `
 gi18n -extract_strings -f <fileName> | [-d <dirName> | -r -d <dirName>]
+	-e the JSON file with strings to be excluded, defaults to excluded.json if present
 	-f the go file name to extract strings
 	-d the directory containing the go files to extract strings
 	-r recursesively extract strings from all subdirectories
