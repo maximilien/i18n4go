@@ -1,6 +1,7 @@
 package extract_strings
 
 import (
+	"os"
 	"fmt"
 
 	"go/ast"
@@ -11,21 +12,29 @@ import (
 	"encoding/json"
 )
 
+type I18nStringInfo struct {
+	ID string `json:"id"`
+	Translation string `json:"translation"`
+}
+
 type StringInfo struct {
-	Value string "json:value"
-	LineNo int "json:lineNo"
-	Pos int "json:pos"
+	Filename string `json:"filename"`
+	Value string `json:"value"`
+	Offset int `json:"offset"`
+	Line int `json:"line"`
+	Column int `json:"column"`
 }
 
 type ExtractStrings struct {
 	Filename string
+	I18nFilename string
 	ExcludedFilename string
 	ExtractedStrings map[string]StringInfo
 	FilteredStrings map[string]string
 }
 
 type ExcludedStrings struct {
-	ExcludedStrings []string "json:excludedStrings"
+	ExcludedStrings []string `json:"excludedStrings"`
 }
 
 var BLANKS = []string{"\"\"", "\" \"", "\"\\t\"", "\"\\n\"", "\"\\n\\t\"", "\"\\t\\n\""}
@@ -41,6 +50,7 @@ func (es * ExtractStrings) InspectFile(filename string) error {
 	fmt.Println("Extracting strings from file:", filename)
 
 	es.setFilename(filename)
+	es.setI18nFilename(filename)
 
 	fset := token.NewFileSet()
 
@@ -60,14 +70,26 @@ func (es * ExtractStrings) InspectFile(filename string) error {
 
 	es.extractString(astFile, fset)
 
-	//TODO: save
-	fmt.Println("TODO: Saving to file:", es.Filename)
-	//END
+	fmt.Printf("Extracted %d strings\n", len(es.ExtractedStrings))
+
+	fmt.Println("Saving extracted strings to file:", es.Filename)
+	err = es.saveExtractedStrings()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	fmt.Println("Saving extracted i18n strings to file:", es.I18nFilename)
+	err = es.saveI18nStrings()
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
 
 	return nil
 }
 
-func (es * ExtractStrings)  InspectDir(dirName string, recursive bool) error {
+func (es * ExtractStrings) InspectDir(dirName string, recursive bool) error {
 	fmt.Println("Inspecting dir:", dirName)
 	fmt.Println("recursive:", recursive)
 
@@ -89,13 +111,67 @@ func (es * ExtractStrings)  InspectDir(dirName string, recursive bool) error {
 	return nil
 }
 
+func (es *ExtractStrings) saveExtractedStrings() error {
+	stringInfos := make([]StringInfo, 0)
+	for _, stringInfo := range es.ExtractedStrings {
+		stringInfos = append(stringInfos, stringInfo)
+	}
+
+	jsonData, err := json.Marshal(stringInfos)
+    if err != nil {
+        fmt.Println(err)
+        return err
+    }
+
+    file, err := os.Create(es.Filename)
+    if err != nil {
+        fmt.Println(err)
+        return err
+    }
+
+    file.Write(jsonData)
+    defer file.Close()
+
+    return nil
+}
+
+func (es *ExtractStrings) saveI18nStrings() error {
+	i18nStringInfos := make([]I18nStringInfo, len(es.ExtractedStrings))
+	i := 0
+	for _, stringInfo := range es.ExtractedStrings {
+		i18nStringInfos[i] = I18nStringInfo{ID: stringInfo.Value, Translation: stringInfo.Value}
+		i++
+	}
+
+	jsonData, err := json.Marshal(i18nStringInfos)
+    if err != nil {
+        fmt.Println(err)
+        return err
+    }
+
+    file, err := os.Create(es.I18nFilename)
+    if err != nil {
+        fmt.Println(err)
+        return err
+    }
+
+    file.Write(jsonData)
+    defer file.Close()
+
+    return nil
+}
+
 func (es *ExtractStrings) setFilename(filename string) {
 	es.Filename = filename + ".extracted.json"
 }
 
+func (es *ExtractStrings) setI18nFilename(filename string) {
+	es.I18nFilename = filename + ".en.json"
+}
+
 func (es *ExtractStrings) loadExcludedStrings() error {
 	fmt.Println("Excluding strings in file:", es.ExcludedFilename)
-	
+
 	content, err := ioutil.ReadFile(es.ExcludedFilename)
     if err != nil {
         fmt.Print(err)
@@ -123,7 +199,13 @@ func (es * ExtractStrings) extractString(f *ast.File, fset *token.FileSet) {
 		case *ast.BasicLit:			
 			s = x.Value
 			if len(s) > 0 && x.Kind == token.STRING && s != "\t" && s != "\n" && s != " " && !es.filter(s) {
-				fmt.Printf("%s:\t%s\n", fset.Position(n.Pos()), s)
+				position := fset.Position(n.Pos())
+				stringInfo := StringInfo{Value: s, 
+										 Filename: position.Filename, 
+										 Offset: position.Offset, 
+										 Line: position.Line, 
+										 Column: position.Column}
+				es.ExtractedStrings[s] = stringInfo
 			}
 		}
 		return true
