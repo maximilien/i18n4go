@@ -72,18 +72,24 @@ func (es * ExtractStrings) InspectFile(filename string) error {
 
 	es.Printlf("Extracted %d strings\n", len(es.ExtractedStrings))
 
-	es.Println("Saving extracted strings to file:", es.Filename)
 	err = es.saveExtractedStrings()
 	if err != nil {
 		es.Println(err)
 		return err
 	}
 
-	es.Println("Saving extracted i18n strings to file:", es.I18nFilename)
 	err = es.saveI18nStrings()
 	if err != nil {
 		es.Println(err)
 		return err
+	}
+
+	if es.Options.PoFlag {
+		err = es.saveI18nStringsInPo()
+		if err != nil {
+			es.Println(err)
+			return err
+		}		
 	}
 
 	return nil
@@ -112,6 +118,8 @@ func (es * ExtractStrings) InspectDir(dirName string, recursive bool) error {
 }
 
 func (es *ExtractStrings) saveExtractedStrings() error {
+	es.Println("Saving extracted strings to file:", es.Filename)
+
 	stringInfos := make([]common.StringInfo, 0)
 	for _, stringInfo := range es.ExtractedStrings {
 		stringInfos = append(stringInfos, stringInfo)
@@ -136,6 +144,8 @@ func (es *ExtractStrings) saveExtractedStrings() error {
 }
 
 func (es *ExtractStrings) saveI18nStrings() error {
+	es.Println("Saving extracted i18n strings to file:", es.I18nFilename)
+
 	i18nStringInfos := make([]common.I18nStringInfo, len(es.ExtractedStrings))
 	i := 0
 	for _, stringInfo := range es.ExtractedStrings {
@@ -159,6 +169,34 @@ func (es *ExtractStrings) saveI18nStrings() error {
     defer file.Close()
 
     return nil
+}
+
+func (es *ExtractStrings) saveI18nStringsInPo() error {
+	poFilename := es.I18nFilename[:len(es.I18nFilename) - len(".json")] + ".po"
+	es.Println("Creating and saving i18n strings to .po file:", poFilename)
+
+	file, err := os.Create(poFilename)
+    if err != nil {
+        es.Println(err)
+        return err
+    }
+
+	for _, stringInfo := range es.ExtractedStrings {
+		file.Write([]byte("# filename: " + stringInfo.Filename + 
+						  ", offset: " + strconv.Itoa(stringInfo.Offset) + 
+						  ", line: " + strconv.Itoa(stringInfo.Line) + 
+						  ", column: " + strconv.Itoa(stringInfo.Column) + "\n"))
+		file.Write([]byte("msgid " + strconv.Quote(stringInfo.Value) + "\n"))
+		file.Write([]byte("msgstr " + strconv.Quote(stringInfo.Value) + "\n"))
+		file.Write([]byte("\n"))
+	}
+
+    defer file.Close()
+
+    return nil
+
+
+	return nil
 }
 
 func (es *ExtractStrings) setFilename(filename string) {
