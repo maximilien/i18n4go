@@ -4,6 +4,7 @@ import (
 	"os"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"go/ast"
 	"go/parser"
@@ -21,13 +22,15 @@ type ExtractStrings struct {
 	I18nFilename string
 	ExtractedStrings map[string]common.StringInfo
 	FilteredStrings map[string]string
+	TotalStringsDir int
+	TotalStrings int
 }
 
 func NewExtractStrings(options common.Options) ExtractStrings {
 	return ExtractStrings{Options: options,
 						  Filename: "extracted_strings.json", 
 					      ExtractedStrings: make(map[string]common.StringInfo), 
-					      FilteredStrings: make(map[string]string)}
+					      FilteredStrings: make(map[string]string), TotalStringsDir: 0, TotalStrings: 0}
 }
 
 func (es* ExtractStrings) Println(a ...interface{}) (int, error) {
@@ -38,7 +41,7 @@ func (es* ExtractStrings) Println(a ...interface{}) (int, error) {
 	return 0, nil
 }
 
-func (es* ExtractStrings) Printlf(msg string, a ...interface{}) (int, error) {
+func (es* ExtractStrings) Printf(msg string, a ...interface{}) (int, error) {
 	if es.Options.VerboseFlag {
 		return fmt.Printf(msg, a...)
 	}
@@ -47,7 +50,7 @@ func (es* ExtractStrings) Printlf(msg string, a ...interface{}) (int, error) {
 }
 
 func (es * ExtractStrings) InspectFile(filename string) error {
-	es.Println("Extracting strings from file:", filename)
+	es.Println("gi18n: extracting strings from file:", filename)
 
 	es.setFilename(filename)
 	es.setI18nFilename(filename)
@@ -69,8 +72,10 @@ func (es * ExtractStrings) InspectFile(filename string) error {
 	es.excludeImports(astFile)
 
 	es.extractString(astFile, fset)
+	es.TotalStringsDir += len(es.ExtractedStrings)
+	es.TotalStrings += len(es.ExtractedStrings)
 
-	es.Printlf("Extracted %d strings\n", len(es.ExtractedStrings))
+	es.Printf("Extracted %d strings from file\n", len(es.ExtractedStrings))
 
 	err = es.saveExtractedStrings()
 	if err != nil {
@@ -96,10 +101,11 @@ func (es * ExtractStrings) InspectFile(filename string) error {
 }
 
 func (es * ExtractStrings) InspectDir(dirName string, recursive bool) error {
-	es.Println("Inspecting dir:", dirName)
-	es.Println("recursive:", recursive)
+	es.Printf("gi18n: inspecting dir %s, recursive: %t\n", dirName, recursive)
+	es.Println()
 
 	fset := token.NewFileSet()
+	es.TotalStringsDir = 0
 
 	packages, err := parser.ParseDir(fset, dirName, nil, 0)
 	if err != nil {
@@ -107,11 +113,36 @@ func (es * ExtractStrings) InspectDir(dirName string, recursive bool) error {
 		return err
 	}
 
-	for k, pkg := range packages {
-		es.Println("Extracting string in package:", k)
-		for file := range pkg.Files {
-			es.InspectFile(file)
-		}		
+	if len(packages) == 0 {
+		if recursive {			
+			fileInfos, _ := ioutil.ReadDir(dirName)
+			for _, fileInfo := range fileInfos {
+				if fileInfo.IsDir() && !strings.HasPrefix(fileInfo.Name(), ".") {
+					err = es.InspectDir(dirName + "/" + fileInfo.Name(), recursive)
+					if err != nil {
+						es.Println(err)
+					}
+				} else {
+					if !strings.HasPrefix(fileInfo.Name(), ".") {						
+						err = es.InspectFile(dirName + "/" + fileInfo.Name())
+						if err != nil {
+							es.Println(err)
+						}
+					}
+				}			
+			}
+		}
+	} else {
+		for k, pkg := range packages {
+			es.Println("Extracting strings in package:", k)
+			for file := range pkg.Files {
+				err = es.InspectFile(file)
+				if err != nil {
+					es.Println(err)
+				}
+			}		
+		}
+		es.Printf("Extracted total of %d strings\n\n", es.TotalStringsDir)
 	}
 
 	return nil
@@ -194,9 +225,6 @@ func (es *ExtractStrings) saveI18nStringsInPo() error {
     defer file.Close()
 
     return nil
-
-
-	return nil
 }
 
 func (es *ExtractStrings) setFilename(filename string) {
