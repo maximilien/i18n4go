@@ -3,6 +3,7 @@ package extract_strings
 import (
 	"os"
 	"fmt"
+	"strconv"
 
 	"go/ast"
 	"go/parser"
@@ -37,7 +38,7 @@ type ExcludedStrings struct {
 	ExcludedStrings []string `json:"excludedStrings"`
 }
 
-var BLANKS = []string{"\"\"", "\" \"", "\"\\t\"", "\"\\n\"", "\"\\n\\t\"", "\"\\t\\n\""}
+var BLANKS = []string{", " , "\t", "\n", "\n\t", "\t\n"}
 
 func NewExtractStrings(excludedFilename string) ExtractStrings {
 	return ExtractStrings{Filename : "extracted_strings.json", 
@@ -192,12 +193,12 @@ func (es *ExtractStrings) loadExcludedStrings() error {
 	return nil
 }
 
-func (es * ExtractStrings) extractString(f *ast.File, fset *token.FileSet) {
+func (es * ExtractStrings) extractString(f *ast.File, fset *token.FileSet) error {
 		ast.Inspect(f, func(n ast.Node) bool {
 		var s string
 		switch x := n.(type) {
 		case *ast.BasicLit:			
-			s = x.Value
+			s, _ = strconv.Unquote(x.Value)
 			if len(s) > 0 && x.Kind == token.STRING && s != "\t" && s != "\n" && s != " " && !es.filter(s) {
 				position := fset.Position(n.Pos())
 				stringInfo := StringInfo{Value: s, 
@@ -210,11 +211,14 @@ func (es * ExtractStrings) extractString(f *ast.File, fset *token.FileSet) {
 		}
 		return true
 	})
+
+	return nil
 }
 
 func (es * ExtractStrings) excludeImports(astFile *ast.File) {
-		for i := range astFile.Imports {
-		es.FilteredStrings[astFile.Imports[i].Path.Value] = astFile.Imports[i].Path.Value
+	for i := range astFile.Imports {
+		importString, _ := strconv.Unquote(astFile.Imports[i].Path.Value)
+		es.FilteredStrings[importString] = importString
 	}
 
 }

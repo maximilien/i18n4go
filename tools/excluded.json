@@ -1,18 +1,28 @@
 {
  "excludedStrings" : [
    "",
-   "\"\"",
-   "\"\\\n\"",
-   "\"\\\t\"",
-   "\"\\\n\\\t\"",
-   "\" \"",
+   " ",
+   "\n",
+   "\t",
+   "\n\t",
 
-   "\"e\"",
-   "\"f\"",
-   "\"d\"",
-   "\"r\"",
-   "\"extract_strings\"",
-   "\"excluded.json\"",
-   "\"gi18n\""
+   "e",
+   "f",
+   "d",
+   "r",
+   "extract_strings",
+   "excluded.json",
+   "gi18n",
+   ".en.json",
+   ".extracted.json",
+   "json:\"id\"",
+   "json:\"filename\"",
+   "json:\"excludedStrings\"",
+   "json:\"translation\"",
+   "json:\"value\"",
+   "json:\"offset\"",
+   "json:\"line\"",
+   "json:\"column\"",
+   "https://"
  ]
 }
