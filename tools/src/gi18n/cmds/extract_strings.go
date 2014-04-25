@@ -30,8 +30,8 @@ type ExtractStrings struct {
 func NewExtractStrings(options common.Options) ExtractStrings {
 	return ExtractStrings{Options: options,
 						  Filename: "extracted_strings.json", 
-					      ExtractedStrings: make(map[string]common.StringInfo), 
-					      FilteredStrings: make(map[string]string), 
+					      ExtractedStrings: nil, 
+					      FilteredStrings: nil, 
 					      TotalStringsDir: 0, 
 					      TotalStrings: 0,
 					  	  TotalFiles: 0}
@@ -56,12 +56,16 @@ func (es* ExtractStrings) Printf(msg string, a ...interface{}) (int, error) {
 func (es * ExtractStrings) InspectFile(filename string) error {
 	es.Println("gi18n: extracting strings from file:", filename)
 
+	es.ExtractedStrings = make(map[string]common.StringInfo)
+	es.FilteredStrings = make(map[string]string)
+
+
 	es.setFilename(filename)
 	es.setI18nFilename(filename)
 
 	fset := token.NewFileSet()
 
-	astFile, err := parser.ParseFile(fset, filename, nil, 0)
+	astFile, err := parser.ParseFile(fset, filename, nil, parser.ParseComments|parser.AllErrors)
 	if err != nil {
 		es.Println(err)
 		return err
@@ -112,7 +116,7 @@ func (es * ExtractStrings) InspectDir(dirName string, recursive bool) error {
 		fset := token.NewFileSet()
 		es.TotalStringsDir = 0
 
-		packages, err := parser.ParseDir(fset, dirName, nil, 0)
+		packages, err := parser.ParseDir(fset, dirName, nil, parser.ParseComments|parser.AllErrors)
 		if err != nil {
 			es.Println(err)
 			return err
@@ -276,6 +280,12 @@ func (es * ExtractStrings) extractString(f *ast.File, fset *token.FileSet) error
 										 		Column: position.Column}
 				es.ExtractedStrings[s] = stringInfo
 			}
+		// case *ast.Comment:
+		// 	fmt.Println(x.Text) //DEBUG
+		// 	panic("found one")
+		// 	// if x.Text == "i18n" {
+		// 	// 	panic("found one!")
+		// 	// }
 		}
 		return true
 	})
