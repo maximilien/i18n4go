@@ -36,7 +36,9 @@ func extractStringsCmd() {
 		extractStrings.InspectFile(options.FilenameFlag)
 	} else {
 		extractStrings.InspectDir(options.DirnameFlag, options.RecurseFlag)
-		extractStrings.Println("Extracted total strings:", extractStrings.TotalStrings)
+		extractStrings.Println()
+		extractStrings.Println("Total files parsed:", extractStrings.TotalFiles)
+		extractStrings.Println("Total extracted strings:", extractStrings.TotalStrings)
 	}	
 }
 

@@ -24,13 +24,17 @@ type ExtractStrings struct {
 	FilteredStrings map[string]string
 	TotalStringsDir int
 	TotalStrings int
+	TotalFiles int
 }
 
 func NewExtractStrings(options common.Options) ExtractStrings {
 	return ExtractStrings{Options: options,
 						  Filename: "extracted_strings.json", 
 					      ExtractedStrings: make(map[string]common.StringInfo), 
-					      FilteredStrings: make(map[string]string), TotalStringsDir: 0, TotalStrings: 0}
+					      FilteredStrings: make(map[string]string), 
+					      TotalStringsDir: 0, 
+					      TotalStrings: 0,
+					  	  TotalFiles: 0}
 }
 
 func (es* ExtractStrings) Println(a ...interface{}) (int, error) {
@@ -74,8 +78,9 @@ func (es * ExtractStrings) InspectFile(filename string) error {
 	es.extractString(astFile, fset)
 	es.TotalStringsDir += len(es.ExtractedStrings)
 	es.TotalStrings += len(es.ExtractedStrings)
+	es.TotalFiles += 1
 
-	es.Printf("Extracted %d strings from file\n", len(es.ExtractedStrings))
+	es.Printf("Extracted %d strings from file: %s\n", len(es.ExtractedStrings), filename)
 
 	err = es.saveExtractedStrings()
 	if err != nil {
@@ -104,35 +109,15 @@ func (es * ExtractStrings) InspectDir(dirName string, recursive bool) error {
 	es.Printf("gi18n: inspecting dir %s, recursive: %t\n", dirName, recursive)
 	es.Println()
 
-	fset := token.NewFileSet()
-	es.TotalStringsDir = 0
+		fset := token.NewFileSet()
+		es.TotalStringsDir = 0
 
-	packages, err := parser.ParseDir(fset, dirName, nil, 0)
-	if err != nil {
-		es.Println(err)
-		return err
-	}
-
-	if len(packages) == 0 {
-		if recursive {			
-			fileInfos, _ := ioutil.ReadDir(dirName)
-			for _, fileInfo := range fileInfos {
-				if fileInfo.IsDir() && !strings.HasPrefix(fileInfo.Name(), ".") {
-					err = es.InspectDir(dirName + "/" + fileInfo.Name(), recursive)
-					if err != nil {
-						es.Println(err)
-					}
-				} else {
-					if !strings.HasPrefix(fileInfo.Name(), ".") {						
-						err = es.InspectFile(dirName + "/" + fileInfo.Name())
-						if err != nil {
-							es.Println(err)
-						}
-					}
-				}			
-			}
+		packages, err := parser.ParseDir(fset, dirName, nil, 0)
+		if err != nil {
+			es.Println(err)
+			return err
 		}
-	} else {
+
 		for k, pkg := range packages {
 			es.Println("Extracting strings in package:", k)
 			for file := range pkg.Files {
@@ -143,7 +128,25 @@ func (es * ExtractStrings) InspectDir(dirName string, recursive bool) error {
 			}		
 		}
 		es.Printf("Extracted total of %d strings\n\n", es.TotalStringsDir)
-	}
+
+		if recursive {			
+			fileInfos, _ := ioutil.ReadDir(dirName)
+			for _, fileInfo := range fileInfos {
+				if fileInfo.IsDir() && !strings.HasPrefix(fileInfo.Name(), ".") {
+					err = es.InspectDir(dirName + "/" + fileInfo.Name(), recursive)
+					if err != nil {
+						es.Println(err)
+					}
+				} else {
+					if !strings.HasPrefix(fileInfo.Name(), ".") && strings.HasSuffix(fileInfo.Name(), ".go") {						
+						err = es.InspectFile(dirName + "/" + fileInfo.Name())
+						if err != nil {
+							es.Println(err)
+						}
+					}
+				}			
+			}
+		}
 
 	return nil
 }
