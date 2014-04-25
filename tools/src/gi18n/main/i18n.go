@@ -5,6 +5,8 @@ import (
 	"flag"
 	"os"
 	"strings"
+	"time"
+
 	"runtime/debug"
 
 	"gi18n/cmds"
@@ -32,6 +34,7 @@ func extractStringsCmd() {
 
 	extractStrings := extract_strings.NewExtractStrings(options)
 
+	startTime := time.Now()
 	if options.FilenameFlag != "" {
 		extractStrings.InspectFile(options.FilenameFlag)
 	} else {
@@ -39,7 +42,9 @@ func extractStringsCmd() {
 		extractStrings.Println()
 		extractStrings.Println("Total files parsed:", extractStrings.TotalFiles)
 		extractStrings.Println("Total extracted strings:", extractStrings.TotalStrings)
-	}	
+	}
+	duration := time.Now().Sub(startTime)
+	extractStrings.Println("Total time:", duration)
 }
 
 func init() {
