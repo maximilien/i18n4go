@@ -50,7 +50,7 @@ func extractStringsCmd() {
 func init() {
 	flag.BoolVar(&options.ExtractStringsCmdFlag, "extract_strings", true, "want to extract strings from file or directory")
 	flag.BoolVar(&options.VerboseFlag, "v", false, "verbose mode where lots of output is generated during execution")
-	flag.BoolVar(&options.PoFlag, "po", true, "generate standard .po file for translation")
+	flag.BoolVar(&options.PoFlag, "p", true, "generate standard .po file for translation")
 	flag.StringVar(&options.ExcludedFilenameFlag, "e", "excluded.json", "the excluded JSON file name, all strings there will be excluded")
 	flag.StringVar(&options.FilenameFlag, "f", "", "the file name for which strings are extracted")
 	flag.StringVar(&options.DirnameFlag, "d", "", "the dir name for which all .go files will have their strings extracted")
@@ -61,8 +61,9 @@ func init() {
 
 func usage() {
 	usageString := `
-gi18n -extract_strings [-po] -f <fileName> | [-d <dirName> | -r -d <dirName>]
-	-po to generate standard .po files for translation
+gi18n -extract_strings [-vpe] -f <fileName> | [-d <dirName> | -r -d <dirName>]
+  -v verbose
+	-p to generate standard .po files for translation
 	-e the JSON file with strings to be excluded, defaults to excluded.json if present
 	-f the go file name to extract strings
 	-d the directory containing the go files to extract strings
