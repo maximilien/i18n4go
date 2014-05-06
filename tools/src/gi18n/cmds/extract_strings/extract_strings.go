@@ -64,6 +64,16 @@ func (es *ExtractStrings) InspectFile(filename string) error {
 
 	fset := token.NewFileSet()
 
+	fileInfo, err := getFileName(filename)
+	if err != nil {
+		es.Println(err)
+	}
+
+	if strings.HasPrefix(fileInfo.Name(), ".") {
+		es.Println("WARNING ignoring file:", filename)
+		return nil
+	}
+
 	astFile, err := parser.ParseFile(fset, filename, nil, parser.ParseComments|parser.AllErrors)
 	if err != nil {
 		es.Println(err)
@@ -115,7 +125,7 @@ func (es *ExtractStrings) InspectDir(dirName string, recursive bool) error {
 	fset := token.NewFileSet()
 	es.TotalStringsDir = 0
 
-	packages, err := parser.ParseDir(fset, dirName, nil, parser.ParseComments|parser.AllErrors)
+	packages, err := parser.ParseDir(fset, dirName, nil, parser.ParseComments)
 	if err != nil {
 		es.Println(err)
 		return err
@@ -124,7 +134,7 @@ func (es *ExtractStrings) InspectDir(dirName string, recursive bool) error {
 	for k, pkg := range packages {
 		es.Println("Extracting strings in package:", k)
 		for fileName, _ := range pkg.Files {
-			if !strings.HasPrefix(fileName, ".") && strings.HasSuffix(fileName, ".go") {
+			if strings.HasSuffix(fileName, ".go") {
 				err = es.InspectFile(fileName)
 				if err != nil {
 					es.Println(err)
@@ -138,7 +148,7 @@ func (es *ExtractStrings) InspectDir(dirName string, recursive bool) error {
 		fileInfos, _ := ioutil.ReadDir(dirName)
 		for _, fileInfo := range fileInfos {
 			if fileInfo.IsDir() && !strings.HasPrefix(fileInfo.Name(), ".") {
-				err = es.InspectDir(dirName + "/" + fileInfo.Name(), recursive)
+				err = es.InspectDir(dirName+"/"+fileInfo.Name(), recursive)
 				if err != nil {
 					es.Println(err)
 				}
@@ -147,6 +157,17 @@ func (es *ExtractStrings) InspectDir(dirName string, recursive bool) error {
 	}
 
 	return nil
+}
+
+func getFileName(filePath string) (os.FileInfo, error) {
+	file, err := os.OpenFile(filePath, os.O_RDONLY, 0)
+	defer file.Close()
+	if err != nil {
+		fmt.Println("ERROR opening file", err)
+		return nil, err
+	}
+
+	return file.Stat()
 }
 
 func (es *ExtractStrings) saveExtractedStrings() error {
