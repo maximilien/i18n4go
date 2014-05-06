@@ -9,7 +9,7 @@ import (
 
 	"runtime/debug"
 
-	"gi18n/cmds"
+	"gi18n/cmds/extract_strings"
 	common "gi18n/common"
 )
 

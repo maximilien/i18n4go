@@ -123,10 +123,12 @@ func (es *ExtractStrings) InspectDir(dirName string, recursive bool) error {
 
 	for k, pkg := range packages {
 		es.Println("Extracting strings in package:", k)
-		for file := range pkg.Files {
-			err = es.InspectFile(file)
-			if err != nil {
-				es.Println(err)
+		for fileName, _ := range pkg.Files {
+			if !strings.HasPrefix(fileName, ".") && strings.HasSuffix(fileName, ".go") {
+				err = es.InspectFile(fileName)
+				if err != nil {
+					es.Println(err)
+				}
 			}
 		}
 	}
@@ -136,16 +138,9 @@ func (es *ExtractStrings) InspectDir(dirName string, recursive bool) error {
 		fileInfos, _ := ioutil.ReadDir(dirName)
 		for _, fileInfo := range fileInfos {
 			if fileInfo.IsDir() && !strings.HasPrefix(fileInfo.Name(), ".") {
-				err = es.InspectDir(dirName+"/"+fileInfo.Name(), recursive)
+				err = es.InspectDir(dirName + "/" + fileInfo.Name(), recursive)
 				if err != nil {
 					es.Println(err)
-				}
-			} else {
-				if !strings.HasPrefix(fileInfo.Name(), ".") && strings.HasSuffix(fileInfo.Name(), ".go") {
-					err = es.InspectFile(dirName + "/" + fileInfo.Name())
-					if err != nil {
-						es.Println(err)
-					}
 				}
 			}
 		}
@@ -270,7 +265,7 @@ func (es *ExtractStrings) extractString(f *ast.File, fset *token.FileSet) error 
 		switch x := n.(type) {
 		case *ast.BasicLit:
 			s, _ = strconv.Unquote(x.Value)
-			if len(s) > 0 && x.Kind == token.STRING && s != "\t" && s != "\n" && s != " " && !es.filter(s) {
+			if len(s) > 0 && x.Kind == token.STRING && s != "\t" && s != "\n" && s != " " && !es.filter(s) { //TODO: fix to remove these: s != "\\t" && s != "\\n" && s != " "
 				position := fset.Position(n.Pos())
 				stringInfo := common.StringInfo{Value: s,
 					Filename: position.Filename,
@@ -279,12 +274,6 @@ func (es *ExtractStrings) extractString(f *ast.File, fset *token.FileSet) error 
 					Column:   position.Column}
 				es.ExtractedStrings[s] = stringInfo
 			}
-			// case *ast.Comment:
-			// 	fmt.Println(x.Text) //DEBUG
-			// 	panic("found one")
-			// 	// if x.Text == "i18n" {
-			// 	// 	panic("found one!")
-			// 	// }
 		}
 		return true
 	})
