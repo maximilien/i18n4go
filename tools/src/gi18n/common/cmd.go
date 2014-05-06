@@ -10,6 +10,8 @@ type Options struct {
 	DirnameFlag          string
 
 	RecurseFlag bool
+
+	IgnoreRegexp string
 }
 
 type I18nStringInfo struct {

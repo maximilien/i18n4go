@@ -3,6 +3,7 @@ package extract_strings
 import (
 	"fmt"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -17,24 +18,39 @@ import (
 )
 
 type ExtractStrings struct {
-	Options          common.Options
-	Filename         string
-	I18nFilename     string
+	Options common.Options
+
+	Filename     string
+	I18nFilename string
+
 	ExtractedStrings map[string]common.StringInfo
 	FilteredStrings  map[string]string
-	TotalStringsDir  int
-	TotalStrings     int
-	TotalFiles       int
+
+	TotalStringsDir int
+	TotalStrings    int
+	TotalFiles      int
+
+	IgnoreRegexp *regexp.Regexp
 }
 
 func NewExtractStrings(options common.Options) ExtractStrings {
+	var compiledRegexp *regexp.Regexp
+	if options.IgnoreRegexp != "" {
+		compiledReg, err := regexp.Compile(options.IgnoreRegexp)
+		if err != nil {
+			fmt.Println("WARNING compiling ignore-regexp:", err)
+		}
+		compiledRegexp = compiledReg
+	}
+
 	return ExtractStrings{Options: options,
 		Filename:         "extracted_strings.json",
 		ExtractedStrings: nil,
 		FilteredStrings:  nil,
 		TotalStringsDir:  0,
 		TotalStrings:     0,
-		TotalFiles:       0}
+		TotalFiles:       0,
+		IgnoreRegexp:     compiledRegexp}
 }
 
 func (es *ExtractStrings) Println(a ...interface{}) (int, error) {
@@ -134,6 +150,13 @@ func (es *ExtractStrings) InspectDir(dirName string, recursive bool) error {
 	for k, pkg := range packages {
 		es.Println("Extracting strings in package:", k)
 		for fileName, _ := range pkg.Files {
+			if es.IgnoreRegexp != nil && es.IgnoreRegexp.MatchString(fileName) {
+				es.Println("Using ignore-regexp:", es.Options.IgnoreRegexp)
+				continue
+			} else {
+				es.Println("No match for ignore-regexp:", es.Options.IgnoreRegexp)
+			}
+
 			if strings.HasSuffix(fileName, ".go") {
 				err = es.InspectFile(fileName)
 				if err != nil {

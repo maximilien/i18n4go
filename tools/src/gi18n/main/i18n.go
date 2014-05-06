@@ -48,26 +48,28 @@ func extractStringsCmd() {
 }
 
 func init() {
-	flag.BoolVar(&options.ExtractStringsCmdFlag, "extract_strings", true, "want to extract strings from file or directory")
+	flag.BoolVar(&options.ExtractStringsCmdFlag, "extract-strings", true, "want to extract strings from file or directory")
 	flag.BoolVar(&options.VerboseFlag, "v", false, "verbose mode where lots of output is generated during execution")
 	flag.BoolVar(&options.PoFlag, "p", true, "generate standard .po file for translation")
 	flag.StringVar(&options.ExcludedFilenameFlag, "e", "excluded.json", "the excluded JSON file name, all strings there will be excluded")
 	flag.StringVar(&options.FilenameFlag, "f", "", "the file name for which strings are extracted")
 	flag.StringVar(&options.DirnameFlag, "d", "", "the dir name for which all .go files will have their strings extracted")
 	flag.BoolVar(&options.RecurseFlag, "r", false, "recursesively extract strings from all files in the same directory as filename or dirName")
+	flag.StringVar(&options.IgnoreRegexp, "ignore-regexp", "", "a perl-style regular expression for files to ignore, e.g., \".*test.*\"")
 
 	flag.Parse()
 }
 
 func usage() {
 	usageString := `
-gi18n -extract_strings [-vpe] -f <fileName> | [-d <dirName> | -r -d <dirName>]
+gi18n -extract-strings [-vpe] -f <fileName> | -d [-r] [-ignore-regexp <regex>] <dirName>
   -v verbose
 	-p to generate standard .po files for translation
 	-e the JSON file with strings to be excluded, defaults to excluded.json if present
 	-f the go file name to extract strings
 	-d the directory containing the go files to extract strings
 	-r recursesively extract strings from all subdirectories
+	-ignore-regexp a perl-style regular expression for files to ignore, e.g., ".*test.*"
 	`
 	fmt.Println(usageString)
 }
