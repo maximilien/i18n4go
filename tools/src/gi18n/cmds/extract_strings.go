@@ -1,8 +1,8 @@
 package extract_strings
 
 import (
-	"os"
 	"fmt"
+	"os"
 	"strconv"
 	"strings"
 
@@ -10,34 +10,34 @@ import (
 	"go/parser"
 	"go/token"
 
-	"io/ioutil"
 	"encoding/json"
-	
+	"io/ioutil"
+
 	common "gi18n/common"
 )
 
 type ExtractStrings struct {
-	Options common.Options
-	Filename string
-	I18nFilename string
+	Options          common.Options
+	Filename         string
+	I18nFilename     string
 	ExtractedStrings map[string]common.StringInfo
-	FilteredStrings map[string]string
-	TotalStringsDir int
-	TotalStrings int
-	TotalFiles int
+	FilteredStrings  map[string]string
+	TotalStringsDir  int
+	TotalStrings     int
+	TotalFiles       int
 }
 
 func NewExtractStrings(options common.Options) ExtractStrings {
 	return ExtractStrings{Options: options,
-						  Filename: "extracted_strings.json", 
-					      ExtractedStrings: nil, 
-					      FilteredStrings: nil, 
-					      TotalStringsDir: 0, 
-					      TotalStrings: 0,
-					  	  TotalFiles: 0}
+		Filename:         "extracted_strings.json",
+		ExtractedStrings: nil,
+		FilteredStrings:  nil,
+		TotalStringsDir:  0,
+		TotalStrings:     0,
+		TotalFiles:       0}
 }
 
-func (es* ExtractStrings) Println(a ...interface{}) (int, error) {
+func (es *ExtractStrings) Println(a ...interface{}) (int, error) {
 	if es.Options.VerboseFlag {
 		return fmt.Println(a...)
 	}
@@ -45,7 +45,7 @@ func (es* ExtractStrings) Println(a ...interface{}) (int, error) {
 	return 0, nil
 }
 
-func (es* ExtractStrings) Printf(msg string, a ...interface{}) (int, error) {
+func (es *ExtractStrings) Printf(msg string, a ...interface{}) (int, error) {
 	if es.Options.VerboseFlag {
 		return fmt.Printf(msg, a...)
 	}
@@ -53,12 +53,11 @@ func (es* ExtractStrings) Printf(msg string, a ...interface{}) (int, error) {
 	return 0, nil
 }
 
-func (es * ExtractStrings) InspectFile(filename string) error {
+func (es *ExtractStrings) InspectFile(filename string) error {
 	es.Println("gi18n: extracting strings from file:", filename)
 
 	es.ExtractedStrings = make(map[string]common.StringInfo)
 	es.FilteredStrings = make(map[string]string)
-
 
 	es.setFilename(filename)
 	es.setI18nFilename(filename)
@@ -103,54 +102,54 @@ func (es * ExtractStrings) InspectFile(filename string) error {
 		if err != nil {
 			es.Println(err)
 			return err
-		}		
+		}
 	}
 
 	return nil
 }
 
-func (es * ExtractStrings) InspectDir(dirName string, recursive bool) error {
+func (es *ExtractStrings) InspectDir(dirName string, recursive bool) error {
 	es.Printf("gi18n: inspecting dir %s, recursive: %t\n", dirName, recursive)
 	es.Println()
 
-		fset := token.NewFileSet()
-		es.TotalStringsDir = 0
+	fset := token.NewFileSet()
+	es.TotalStringsDir = 0
 
-		packages, err := parser.ParseDir(fset, dirName, nil, parser.ParseComments|parser.AllErrors)
-		if err != nil {
-			es.Println(err)
-			return err
+	packages, err := parser.ParseDir(fset, dirName, nil, parser.ParseComments|parser.AllErrors)
+	if err != nil {
+		es.Println(err)
+		return err
+	}
+
+	for k, pkg := range packages {
+		es.Println("Extracting strings in package:", k)
+		for file := range pkg.Files {
+			err = es.InspectFile(file)
+			if err != nil {
+				es.Println(err)
+			}
 		}
+	}
+	es.Printf("Extracted total of %d strings\n\n", es.TotalStringsDir)
 
-		for k, pkg := range packages {
-			es.Println("Extracting strings in package:", k)
-			for file := range pkg.Files {
-				err = es.InspectFile(file)
+	if recursive {
+		fileInfos, _ := ioutil.ReadDir(dirName)
+		for _, fileInfo := range fileInfos {
+			if fileInfo.IsDir() && !strings.HasPrefix(fileInfo.Name(), ".") {
+				err = es.InspectDir(dirName+"/"+fileInfo.Name(), recursive)
 				if err != nil {
 					es.Println(err)
 				}
-			}		
-		}
-		es.Printf("Extracted total of %d strings\n\n", es.TotalStringsDir)
-
-		if recursive {			
-			fileInfos, _ := ioutil.ReadDir(dirName)
-			for _, fileInfo := range fileInfos {
-				if fileInfo.IsDir() && !strings.HasPrefix(fileInfo.Name(), ".") {
-					err = es.InspectDir(dirName + "/" + fileInfo.Name(), recursive)
+			} else {
+				if !strings.HasPrefix(fileInfo.Name(), ".") && strings.HasSuffix(fileInfo.Name(), ".go") {
+					err = es.InspectFile(dirName + "/" + fileInfo.Name())
 					if err != nil {
 						es.Println(err)
 					}
-				} else {
-					if !strings.HasPrefix(fileInfo.Name(), ".") && strings.HasSuffix(fileInfo.Name(), ".go") {						
-						err = es.InspectFile(dirName + "/" + fileInfo.Name())
-						if err != nil {
-							es.Println(err)
-						}
-					}
-				}			
+				}
 			}
 		}
+	}
 
 	return nil
 }
@@ -164,21 +163,21 @@ func (es *ExtractStrings) saveExtractedStrings() error {
 	}
 
 	jsonData, err := json.Marshal(stringInfos)
-    if err != nil {
-        es.Println(err)
-        return err
-    }
+	if err != nil {
+		es.Println(err)
+		return err
+	}
 
-    file, err := os.Create(es.Filename)
-    if err != nil {
-        es.Println(err)
-        return err
-    }
+	file, err := os.Create(es.Filename)
+	if err != nil {
+		es.Println(err)
+		return err
+	}
 
-    file.Write(jsonData)
-    defer file.Close()
+	file.Write(jsonData)
+	defer file.Close()
 
-    return nil
+	return nil
 }
 
 func (es *ExtractStrings) saveI18nStrings() error {
@@ -192,46 +191,46 @@ func (es *ExtractStrings) saveI18nStrings() error {
 	}
 
 	jsonData, err := json.Marshal(i18nStringInfos)
-    if err != nil {
-        es.Println(err)
-        return err
-    }
+	if err != nil {
+		es.Println(err)
+		return err
+	}
 
-    file, err := os.Create(es.I18nFilename)
-    if err != nil {
-        es.Println(err)
-        return err
-    }
+	file, err := os.Create(es.I18nFilename)
+	if err != nil {
+		es.Println(err)
+		return err
+	}
 
-    file.Write(jsonData)
-    defer file.Close()
+	file.Write(jsonData)
+	defer file.Close()
 
-    return nil
+	return nil
 }
 
 func (es *ExtractStrings) saveI18nStringsInPo() error {
-	poFilename := es.I18nFilename[:len(es.I18nFilename) - len(".json")] + ".po"
+	poFilename := es.I18nFilename[:len(es.I18nFilename)-len(".json")] + ".po"
 	es.Println("Creating and saving i18n strings to .po file:", poFilename)
 
 	file, err := os.Create(poFilename)
-    if err != nil {
-        es.Println(err)
-        return err
-    }
+	if err != nil {
+		es.Println(err)
+		return err
+	}
 
 	for _, stringInfo := range es.ExtractedStrings {
-		file.Write([]byte("# filename: " + stringInfo.Filename + 
-						  ", offset: " + strconv.Itoa(stringInfo.Offset) + 
-						  ", line: " + strconv.Itoa(stringInfo.Line) + 
-						  ", column: " + strconv.Itoa(stringInfo.Column) + "\n"))
+		file.Write([]byte("# filename: " + stringInfo.Filename +
+			", offset: " + strconv.Itoa(stringInfo.Offset) +
+			", line: " + strconv.Itoa(stringInfo.Line) +
+			", column: " + strconv.Itoa(stringInfo.Column) + "\n"))
 		file.Write([]byte("msgid " + strconv.Quote(stringInfo.Value) + "\n"))
 		file.Write([]byte("msgstr " + strconv.Quote(stringInfo.Value) + "\n"))
 		file.Write([]byte("\n"))
 	}
 
-    defer file.Close()
+	defer file.Close()
 
-    return nil
+	return nil
 }
 
 func (es *ExtractStrings) setFilename(filename string) {
@@ -246,46 +245,46 @@ func (es *ExtractStrings) loadExcludedStrings() error {
 	es.Println("Excluding strings in file:", es.Options.ExcludedFilenameFlag)
 
 	content, err := ioutil.ReadFile(es.Options.ExcludedFilenameFlag)
-    if err != nil {
-        fmt.Print(err)
-        return err
-    }
+	if err != nil {
+		fmt.Print(err)
+		return err
+	}
 
-    var excludedStrings common.ExcludedStrings
-    err = json.Unmarshal(content, &excludedStrings)
-    if err != nil {
-        fmt.Print(err)
-        return err
-    }
+	var excludedStrings common.ExcludedStrings
+	err = json.Unmarshal(content, &excludedStrings)
+	if err != nil {
+		fmt.Print(err)
+		return err
+	}
 
-    for i := range excludedStrings.ExcludedStrings {
-    	es.FilteredStrings[excludedStrings.ExcludedStrings[i]] = excludedStrings.ExcludedStrings[i]
-    }
+	for i := range excludedStrings.ExcludedStrings {
+		es.FilteredStrings[excludedStrings.ExcludedStrings[i]] = excludedStrings.ExcludedStrings[i]
+	}
 
 	return nil
 }
 
-func (es * ExtractStrings) extractString(f *ast.File, fset *token.FileSet) error {
-		ast.Inspect(f, func(n ast.Node) bool {
+func (es *ExtractStrings) extractString(f *ast.File, fset *token.FileSet) error {
+	ast.Inspect(f, func(n ast.Node) bool {
 		var s string
 		switch x := n.(type) {
-		case *ast.BasicLit:			
+		case *ast.BasicLit:
 			s, _ = strconv.Unquote(x.Value)
 			if len(s) > 0 && x.Kind == token.STRING && s != "\t" && s != "\n" && s != " " && !es.filter(s) {
 				position := fset.Position(n.Pos())
-				stringInfo := common.StringInfo{Value: s, 
-										 		Filename: position.Filename, 
-										 		Offset: position.Offset, 
-										 		Line: position.Line, 
-										 		Column: position.Column}
+				stringInfo := common.StringInfo{Value: s,
+					Filename: position.Filename,
+					Offset:   position.Offset,
+					Line:     position.Line,
+					Column:   position.Column}
 				es.ExtractedStrings[s] = stringInfo
 			}
-		// case *ast.Comment:
-		// 	fmt.Println(x.Text) //DEBUG
-		// 	panic("found one")
-		// 	// if x.Text == "i18n" {
-		// 	// 	panic("found one!")
-		// 	// }
+			// case *ast.Comment:
+			// 	fmt.Println(x.Text) //DEBUG
+			// 	panic("found one")
+			// 	// if x.Text == "i18n" {
+			// 	// 	panic("found one!")
+			// 	// }
 		}
 		return true
 	})
@@ -293,7 +292,7 @@ func (es * ExtractStrings) extractString(f *ast.File, fset *token.FileSet) error
 	return nil
 }
 
-func (es * ExtractStrings) excludeImports(astFile *ast.File) {
+func (es *ExtractStrings) excludeImports(astFile *ast.File) {
 	for i := range astFile.Imports {
 		importString, _ := strconv.Unquote(astFile.Imports[i].Path.Value)
 		es.FilteredStrings[importString] = importString
@@ -301,7 +300,7 @@ func (es * ExtractStrings) excludeImports(astFile *ast.File) {
 
 }
 
-func (es * ExtractStrings) filter(aString string) bool {
+func (es *ExtractStrings) filter(aString string) bool {
 	for i := range common.BLANKS {
 		if aString == common.BLANKS[i] {
 			return true

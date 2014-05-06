@@ -1,32 +1,32 @@
 package common
 
-type Options struct {	
+type Options struct {
 	ExtractStringsCmdFlag bool
-	VerboseFlag bool
-	PoFlag bool
+	VerboseFlag           bool
+	PoFlag                bool
 
 	ExcludedFilenameFlag string
-	FilenameFlag string
-	DirnameFlag string
-	
-	RecurseFlag	bool
+	FilenameFlag         string
+	DirnameFlag          string
+
+	RecurseFlag bool
 }
 
 type I18nStringInfo struct {
-	ID string `json:"id"`
+	ID          string `json:"id"`
 	Translation string `json:"translation"`
 }
 
 type StringInfo struct {
 	Filename string `json:"filename"`
-	Value string `json:"value"`
-	Offset int `json:"offset"`
-	Line int `json:"line"`
-	Column int `json:"column"`
+	Value    string `json:"value"`
+	Offset   int    `json:"offset"`
+	Line     int    `json:"line"`
+	Column   int    `json:"column"`
 }
 
 type ExcludedStrings struct {
 	ExcludedStrings []string `json:"excludedStrings"`
 }
 
-var BLANKS = []string{", " , "\t", "\n", "\n\t", "\t\n"}
+var BLANKS = []string{", ", "\t", "\n", "\n\t", "\t\n"}
