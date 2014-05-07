@@ -24,3 +24,5 @@ _testmain.go
 
 *.go.*.json
 *.go.*.po
+
+tmp
