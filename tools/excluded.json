@@ -37,6 +37,14 @@
    "help",
    ".go",
    "",
-   "/"
+   "/",
+   "false",
+   "true"
+ ],
+ "excludedRegexps" : [
+   "^\\d+$",
+   "^-\\w$",
+   "^\\w$",
+   "^json:"
  ]
 }

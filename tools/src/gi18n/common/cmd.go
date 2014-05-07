@@ -29,6 +29,7 @@ type StringInfo struct {
 
 type ExcludedStrings struct {
 	ExcludedStrings []string `json:"excludedStrings"`
+	ExcludedRegexps []string `json:"excludedRegexps"`
 }
 
 var BLANKS = []string{", ", "\t", "\n", "\n\t", "\t\n"}

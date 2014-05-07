@@ -25,6 +25,7 @@ type ExtractStrings struct {
 
 	ExtractedStrings map[string]common.StringInfo
 	FilteredStrings  map[string]string
+	FilteredRegexps  []*regexp.Regexp
 
 	TotalStringsDir int
 	TotalStrings    int
@@ -47,6 +48,7 @@ func NewExtractStrings(options common.Options) ExtractStrings {
 		Filename:         "extracted_strings.json",
 		ExtractedStrings: nil,
 		FilteredStrings:  nil,
+		FilteredRegexps:  nil,
 		TotalStringsDir:  0,
 		TotalStrings:     0,
 		TotalFiles:       0,
@@ -74,6 +76,7 @@ func (es *ExtractStrings) InspectFile(filename string) error {
 
 	es.ExtractedStrings = make(map[string]common.StringInfo)
 	es.FilteredStrings = make(map[string]string)
+	es.FilteredRegexps = []*regexp.Regexp{}
 
 	es.setFilename(filename)
 	es.setI18nFilename(filename)
@@ -101,6 +104,14 @@ func (es *ExtractStrings) InspectFile(filename string) error {
 		es.Println(err)
 		return err
 	}
+	es.Println(fmt.Sprintf("Loaded %d excluded strings", len(es.FilteredStrings)))
+
+	err = es.loadExcludedRegexps()
+	if err != nil {
+		es.Println(err)
+		return err
+	}
+	es.Println(fmt.Sprintf("Loaded %d excluded regexps", len(es.FilteredRegexps)))
 
 	es.excludeImports(astFile)
 
@@ -303,6 +314,34 @@ func (es *ExtractStrings) loadExcludedStrings() error {
 	return nil
 }
 
+func (es *ExtractStrings) loadExcludedRegexps() error {
+	es.Println("Excluding regexps in file:", es.Options.ExcludedFilenameFlag)
+
+	content, err := ioutil.ReadFile(es.Options.ExcludedFilenameFlag)
+	if err != nil {
+		fmt.Print(err)
+		return err
+	}
+
+	var excludedRegexps common.ExcludedStrings
+	err = json.Unmarshal(content, &excludedRegexps)
+	if err != nil {
+		fmt.Print(err)
+		return err
+	}
+
+	for _, regexpString := range excludedRegexps.ExcludedRegexps {
+		compiledRegexp, err := regexp.Compile(regexpString)
+		if err != nil {
+			fmt.Println("WARNING error compiling regexp:", regexpString)
+		}
+
+		es.FilteredRegexps = append(es.FilteredRegexps, compiledRegexp)
+	}
+
+	return nil
+}
+
 func (es *ExtractStrings) extractString(f *ast.File, fset *token.FileSet) error {
 	ast.Inspect(f, func(n ast.Node) bool {
 		var s string
@@ -343,5 +382,12 @@ func (es *ExtractStrings) filter(aString string) bool {
 	if es.FilteredStrings[aString] != "" {
 		return true
 	}
+
+	for _, compiledRegexp := range es.FilteredRegexps {
+		if compiledRegexp.MatchString(aString) {
+			return true
+		}
+	}
+
 	return false
 }
