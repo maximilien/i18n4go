@@ -6,18 +6,18 @@ type Options struct {
 	VerboseFlag           bool
 	PoFlag                bool
 
-	OutputDirFlag				 string
-	OutputMatchImportFlag bool
+	OutputDirFlag          string
+	OutputMatchImportFlag  bool
 	OutputMatchPackageFlag bool
-	OutputFlatFlag				bool
+	OutputFlatFlag         bool
 
 	ExcludedFilenameFlag string
 	FilenameFlag         string
 	DirnameFlag          string
 
-	RecurseFlag 				 bool
+	RecurseFlag bool
 
-	IgnoreRegexp 				 string
+	IgnoreRegexp string
 }
 
 type I18nStringInfo struct {

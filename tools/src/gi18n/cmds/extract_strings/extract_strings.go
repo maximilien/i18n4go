@@ -8,9 +8,9 @@ import (
 	"strings"
 
 	"go/ast"
+	"go/build"
 	"go/parser"
 	"go/token"
-	"go/build"
 
 	"encoding/json"
 	"io/ioutil"
@@ -49,7 +49,7 @@ func NewExtractStrings(options common.Options) ExtractStrings {
 
 	return ExtractStrings{Options: options,
 		Filename:         "extracted_strings.json",
-		OutputDirname:		options.OutputDirFlag,
+		OutputDirname:    options.OutputDirFlag,
 		ExtractedStrings: nil,
 		FilteredStrings:  nil,
 		FilteredRegexps:  nil,
@@ -136,11 +136,11 @@ func (es *ExtractStrings) InspectFile(filename string) error {
 				return err
 			}
 		} else if es.Options.OutputMatchPackageFlag {
-				outputDirname, err = es.findPackagePath(filename)
-				if err != nil {
-					es.Println(err)
-					return err
-				}
+			outputDirname, err = es.findPackagePath(filename)
+			if err != nil {
+				es.Println(err)
+				return err
+			}
 		}
 	} else {
 		outputDirname, err = es.findFilePath(filename)
@@ -252,7 +252,7 @@ func (es *ExtractStrings) findFilePath(filename string) (string, error) {
 		fmt.Errorf("ERROR opening file", err)
 		return "", err
 	}
-	path = filename[0:len(filename) - len(fileInfo.Name())]
+	path = filename[0 : len(filename)-len(fileInfo.Name())]
 	return path, nil
 }
 
@@ -272,7 +272,7 @@ func (es *ExtractStrings) findImportPath(filename string) (string, error) {
 	return path, nil
 }
 
-func (es *ExtractStrings)	findPackagePath(filename string) (string, error) {
+func (es *ExtractStrings) findPackagePath(filename string) (string, error) {
 	path := es.OutputDirname
 
 	filePath, err := es.findFilePath(filename)
@@ -305,7 +305,7 @@ func (es *ExtractStrings) saveExtractedStrings(outputDirname string) error {
 		return err
 	}
 
-	file, err := os.Create(outputDirname + "/" + es.Filename[strings.LastIndex(es.Filename, "/") + 1:len(es.Filename)])
+	file, err := os.Create(outputDirname + "/" + es.Filename[strings.LastIndex(es.Filename, "/")+1:len(es.Filename)])
 	defer file.Close()
 	if err != nil {
 		es.Println(err)
@@ -334,7 +334,7 @@ func (es *ExtractStrings) saveI18nStrings(outputDirname string) error {
 		return err
 	}
 
-	file, err := os.Create(outputDirname + "/" + es.I18nFilename[strings.LastIndex(es.I18nFilename, "/") + 1:len(es.I18nFilename)])
+	file, err := os.Create(outputDirname + "/" + es.I18nFilename[strings.LastIndex(es.I18nFilename, "/")+1:len(es.I18nFilename)])
 	if err != nil {
 		es.Println(err)
 		return err
@@ -350,7 +350,7 @@ func (es *ExtractStrings) saveI18nStringsInPo(outputDirname string) error {
 	es.Println("Creating and saving i18n strings to .po file:", es.PoFilename)
 	es.createOutputDirsIfNeeded(outputDirname)
 
-	file, err := os.Create(outputDirname + "/" + es.PoFilename[strings.LastIndex(es.PoFilename, "/") + 1:len(es.PoFilename)])
+	file, err := os.Create(outputDirname + "/" + es.PoFilename[strings.LastIndex(es.PoFilename, "/")+1:len(es.PoFilename)])
 	if err != nil {
 		es.Println(err)
 		return err
