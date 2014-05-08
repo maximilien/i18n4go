@@ -6,7 +6,7 @@ This is the official i18n tooling for the Cloud Foundry command line client. It 
 Getting Started
 ===============
 Download and run the installer for your platform from the section below. If you are on OS X, you can also install the gi18n tool
-with homebrew--run `brew install gi18n`.
+with homebrew--run `brew install gi18n` *.
 
 Once installed, you can use it to issue some of the typical i18n tooling processes.
 
@@ -100,8 +100,8 @@ TODO
 Stable Release
 ==============
 
-Installers
-----------
+Installers *
+-----------
 - [Debian 32 bit]()
 - [Debian 64 bit]()
 - [Redhat 32 bit]()
@@ -113,9 +113,9 @@ Installers
 Edge Releases (master)
 ======================
 
-Get latest code here on Github and build it: `./bin/build`
+Get latest code here on Github and build it: `./bin/build` *
 
-The binary will be in the `./out` directory.
+The binary will be in the `./out` * directory.
 
 You can follow our development progress on [Pivotal Tracker](https://www.pivotaltracker.com/n/projects/1071880).
 
@@ -149,16 +149,16 @@ Cloning the repository
 1. Clone (Forking beforehand for development).
 1. [Ensure your $GOPATH is set correctly](http://golang.org/cmd/go/#hdr-GOPATH_environment_variable)
 
-Building
-=======
+Building *
+==========
 
 1. Run `./bin/build`
 1. The binary will be built into the `./out` directory.
 
 Optionally, you can use `bin/run` to compile and run the executable in one step.
 
-Developing
-==========
+Developing *
+============
 
 1. Run `go get code.google.com/p/go.tools/cmd/vet`
 1. Write a Ginkgo test.
@@ -187,3 +187,5 @@ Current conventions
 ===================
 
 TODO
+
+(*) these items are in the works, we will remove the * once they are available
