@@ -64,7 +64,7 @@ func init() {
 
 	flag.StringVar(&options.FilenameFlag, "f", "", "the file name for which strings are extracted")
 	flag.StringVar(&options.DirnameFlag, "d", "", "the dir name for which all .go files will have their strings extracted")
-	flag.BoolVar(&options.RecurseFlag, "r", false, "recursesively extract strings from all files in the same directory as filename or dirName")
+	flag.BoolVar(&options.RecurseFlag, "r", false, "recursively extract strings from all files in the same directory as filename or dirName")
 
 	flag.StringVar(&options.IgnoreRegexp, "ignore-regexp", "", "a perl-style regular expression for files to ignore, e.g., \".*test.*\"")
 
@@ -74,25 +74,25 @@ func init() {
 func usage() {
 	usageString := `
 gi18n -extract-strings [-vpe] [-o <outputDir>] -f <fileName> | -d [-r] [-ignore-regexp <regex>] <dirName>
-        -h   	                prints the usage
+  -h                      prints the usage
 
-        -v                      verbose
-	-p                      to generate standard .po files for translation
+  -v                      verbose
+  -p                      to generate standard .po files for translation
 
-	-o                      the output directory where the translation files will be placed
-	-output-match-import    generated files are created in directory to match the import structure
-	-output-match-package   generated files are created in directory to match the package name
-	-output-flat            generated files are created in the specified output directory
+  -o                      the output directory where the translation files will be placed
+  -output-match-import    generated files are created in directory to match the import structure
+  -output-match-package   generated files are created in directory to match the package name
+  -output-flat            generated files are created in the specified output directory
 
-	-e                      the JSON file with strings to be excluded, defaults to excluded.json if present
+  -e                      the JSON file with strings to be excluded, defaults to excluded.json if present
 
-	-f                      the go file name to extract strings
+  -f                      the go file name to extract strings
 
-	-r                      recursesively extract strings from all subdirectories
-	-d                      the directory containing the go files to extract strings
+  -r                      recursesively extract strings from all subdirectories
+  -d                      the directory containing the go files to extract strings
 
-	-ignore-regexp          a perl-style regular expression for files to ignore, e.g., ".*test.*"
-	`
+  -ignore-regexp          a perl-style regular expression for files to ignore, e.g., ".*test.*"
+`
 	fmt.Println(usageString)
 }
 
