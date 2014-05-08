@@ -26,5 +26,6 @@ _testmain.go
 *.go.*.po
 
 tmp
+out
 
 .DS_Store
