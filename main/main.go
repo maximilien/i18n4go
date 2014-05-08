@@ -9,8 +9,8 @@ import (
 
 	"runtime/debug"
 
-	"github.com/maximilien/i18n4cf/gi18n/cmds/extract_strings"
-	common "github.com/maximilien/i18n4cf/gi18n/common"
+	"github.com/maximilien/i18n4cf/cmds/extract_strings"
+	common "github.com/maximilien/i18n4cf/common"
 )
 
 var options common.Options

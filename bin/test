@@ -12,20 +12,24 @@
   }
 
   trap printStatus EXIT
+  export GOPATH=$(godep path):$GOPATH
 
   echo -e "\n Cleaning build artifacts..."
   go clean
 
   echo -e "\n Formatting packages..."
-  go fmt ./gi18n/...
-
-  echo -e "\n Testing packages:"
-  go test ./gi18n/... -parallel 4 $@
-
-
-  echo -e "\n Vetting packages for potential issues..."
-  go tool vet gi18n/.
+  go fmt ./...
 
   echo -e "\n Running build script to confirm everything compiles..."
   bin/build
+
+  echo -e "\n Integration Testing packages:"
+  go test ./integration/... -parallel 4 $@
+
+  echo -e "\n Testing packages:"
+  #go test ./... -parallel 4 $@
+
+  echo -e "\n Vetting packages for potential issues..."
+  go tool vet .
+
 )

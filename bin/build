@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
+export GOPATH=$(godep path):$GOPATH
+
 echo -e "\nGenerating Binary..."
-go build -o $(dirname $0)/../out/gi18n ./gi18n/main/i18n.go
+go build -o $(dirname $0)/../out/gi18n ./main/main.go

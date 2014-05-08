@@ -15,7 +15,7 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
-	common "github.com/maximilien/i18n4cf/gi18n/common"
+	common "github.com/maximilien/i18n4cf/common"
 )
 
 type ExtractStrings struct {
