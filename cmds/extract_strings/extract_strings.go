@@ -79,6 +79,9 @@ func (es *ExtractStrings) Printf(msg string, a ...interface{}) (int, error) {
 
 func (es *ExtractStrings) InspectFile(filename string) error {
 	es.Println("gi18n: extracting strings from file:", filename)
+	if es.Options.DryRunFlag {
+		es.Println("WARNING running in -dry-run mode")
+	}
 
 	es.ExtractedStrings = make(map[string]common.StringInfo)
 	es.FilteredStrings = make(map[string]string)
@@ -308,14 +311,16 @@ func (es *ExtractStrings) saveExtractedStrings(outputDirname string) error {
 		return err
 	}
 
-	file, err := os.Create(filepath.Join(outputDirname, es.Filename[strings.LastIndex(es.Filename, string(os.PathSeparator))+1:len(es.Filename)]))
-	defer file.Close()
-	if err != nil {
-		es.Println(err)
-		return err
-	}
+	if !es.Options.DryRunFlag {
+		file, err := os.Create(filepath.Join(outputDirname, es.Filename[strings.LastIndex(es.Filename, string(os.PathSeparator))+1:len(es.Filename)]))
+		defer file.Close()
+		if err != nil {
+			es.Println(err)
+			return err
+		}
 
-	file.Write(jsonData)
+		file.Write(jsonData)
+	}
 
 	return nil
 }
@@ -337,40 +342,42 @@ func (es *ExtractStrings) saveI18nStrings(outputDirname string) error {
 		return err
 	}
 
-	file, err := os.Create(filepath.Join(outputDirname, es.I18nFilename[strings.LastIndex(es.I18nFilename, string(os.PathSeparator))+1:len(es.I18nFilename)]))
-	if err != nil {
-		es.Println(err)
-		return err
-	}
+	if !es.Options.DryRunFlag {
+		file, err := os.Create(filepath.Join(outputDirname, es.I18nFilename[strings.LastIndex(es.I18nFilename, string(os.PathSeparator))+1:len(es.I18nFilename)]))
+		defer file.Close()
+		if err != nil {
+			es.Println(err)
+			return err
+		}
 
-	file.Write(jsonData)
-	defer file.Close()
+		file.Write(jsonData)
+	}
 
 	return nil
 }
 
 func (es *ExtractStrings) saveI18nStringsInPo(outputDirname string) error {
 	es.Println("Creating and saving i18n strings to .po file:", es.PoFilename)
-	es.createOutputDirsIfNeeded(outputDirname)
 
-	file, err := os.Create(filepath.Join(outputDirname, es.PoFilename[strings.LastIndex(es.PoFilename, string(os.PathSeparator))+1:len(es.PoFilename)]))
-	if err != nil {
-		es.Println(err)
-		return err
+	if !es.Options.DryRunFlag {
+		es.createOutputDirsIfNeeded(outputDirname)
+		file, err := os.Create(filepath.Join(outputDirname, es.PoFilename[strings.LastIndex(es.PoFilename, string(os.PathSeparator))+1:len(es.PoFilename)]))
+		defer file.Close()
+		if err != nil {
+			es.Println(err)
+			return err
+		}
+
+		for _, stringInfo := range es.ExtractedStrings {
+			file.Write([]byte("# filename: " + stringInfo.Filename +
+				", offset: " + strconv.Itoa(stringInfo.Offset) +
+				", line: " + strconv.Itoa(stringInfo.Line) +
+				", column: " + strconv.Itoa(stringInfo.Column) + "\n"))
+			file.Write([]byte("msgid " + strconv.Quote(stringInfo.Value) + "\n"))
+			file.Write([]byte("msgstr " + strconv.Quote(stringInfo.Value) + "\n"))
+			file.Write([]byte("\n"))
+		}
 	}
-
-	for _, stringInfo := range es.ExtractedStrings {
-		file.Write([]byte("# filename: " + stringInfo.Filename +
-			", offset: " + strconv.Itoa(stringInfo.Offset) +
-			", line: " + strconv.Itoa(stringInfo.Line) +
-			", column: " + strconv.Itoa(stringInfo.Column) + "\n"))
-		file.Write([]byte("msgid " + strconv.Quote(stringInfo.Value) + "\n"))
-		file.Write([]byte("msgstr " + strconv.Quote(stringInfo.Value) + "\n"))
-		file.Write([]byte("\n"))
-	}
-
-	defer file.Close()
-
 	return nil
 }
 

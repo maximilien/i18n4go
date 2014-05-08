@@ -4,6 +4,7 @@ type Options struct {
 	HelpFlag              bool
 	ExtractStringsCmdFlag bool
 	VerboseFlag           bool
+	DryRunFlag            bool
 	PoFlag                bool
 
 	OutputDirFlag          string

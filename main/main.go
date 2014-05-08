@@ -54,6 +54,7 @@ func init() {
 
 	flag.BoolVar(&options.VerboseFlag, "v", false, "verbose mode where lots of output is generated during execution")
 	flag.BoolVar(&options.PoFlag, "p", true, "generate standard .po file for translation")
+	flag.BoolVar(&options.DryRunFlag, "dry-run", false, "prevents any output files from being created")
 
 	flag.StringVar(&options.ExcludedFilenameFlag, "e", "excluded.json", "the excluded JSON file name, all strings there will be excluded")
 
@@ -77,6 +78,7 @@ gi18n -extract-strings [-vpe] [-o <outputDir>] -f <fileName> | -d [-r] [-ignore-
   -h                      prints the usage
 
   -v                      verbose
+  -dry-run                prevents any output files from being created
   -p                      to generate standard .po files for translation
 
   -o                      the output directory where the translation files will be placed
