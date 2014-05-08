@@ -42,7 +42,7 @@ func NewExtractStrings(options common.Options) ExtractStrings {
 	if options.IgnoreRegexp != "" {
 		compiledReg, err := regexp.Compile(options.IgnoreRegexp)
 		if err != nil {
-			fmt.Errorf("WARNING compiling ignore-regexp:", err)
+			fmt.Println("WARNING compiling ignore-regexp:", err)
 		}
 		compiledRegexp = compiledReg
 	}
@@ -225,7 +225,7 @@ func getFileName(filePath string) (os.FileInfo, error) {
 	file, err := os.OpenFile(filePath, os.O_RDONLY, 0)
 	defer file.Close()
 	if err != nil {
-		fmt.Errorf("ERROR opening file", err)
+		fmt.Println("ERROR opening file", err)
 		return nil, err
 	}
 
@@ -238,7 +238,7 @@ func (es *ExtractStrings) createOutputDirsIfNeeded(outputDirname string) error {
 		es.Println("Creating output directory:", outputDirname)
 		err = os.MkdirAll(outputDirname, 0777)
 		if err != nil {
-			fmt.Errorf("ERROR opening output directory", err)
+			fmt.Println("ERROR opening output directory", err)
 			return err
 		}
 	}
@@ -249,7 +249,7 @@ func (es *ExtractStrings) findFilePath(filename string) (string, error) {
 	path := es.OutputDirname
 	fileInfo, err := os.Stat(filename)
 	if err != nil {
-		fmt.Errorf("ERROR opening file", err)
+		fmt.Println("ERROR opening file", err)
 		return "", err
 	}
 	path = filename[0 : len(filename)-len(fileInfo.Name())]
@@ -260,7 +260,7 @@ func (es *ExtractStrings) findImportPath(filename string) (string, error) {
 	path := es.OutputDirname
 	filePath, err := es.findFilePath(filename)
 	if err != nil {
-		fmt.Errorf("ERROR opening file", err)
+		fmt.Println("ERROR opening file", err)
 		return "", err
 	}
 
@@ -277,13 +277,13 @@ func (es *ExtractStrings) findPackagePath(filename string) (string, error) {
 
 	filePath, err := es.findFilePath(filename)
 	if err != nil {
-		fmt.Errorf("ERROR opening file", err)
+		fmt.Println("ERROR opening file", err)
 		return "", err
 	}
 
 	pkg, err := build.ImportDir(filePath, 0)
 	if err != nil {
-		fmt.Errorf("ERROR opening file", err)
+		fmt.Println("ERROR opening file", err)
 		return "", err
 	}
 
@@ -425,7 +425,7 @@ func (es *ExtractStrings) loadExcludedRegexps() error {
 	for _, regexpString := range excludedRegexps.ExcludedRegexps {
 		compiledRegexp, err := regexp.Compile(regexpString)
 		if err != nil {
-			fmt.Errorf("WARNING error compiling regexp:", regexpString)
+			fmt.Println("WARNING error compiling regexp:", regexpString)
 		}
 
 		es.FilteredRegexps = append(es.FilteredRegexps, compiledRegexp)
