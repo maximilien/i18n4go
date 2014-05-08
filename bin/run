@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -e
+
+$(dirname $0)/build
+go run -race $(dirname $0)/../gi18n/main/i18n.go "$@"

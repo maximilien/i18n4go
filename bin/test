@@ -1,0 +1,31 @@
+#!/bin/bash
+
+(
+  set -e
+
+  function printStatus {
+      if [ $? -eq 0 ]; then
+          echo -e "\nSWEET SUITE SUCCESS"
+      else
+          echo -e "\nSUITE FAILURE"
+      fi
+  }
+
+  trap printStatus EXIT
+
+  echo -e "\n Cleaning build artifacts..."
+  go clean
+
+  echo -e "\n Formatting packages..."
+  go fmt ./gi18n/...
+
+  echo -e "\n Testing packages:"
+  go test ./gi18n/... -parallel 4 $@
+
+
+  echo -e "\n Vetting packages for potential issues..."
+  go tool vet gi18n/.
+
+  echo -e "\n Running build script to confirm everything compiles..."
+  bin/build
+)
