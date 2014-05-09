@@ -28,6 +28,9 @@ _testmain.go
 *.go.*.json
 *.go.*.po
 
+!**/expected_output/**/*.go.*.json
+!**/expected_output/**/*.go.*.po
+
 tmp
 out
 
