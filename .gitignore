@@ -3,6 +3,9 @@
 *.a
 *.so
 
+# Vim swap files
+*.swp
+
 # Folders
 _obj
 _test
