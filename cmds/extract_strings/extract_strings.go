@@ -93,17 +93,22 @@ func (es *ExtractStrings) InspectFile(filename string) error {
 
 	fset := token.NewFileSet()
 
-	fileInfo, err := getFileName(filename)
+	var absFilePath = filename
+	if !filepath.IsAbs(absFilePath) {
+		absFilePath = filepath.Join(os.Getenv("PWD"), absFilePath)
+	}
+
+	fileInfo, err := getFileName(absFilePath)
 	if err != nil {
 		es.Println(err)
 	}
 
 	if strings.HasPrefix(fileInfo.Name(), ".") {
-		es.Println("WARNING ignoring file:", filename)
+		es.Println("WARNING ignoring file:", absFilePath)
 		return nil
 	}
 
-	astFile, err := parser.ParseFile(fset, filename, nil, parser.ParseComments|parser.AllErrors)
+	astFile, err := parser.ParseFile(fset, absFilePath, nil, parser.ParseComments|parser.AllErrors)
 	if err != nil {
 		es.Println(err)
 		return err
@@ -130,25 +135,25 @@ func (es *ExtractStrings) InspectFile(filename string) error {
 	es.TotalStrings += len(es.ExtractedStrings)
 	es.TotalFiles += 1
 
-	es.Printf("Extracted %d strings from file: %s\n", len(es.ExtractedStrings), filename)
+	es.Printf("Extracted %d strings from file: %s\n", len(es.ExtractedStrings), absFilePath)
 
 	var outputDirname = es.OutputDirname
 	if es.Options.OutputDirFlag != "" {
 		if es.Options.OutputMatchImportFlag {
-			outputDirname, err = es.findImportPath(filename)
+			outputDirname, err = es.findImportPath(absFilePath)
 			if err != nil {
 				es.Println(err)
 				return err
 			}
 		} else if es.Options.OutputMatchPackageFlag {
-			outputDirname, err = es.findPackagePath(filename)
+			outputDirname, err = es.findPackagePath(absFilePath)
 			if err != nil {
 				es.Println(err)
 				return err
 			}
 		}
 	} else {
-		outputDirname, err = es.findFilePath(filename)
+		outputDirname, err = es.findFilePath(absFilePath)
 		if err != nil {
 			es.Println(err)
 			return err
@@ -227,7 +232,12 @@ func (es *ExtractStrings) InspectDir(dirName string, recursive bool) error {
 }
 
 func getFileName(filePath string) (os.FileInfo, error) {
-	file, err := os.OpenFile(filePath, os.O_RDONLY, 0)
+	var absFilePath = filePath
+	if !filepath.IsAbs(absFilePath) {
+		absFilePath = filepath.Join(os.Getenv("PWD"), absFilePath)
+	}
+
+	file, err := os.OpenFile(absFilePath, os.O_RDONLY, 0)
 	defer file.Close()
 	if err != nil {
 		fmt.Println("ERROR opening file", err)
@@ -394,6 +404,12 @@ func (es *ExtractStrings) setPoFilename(filename string) {
 }
 
 func (es *ExtractStrings) loadExcludedStrings() error {
+	_, err := os.Stat(es.Options.ExcludedFilenameFlag)
+	if os.IsNotExist(err) {
+		es.Println("Could not find:", es.Options.ExcludedFilenameFlag)
+		return nil
+	}
+
 	es.Println("Excluding strings in file:", es.Options.ExcludedFilenameFlag)
 
 	content, err := ioutil.ReadFile(es.Options.ExcludedFilenameFlag)
@@ -417,6 +433,12 @@ func (es *ExtractStrings) loadExcludedStrings() error {
 }
 
 func (es *ExtractStrings) loadExcludedRegexps() error {
+	_, err := os.Stat(es.Options.ExcludedFilenameFlag)
+	if os.IsNotExist(err) {
+		es.Println("Could not find:", es.Options.ExcludedFilenameFlag)
+		return nil
+	}
+
 	es.Println("Excluding regexps in file:", es.Options.ExcludedFilenameFlag)
 
 	content, err := ioutil.ReadFile(es.Options.ExcludedFilenameFlag)
