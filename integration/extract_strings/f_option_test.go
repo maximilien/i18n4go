@@ -1,13 +1,16 @@
 package extract_strings_test
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"reflect"
+	"strings"
 
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -35,17 +38,42 @@ var _ = Describe("extract-strings -f fileName", func() {
 		)
 	})
 
-	It("should output three files: app.en.json, app.en.extracted.json, and app.en.po", func() {
-		session := Runi18n("-extract-strings", "-v", "-f", filepath.Join(INPUT_FILES_PATH, "app.go"))
+	Context("compare generated and expected file", func() {
+		BeforeEach(func() {
+			session := Runi18n("-extract-strings", "-v", "-f", filepath.Join(INPUT_FILES_PATH, "app.go"))
+			Ω(session.ExitCode()).Should(Equal(0))
+		})
 
-		Ω(session.ExitCode()).Should(Equal(0))
+		It("app.en.json", func() {
+			compareExpectedToGeneratedJson(
+				getFilePath(EXPECTED_FILES_PATH, "app.go.en.json"),
+				getFilePath(INPUT_FILES_PATH, "app.go.en.json"),
+			)
+		})
 
-		expectedTranslation := ReadJson(getFilePath(EXPECTED_FILES_PATH, "app.go.en.json"))
-		generatedTranslation := ReadJson(getFilePath(INPUT_FILES_PATH, "app.go.en.json"))
+		It("app.en.po", func() {
+			compareExpectedToGeneratedPo(
+				getFilePath(EXPECTED_FILES_PATH, "app.go.en.po"),
+				getFilePath(INPUT_FILES_PATH, "app.go.en.po"),
+			)
+		})
 
-		Ω(reflect.DeepEqual(expectedTranslation, generatedTranslation)).Should(BeTrue())
 	})
 })
+
+func compareExpectedToGeneratedPo(expectedFilePath string, generatedFilePath string) {
+	expectedTranslation := ReadPo(expectedFilePath)
+	generatedTranslation := ReadPo(generatedFilePath)
+
+	Ω(reflect.DeepEqual(expectedTranslation, generatedTranslation)).Should(BeTrue())
+}
+
+func compareExpectedToGeneratedJson(expectedFilePath string, generatedFilePath string) {
+	expectedTranslation := ReadJson(expectedFilePath)
+	generatedTranslation := ReadJson(generatedFilePath)
+
+	Ω(reflect.DeepEqual(expectedTranslation, generatedTranslation)).Should(BeTrue())
+}
 
 func getFilePath(input_dir string, fileName string) string {
 	return filepath.Join(os.Getenv("PWD"), input_dir, fileName)
@@ -68,6 +96,30 @@ func RunCommand(cmd string, args ...string) *Session {
 	Ω(err).ShouldNot(HaveOccurred())
 	session.Wait()
 	return session
+}
+
+func ReadPo(fileName string) map[string]string {
+	file, _ := os.Open(fileName)
+	r := bufio.NewReader(file)
+
+	myMap := make(map[string]string)
+	for rawLine, _, err := r.ReadLine(); err != io.EOF; rawLine, _, err = r.ReadLine() {
+		if err != nil {
+			Fail(fmt.Sprintf("Error: %v", err))
+		}
+
+		line := string(rawLine)
+		if strings.HasPrefix(line, "msgid") {
+			rawLine, _, err = r.ReadLine()
+			if err != nil {
+				Fail(fmt.Sprintf("Error: %v", err))
+			}
+
+			myMap[line] = string(rawLine)
+		}
+	}
+
+	return myMap
 }
 
 func ReadJson(fileName string) map[string]string {
