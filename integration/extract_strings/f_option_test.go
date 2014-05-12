@@ -14,18 +14,18 @@ var _ = Describe("extract-strings -f fileName", func() {
 		EXPECTED_FILES_PATH = filepath.Join("f_option", "expected_output")
 	)
 
-	AfterEach(func() {
-		RemoveAllFiles(
-			GetFilePath(INPUT_FILES_PATH, "app.go.en.json"),
-			GetFilePath(INPUT_FILES_PATH, "app.go.en.po"),
-			GetFilePath(INPUT_FILES_PATH, "app.go.extracted.json"),
-		)
-	})
-
 	Context("compare generated and expected file", func() {
 		BeforeEach(func() {
 			session := Runi18n("-extract-strings", "-v", "-f", filepath.Join(INPUT_FILES_PATH, "app.go"))
 			Ω(session.ExitCode()).Should(Equal(0))
+		})
+
+		AfterEach(func() {
+			RemoveAllFiles(
+				GetFilePath(INPUT_FILES_PATH, "app.go.en.json"),
+				GetFilePath(INPUT_FILES_PATH, "app.go.en.po"),
+				GetFilePath(INPUT_FILES_PATH, "app.go.extracted.json"),
+			)
 		})
 
 		It("app.go.en.json", func() {
