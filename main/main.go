@@ -81,10 +81,14 @@ gi18n -extract-strings [-vpe] [-o <outputDir>] -f <fileName> | -d [-r] [-ignore-
   -dry-run                prevents any output files from being created
   -p                      to generate standard .po files for translation
 
+  EXTRACT-STRINGS:
+
+  -extract-strings        the extract strings command flag
+
   -o                      the output directory where the translation files will be placed
+  -output-flat            generated files are created in the specified output directory (default)
   -output-match-import    generated files are created in directory to match the import structure
   -output-match-package   generated files are created in directory to match the package name
-  -output-flat            generated files are created in the specified output directory
 
   -e                      the JSON file with strings to be excluded, defaults to excluded.json if present
 
