@@ -315,6 +315,8 @@ func (es *ExtractStrings) saveExtractedStrings(outputDirname string) error {
 
 	stringInfos := make([]common.StringInfo, 0)
 	for _, stringInfo := range es.ExtractedStrings {
+		stringInfo.Filename = strings.Split(es.Filename, ".extracted.json")[0]
+
 		stringInfos = append(stringInfos, stringInfo)
 	}
 
@@ -387,7 +389,7 @@ func (es *ExtractStrings) saveI18nStringsInPo(outputDirname string) error {
 		}
 
 		for _, stringInfo := range es.ExtractedStrings {
-			file.Write([]byte("# filename: " + stringInfo.Filename +
+			file.Write([]byte("# filename: " + strings.Split(es.PoFilename, ".en.po")[0] +
 				", offset: " + strconv.Itoa(stringInfo.Offset) +
 				", line: " + strconv.Itoa(stringInfo.Line) +
 				", column: " + strconv.Itoa(stringInfo.Column) + "\n"))
