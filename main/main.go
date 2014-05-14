@@ -59,9 +59,11 @@ func init() {
 	flag.StringVar(&options.ExcludedFilenameFlag, "e", "excluded.json", "the excluded JSON file name, all strings there will be excluded")
 
 	flag.StringVar(&options.OutputDirFlag, "o", "", "output directory where the translation files will be placed")
-	flag.BoolVar(&options.OutputMatchImportFlag, "output-match-import", false, "generated files are created in directory to match the import structure")
-	flag.BoolVar(&options.OutputMatchPackageFlag, "output-match-package", false, "generated files are created in directory to match the package name")
 	flag.BoolVar(&options.OutputFlatFlag, "output-flat", true, "generated files are created in the specified output directory")
+	flag.BoolVar(&options.OutputMatchPackageFlag, "output-match-package", false, "generated files are created in directory to match the package name")
+	//TODO: disabled until we find we do not need and then remove
+	//  -output-match-import    generated files are created in directory to match the import structure
+	//flag.BoolVar(&options.OutputMatchImportFlag, "output-match-import", false, "generated files are created in directory to match the import structure")
 
 	flag.StringVar(&options.FilenameFlag, "f", "", "the file name for which strings are extracted")
 	flag.StringVar(&options.DirnameFlag, "d", "", "the dir name for which all .go files will have their strings extracted")
@@ -87,7 +89,6 @@ gi18n -extract-strings [-vpe] [-o <outputDir>] -f <fileName> | -d [-r] [-ignore-
 
   -o                      the output directory where the translation files will be placed
   -output-flat            generated files are created in the specified output directory (default)
-  -output-match-import    generated files are created in directory to match the import structure
   -output-match-package   generated files are created in directory to match the package name
 
   -e                      the JSON file with strings to be excluded, defaults to excluded.json if present
