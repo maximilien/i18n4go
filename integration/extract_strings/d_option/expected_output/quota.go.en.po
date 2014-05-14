@@ -2,6 +2,22 @@
 msgid "quota"
 msgstr "quota"
 
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quota.go, offset: 797, line: 31, column: 16
+msgid "CF_NAME quota QUOTA"
+msgstr "CF_NAME quota QUOTA"
+
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quota.go, offset: 1263, line: 48, column: 13
+msgid "Getting quota %s info as %s..."
+msgstr "Getting quota %s info as %s..."
+
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quota.go, offset: 1521, line: 58, column: 21
+msgid "Memory"
+msgstr "Memory"
+
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quota.go, offset: 1756, line: 61, column: 21
+msgid "Paid service plans"
+msgstr "Paid service plans"
+
 # filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quota.go, offset: 835, line: 32, column: 16
 msgid "Show quota info"
 msgstr "Show quota info"
@@ -17,22 +33,6 @@ msgstr "Routes"
 # filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quota.go, offset: 1707, line: 60, column: 45
 msgid "%d"
 msgstr "%d"
-
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quota.go, offset: 1756, line: 61, column: 21
-msgid "Paid service plans"
-msgstr "Paid service plans"
-
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quota.go, offset: 797, line: 31, column: 16
-msgid "CF_NAME quota QUOTA"
-msgstr "CF_NAME quota QUOTA"
-
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quota.go, offset: 1263, line: 48, column: 13
-msgid "Getting quota %s info as %s..."
-msgstr "Getting quota %s info as %s..."
-
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quota.go, offset: 1521, line: 58, column: 21
-msgid "Memory"
-msgstr "Memory"
 
 # filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quota.go, offset: 1683, line: 60, column: 21
 msgid "Services"

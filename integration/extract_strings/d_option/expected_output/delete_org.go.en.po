@@ -1,0 +1,36 @@
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/delete_org.go, offset: 907, line: 32, column: 16
+msgid "Delete an org"
+msgstr "Delete an org"
+
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/delete_org.go, offset: 939, line: 33, column: 16
+msgid "CF_NAME delete-org ORG [-f]"
+msgstr "CF_NAME delete-org ORG [-f]"
+
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/delete_org.go, offset: 1025, line: 35, column: 35
+msgid "Force deletion without confirmation"
+msgstr "Force deletion without confirmation"
+
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/delete_org.go, offset: 1263, line: 42, column: 20
+msgid "Incorrect Usage"
+msgstr "Incorrect Usage"
+
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/delete_org.go, offset: 1541, line: 55, column: 44
+msgid "org"
+msgstr "org"
+
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/delete_org.go, offset: 1855, line: 71, column: 15
+msgid "Org %s does not exist."
+msgstr "Org %s does not exist."
+
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/delete_org.go, offset: 878, line: 31, column: 16
+msgid "delete-org"
+msgstr "delete-org"
+
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/delete_org.go, offset: 1491, line: 54, column: 13
+msgid "f"
+msgstr "f"
+
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/delete_org.go, offset: 1589, line: 60, column: 13
+msgid "Deleting org %s as %s..."
+msgstr "Deleting org %s as %s..."
+

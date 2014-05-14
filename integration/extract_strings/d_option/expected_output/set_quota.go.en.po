@@ -1,0 +1,28 @@
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/set_quota.go, offset: 793, line: 30, column: 16
+msgid "set-quota"
+msgstr "set-quota"
+
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/set_quota.go, offset: 821, line: 31, column: 16
+msgid "Assign a quota to an org"
+msgstr "Assign a quota to an org"
+
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/set_quota.go, offset: 858, line: 32, column: 10
+msgid "CF_NAME set-quota ORG QUOTA\n\n"
+msgstr "CF_NAME set-quota ORG QUOTA\n\n"
+
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/set_quota.go, offset: 897, line: 33, column: 4
+msgid "TIP:\n"
+msgstr "TIP:\n"
+
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/set_quota.go, offset: 911, line: 34, column: 4
+msgid "   View allowable quotas with 'CF_NAME quotas'"
+msgstr "   View allowable quotas with 'CF_NAME quotas'"
+
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/set_quota.go, offset: 1153, line: 40, column: 20
+msgid "Incorrect Usage"
+msgstr "Incorrect Usage"
+
+# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/set_quota.go, offset: 1633, line: 64, column: 13
+msgid "Setting quota %s to org %s as %s..."
+msgstr "Setting quota %s to org %s as %s..."
+
