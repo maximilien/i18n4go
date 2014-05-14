@@ -307,7 +307,10 @@ func (es *ExtractStrings) findPackagePath(filename string) (string, error) {
 }
 
 func (es *ExtractStrings) saveExtractedStrings(outputDirname string) error {
-	es.Println("Saving extracted strings to file:", es.Filename)
+	if len(es.ExtractedStrings) != 0 {
+		es.Println("Saving extracted strings to file:", es.Filename)
+	}
+
 	es.createOutputDirsIfNeeded(outputDirname)
 
 	stringInfos := make([]common.StringInfo, 0)
@@ -321,7 +324,7 @@ func (es *ExtractStrings) saveExtractedStrings(outputDirname string) error {
 		return err
 	}
 
-	if !es.Options.DryRunFlag {
+	if !es.Options.DryRunFlag && len(stringInfos) != 0 {
 		file, err := os.Create(filepath.Join(outputDirname, es.Filename[strings.LastIndex(es.Filename, string(os.PathSeparator))+1:len(es.Filename)]))
 		defer file.Close()
 		if err != nil {
@@ -336,7 +339,10 @@ func (es *ExtractStrings) saveExtractedStrings(outputDirname string) error {
 }
 
 func (es *ExtractStrings) saveI18nStrings(outputDirname string) error {
-	es.Println("Saving extracted i18n strings to file:", es.I18nFilename)
+	if len(es.ExtractedStrings) != 0 {
+		es.Println("Saving extracted i18n strings to file:", es.I18nFilename)
+	}
+
 	es.createOutputDirsIfNeeded(outputDirname)
 
 	i18nStringInfos := make([]common.I18nStringInfo, len(es.ExtractedStrings))
@@ -352,7 +358,7 @@ func (es *ExtractStrings) saveI18nStrings(outputDirname string) error {
 		return err
 	}
 
-	if !es.Options.DryRunFlag {
+	if !es.Options.DryRunFlag && len(i18nStringInfos) != 0 {
 		file, err := os.Create(filepath.Join(outputDirname, es.I18nFilename[strings.LastIndex(es.I18nFilename, string(os.PathSeparator))+1:len(es.I18nFilename)]))
 		defer file.Close()
 		if err != nil {
@@ -367,9 +373,11 @@ func (es *ExtractStrings) saveI18nStrings(outputDirname string) error {
 }
 
 func (es *ExtractStrings) saveI18nStringsInPo(outputDirname string) error {
-	es.Println("Creating and saving i18n strings to .po file:", es.PoFilename)
+	if len(es.ExtractedStrings) != 0 {
+		es.Println("Creating and saving i18n strings to .po file:", es.PoFilename)
+	}
 
-	if !es.Options.DryRunFlag {
+	if !es.Options.DryRunFlag && len(es.ExtractedStrings) != 0 {
 		es.createOutputDirsIfNeeded(outputDirname)
 		file, err := os.Create(filepath.Join(outputDirname, es.PoFilename[strings.LastIndex(es.PoFilename, string(os.PathSeparator))+1:len(es.PoFilename)]))
 		defer file.Close()

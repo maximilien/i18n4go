@@ -1,6 +1,7 @@
 package extract_strings_test
 
 import (
+	"io/ioutil"
 	"path/filepath"
 
 	. "github.com/maximilien/i18n4cf/integration/test_helpers"
@@ -48,6 +49,30 @@ var _ = Describe("extract-strings -f fileName", func() {
 				GetFilePath(INPUT_FILES_PATH, "app.go.en.po"),
 			)
 		})
+	})
 
+	Context("when the file specified has no strings at all", func() {
+		var (
+			OUTPUT_PATH string
+		)
+
+		BeforeEach(func() {
+			var err error
+			OUTPUT_PATH, err = ioutil.TempDir("", "gi18n4cf")
+			Ω(err).ShouldNot(HaveOccurred())
+
+			session := Runi18n("-extract-strings", "-f", filepath.Join(INPUT_FILES_PATH, "no_strings.go"), "-o", OUTPUT_PATH)
+			Ω(session.ExitCode()).Should(Equal(0))
+		})
+
+		//    AfterEach(func() { os.RemoveAll(OUTPUT_PATH) })
+
+		It("does not generate any files", func() {
+			println(OUTPUT_PATH)
+			files, err := ioutil.ReadDir(OUTPUT_PATH)
+			Ω(err).ShouldNot(HaveOccurred())
+
+			Ω(files).Should(BeEmpty())
+		})
 	})
 })
