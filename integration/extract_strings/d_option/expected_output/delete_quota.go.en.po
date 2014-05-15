@@ -1,36 +1,36 @@
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/delete_quota.go, offset: 863, line: 31, column: 16
+# filename: d_option/input_files/quota/delete_quota.go, offset: 863, line: 31, column: 16
 msgid "Delete a quota"
 msgstr "Delete a quota"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/delete_quota.go, offset: 896, line: 32, column: 16
+# filename: d_option/input_files/quota/delete_quota.go, offset: 896, line: 32, column: 16
 msgid "CF_NAME delete-quota QUOTA [-f]"
 msgstr "CF_NAME delete-quota QUOTA [-f]"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/delete_quota.go, offset: 1226, line: 41, column: 20
+# filename: d_option/input_files/quota/delete_quota.go, offset: 1226, line: 41, column: 20
 msgid "Incorrect Usage"
 msgstr "Incorrect Usage"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/delete_quota.go, offset: 1589, line: 62, column: 13
+# filename: d_option/input_files/quota/delete_quota.go, offset: 1589, line: 62, column: 13
 msgid "Deleting quota %s as %s..."
 msgstr "Deleting quota %s as %s..."
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/delete_quota.go, offset: 1271, line: 42, column: 27
+# filename: d_option/input_files/quota/delete_quota.go, offset: 1271, line: 42, column: 27
 msgid "delete-quota"
 msgstr "delete-quota"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/delete_quota.go, offset: 1480, line: 55, column: 13
+# filename: d_option/input_files/quota/delete_quota.go, offset: 1480, line: 55, column: 13
 msgid "f"
 msgstr "f"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/delete_quota.go, offset: 986, line: 34, column: 35
+# filename: d_option/input_files/quota/delete_quota.go, offset: 986, line: 34, column: 35
 msgid "Force deletion without confirmation"
 msgstr "Force deletion without confirmation"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/delete_quota.go, offset: 1522, line: 56, column: 36
+# filename: d_option/input_files/quota/delete_quota.go, offset: 1522, line: 56, column: 36
 msgid "quota"
 msgstr "quota"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/delete_quota.go, offset: 1879, line: 73, column: 15
+# filename: d_option/input_files/quota/delete_quota.go, offset: 1879, line: 73, column: 15
 msgid "Quota %s does not exist"
 msgstr "Quota %s does not exist"
 

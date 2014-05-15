@@ -1,36 +1,36 @@
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/create_org.go, offset: 793, line: 29, column: 16
+# filename: d_option/input_files/org/create_org.go, offset: 793, line: 29, column: 16
 msgid "create-org"
 msgstr "create-org"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/create_org.go, offset: 822, line: 30, column: 16
+# filename: d_option/input_files/org/create_org.go, offset: 822, line: 30, column: 16
 msgid "co"
 msgstr "co"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/create_org.go, offset: 1093, line: 38, column: 20
+# filename: d_option/input_files/org/create_org.go, offset: 1093, line: 38, column: 20
 msgid "Incorrect Usage"
 msgstr "Incorrect Usage"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/create_org.go, offset: 1323, line: 52, column: 13
+# filename: d_option/input_files/org/create_org.go, offset: 1323, line: 52, column: 13
 msgid "Creating org %s as %s..."
 msgstr "Creating org %s as %s..."
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/create_org.go, offset: 1610, line: 60, column: 16
+# filename: d_option/input_files/org/create_org.go, offset: 1610, line: 60, column: 16
 msgid "Org %s already exists"
 msgstr "Org %s already exists"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/create_org.go, offset: 1725, line: 68, column: 13
+# filename: d_option/input_files/org/create_org.go, offset: 1725, line: 68, column: 13
 msgid "\nTIP: Use '%s' to target new org"
 msgstr "\nTIP: Use '%s' to target new org"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/create_org.go, offset: 843, line: 31, column: 16
+# filename: d_option/input_files/org/create_org.go, offset: 843, line: 31, column: 16
 msgid "Create an org"
 msgstr "Create an org"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/create_org.go, offset: 875, line: 32, column: 16
+# filename: d_option/input_files/org/create_org.go, offset: 875, line: 32, column: 16
 msgid "CF_NAME create-org ORG"
 msgstr "CF_NAME create-org ORG"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/create_org.go, offset: 1794, line: 68, column: 82
+# filename: d_option/input_files/org/create_org.go, offset: 1794, line: 68, column: 82
 msgid " target -o "
 msgstr " target -o "
 

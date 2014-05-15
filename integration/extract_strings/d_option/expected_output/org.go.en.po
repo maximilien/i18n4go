@@ -1,40 +1,40 @@
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/org.go, offset: 715, line: 30, column: 16
+# filename: d_option/input_files/org/org.go, offset: 715, line: 30, column: 16
 msgid "org"
 msgstr "org"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/org.go, offset: 737, line: 31, column: 16
+# filename: d_option/input_files/org/org.go, offset: 737, line: 31, column: 16
 msgid "Show org info"
 msgstr "Show org info"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/org.go, offset: 769, line: 32, column: 16
+# filename: d_option/input_files/org/org.go, offset: 769, line: 32, column: 16
 msgid "CF_NAME org ORG"
 msgstr "CF_NAME org ORG"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/org.go, offset: 979, line: 38, column: 20
+# filename: d_option/input_files/org/org.go, offset: 979, line: 38, column: 20
 msgid "Incorrect Usage"
 msgstr "Incorrect Usage"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/org.go, offset: 1312, line: 54, column: 13
+# filename: d_option/input_files/org/org.go, offset: 1312, line: 54, column: 13
 msgid "Getting info for org %s as %s..."
 msgstr "Getting info for org %s as %s..."
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/org.go, offset: 1465, line: 59, column: 13
+# filename: d_option/input_files/org/org.go, offset: 1465, line: 59, column: 13
 msgid "\n%s:"
 msgstr "\n%s:"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/org.go, offset: 1772, line: 72, column: 26
+# filename: d_option/input_files/org/org.go, offset: 1772, line: 72, column: 26
 msgid "%s (%dM memory limit, %d routes, %d services, paid services %s)"
 msgstr "%s (%dM memory limit, %d routes, %d services, paid services %s)"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/org.go, offset: 1976, line: 75, column: 13
+# filename: d_option/input_files/org/org.go, offset: 1976, line: 75, column: 13
 msgid "  domains: %s"
 msgstr "  domains: %s"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/org.go, offset: 2060, line: 76, column: 13
+# filename: d_option/input_files/org/org.go, offset: 2060, line: 76, column: 13
 msgid "  quota:   %s"
 msgstr "  quota:   %s"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/org.go, offset: 2125, line: 77, column: 13
+# filename: d_option/input_files/org/org.go, offset: 2125, line: 77, column: 13
 msgid "  spaces:  %s"
 msgstr "  spaces:  %s"
 

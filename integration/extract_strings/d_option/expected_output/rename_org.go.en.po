@@ -1,20 +1,20 @@
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/rename_org.go, offset: 806, line: 30, column: 16
+# filename: d_option/input_files/org/rename_org.go, offset: 806, line: 30, column: 16
 msgid "rename-org"
 msgstr "rename-org"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/rename_org.go, offset: 835, line: 31, column: 16
+# filename: d_option/input_files/org/rename_org.go, offset: 835, line: 31, column: 16
 msgid "Rename an org"
 msgstr "Rename an org"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/rename_org.go, offset: 867, line: 32, column: 16
+# filename: d_option/input_files/org/rename_org.go, offset: 867, line: 32, column: 16
 msgid "CF_NAME rename-org ORG NEW_ORG"
 msgstr "CF_NAME rename-org ORG NEW_ORG"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/rename_org.go, offset: 1094, line: 38, column: 20
+# filename: d_option/input_files/org/rename_org.go, offset: 1094, line: 38, column: 20
 msgid "Incorrect Usage"
 msgstr "Incorrect Usage"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/rename_org.go, offset: 1452, line: 54, column: 13
+# filename: d_option/input_files/org/rename_org.go, offset: 1452, line: 54, column: 13
 msgid "Renaming org %s to %s as %s..."
 msgstr "Renaming org %s to %s as %s..."
 

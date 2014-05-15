@@ -1,40 +1,40 @@
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quotas.go, offset: 815, line: 31, column: 16
+# filename: d_option/input_files/quota/quotas.go, offset: 815, line: 31, column: 16
 msgid "List available usage quotas"
 msgstr "List available usage quotas"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quotas.go, offset: 861, line: 32, column: 16
+# filename: d_option/input_files/quota/quotas.go, offset: 861, line: 32, column: 16
 msgid "CF_NAME quotas"
 msgstr "CF_NAME quotas"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quotas.go, offset: 1441, line: 55, column: 46
+# filename: d_option/input_files/quota/quotas.go, offset: 1441, line: 55, column: 46
 msgid "name"
 msgstr "name"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quotas.go, offset: 1465, line: 55, column: 70
+# filename: d_option/input_files/quota/quotas.go, offset: 1465, line: 55, column: 70
 msgid "routes"
 msgstr "routes"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quotas.go, offset: 1475, line: 55, column: 80
+# filename: d_option/input_files/quota/quotas.go, offset: 1475, line: 55, column: 80
 msgid "service instances"
 msgstr "service instances"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quotas.go, offset: 1496, line: 55, column: 101
+# filename: d_option/input_files/quota/quotas.go, offset: 1496, line: 55, column: 101
 msgid "paid service plans"
 msgstr "paid service plans"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quotas.go, offset: 790, line: 30, column: 16
+# filename: d_option/input_files/quota/quotas.go, offset: 790, line: 30, column: 16
 msgid "quotas"
 msgstr "quotas"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quotas.go, offset: 1181, line: 44, column: 13
+# filename: d_option/input_files/quota/quotas.go, offset: 1181, line: 44, column: 13
 msgid "Getting quotas as %s..."
 msgstr "Getting quotas as %s..."
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quotas.go, offset: 1449, line: 55, column: 54
+# filename: d_option/input_files/quota/quotas.go, offset: 1449, line: 55, column: 54
 msgid "memory limit"
 msgstr "memory limit"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/quotas.go, offset: 1710, line: 62, column: 16
+# filename: d_option/input_files/quota/quotas.go, offset: 1710, line: 62, column: 16
 msgid "%d"
 msgstr "%d"
 

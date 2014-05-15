@@ -1,32 +1,32 @@
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/orgs.go, offset: 755, line: 28, column: 16
+# filename: d_option/input_files/org/orgs.go, offset: 755, line: 28, column: 16
 msgid "orgs"
 msgstr "orgs"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/orgs.go, offset: 778, line: 29, column: 16
+# filename: d_option/input_files/org/orgs.go, offset: 778, line: 29, column: 16
 msgid "o"
 msgstr "o"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/orgs.go, offset: 798, line: 30, column: 16
+# filename: d_option/input_files/org/orgs.go, offset: 798, line: 30, column: 16
 msgid "List all orgs"
 msgstr "List all orgs"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/orgs.go, offset: 830, line: 31, column: 16
+# filename: d_option/input_files/org/orgs.go, offset: 830, line: 31, column: 16
 msgid "CF_NAME orgs"
 msgstr "CF_NAME orgs"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/orgs.go, offset: 1142, line: 43, column: 13
+# filename: d_option/input_files/org/orgs.go, offset: 1142, line: 43, column: 13
 msgid "Getting orgs as %s...\n"
 msgstr "Getting orgs as %s...\n"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/orgs.go, offset: 1267, line: 46, column: 33
+# filename: d_option/input_files/org/orgs.go, offset: 1267, line: 46, column: 33
 msgid "name"
 msgstr "name"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/orgs.go, offset: 1465, line: 56, column: 17
+# filename: d_option/input_files/org/orgs.go, offset: 1465, line: 56, column: 17
 msgid "Failed fetching orgs.\n%s"
 msgstr "Failed fetching orgs.\n%s"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/org/orgs.go, offset: 1541, line: 61, column: 14
+# filename: d_option/input_files/org/orgs.go, offset: 1541, line: 61, column: 14
 msgid "No orgs found"
 msgstr "No orgs found"
 

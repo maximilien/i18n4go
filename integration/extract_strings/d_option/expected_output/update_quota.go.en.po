@@ -1,68 +1,68 @@
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/update_quota.go, offset: 2644, line: 80, column: 28
+# filename: d_option/input_files/quota/update_quota.go, offset: 2644, line: 80, column: 28
 msgid "update-quota"
 msgstr "update-quota"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/update_quota.go, offset: 906, line: 32, column: 16
+# filename: d_option/input_files/quota/update_quota.go, offset: 906, line: 32, column: 16
 msgid "CF_NAME update-quota QUOTA [-m MEMORY] [-n NEW_NAME] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans | --disallow-paid-service-plans]"
 msgstr "CF_NAME update-quota QUOTA [-m MEMORY] [-n NEW_NAME] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans | --disallow-paid-service-plans]"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/update_quota.go, offset: 2862, line: 95, column: 29
+# filename: d_option/input_files/quota/update_quota.go, offset: 2862, line: 95, column: 29
 msgid "r"
 msgstr "r"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/update_quota.go, offset: 2806, line: 91, column: 31
+# filename: d_option/input_files/quota/update_quota.go, offset: 2806, line: 91, column: 31
 msgid "s"
 msgstr "s"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/update_quota.go, offset: 2097, line: 62, column: 30
+# filename: d_option/input_files/quota/update_quota.go, offset: 2097, line: 62, column: 30
 msgid "allow-paid-service-plans"
 msgstr "allow-paid-service-plans"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/update_quota.go, offset: 2883, line: 98, column: 13
+# filename: d_option/input_files/quota/update_quota.go, offset: 2883, line: 98, column: 13
 msgid "Updating quota %s as %s..."
 msgstr "Updating quota %s as %s..."
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/update_quota.go, offset: 1243, line: 36, column: 33
+# filename: d_option/input_files/quota/update_quota.go, offset: 1243, line: 36, column: 33
 msgid "Total number of routes"
 msgstr "Total number of routes"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/update_quota.go, offset: 2157, line: 63, column: 33
+# filename: d_option/input_files/quota/update_quota.go, offset: 2157, line: 63, column: 33
 msgid "disallow-paid-service-plans"
 msgstr "disallow-paid-service-plans"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/update_quota.go, offset: 1507, line: 39, column: 61
+# filename: d_option/input_files/quota/update_quota.go, offset: 1507, line: 39, column: 61
 msgid "Cannot provision instances of paid service plans"
 msgstr "Cannot provision instances of paid service plans"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/update_quota.go, offset: 854, line: 31, column: 16
+# filename: d_option/input_files/quota/update_quota.go, offset: 854, line: 31, column: 16
 msgid "Update an existing resource quota"
 msgstr "Update an existing resource quota"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/update_quota.go, offset: 2584, line: 77, column: 58
+# filename: d_option/input_files/quota/update_quota.go, offset: 2584, line: 77, column: 58
 msgid "m"
 msgstr "m"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/update_quota.go, offset: 2748, line: 87, column: 25
+# filename: d_option/input_files/quota/update_quota.go, offset: 2748, line: 87, column: 25
 msgid "n"
 msgstr "n"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/update_quota.go, offset: 1302, line: 37, column: 33
+# filename: d_option/input_files/quota/update_quota.go, offset: 1302, line: 37, column: 33
 msgid "Total number of service instances"
 msgstr "Total number of service instances"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/update_quota.go, offset: 2252, line: 65, column: 17
+# filename: d_option/input_files/quota/update_quota.go, offset: 2252, line: 65, column: 17
 msgid "Please choose either allow or disallow. Both flags are not permitted to be passed in the same command. "
 msgstr "Please choose either allow or disallow. Both flags are not permitted to be passed in the same command. "
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/update_quota.go, offset: 1114, line: 34, column: 36
+# filename: d_option/input_files/quota/update_quota.go, offset: 1114, line: 34, column: 36
 msgid "Total amount of memory (e.g. 1024M, 1G, 10G)"
 msgstr "Total amount of memory (e.g. 1024M, 1G, 10G)"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/update_quota.go, offset: 1198, line: 35, column: 36
+# filename: d_option/input_files/quota/update_quota.go, offset: 1198, line: 35, column: 36
 msgid "New name"
 msgstr "New name"
 
-# filename: /Users/pivotal/go/src/github.com/maximilien/i18n4cf/integration/extract_strings/d_option/input_files/quota/update_quota.go, offset: 1397, line: 38, column: 58
+# filename: d_option/input_files/quota/update_quota.go, offset: 1397, line: 38, column: 58
 msgid "Can provision instances of paid service plans"
 msgstr "Can provision instances of paid service plans"
 
