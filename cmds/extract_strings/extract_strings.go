@@ -320,7 +320,7 @@ func (es *ExtractStrings) saveExtractedStrings(outputDirname string) error {
 		stringInfos = append(stringInfos, stringInfo)
 	}
 
-	jsonData, err := json.Marshal(stringInfos)
+	jsonData, err := json.MarshalIndent(stringInfos, "", "   ")
 	if err != nil {
 		es.Println(err)
 		return err
@@ -354,7 +354,7 @@ func (es *ExtractStrings) saveI18nStrings(outputDirname string) error {
 		i++
 	}
 
-	jsonData, err := json.Marshal(i18nStringInfos)
+	jsonData, err := json.MarshalIndent(i18nStringInfos, "", "   ")
 	if err != nil {
 		es.Println(err)
 		return err
