@@ -10,6 +10,9 @@ type Options struct {
 	DryRunFlag  bool
 	PoFlag      bool
 
+	SourceLanguageFlag string
+	LanguagesFlag      string
+
 	OutputDirFlag          string
 	OutputMatchImportFlag  bool
 	OutputMatchPackageFlag bool

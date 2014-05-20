@@ -2,11 +2,10 @@ package create_translations
 
 import (
 	"fmt"
-	// "os"
-	// "path/filepath"
+	"os"
+	"strings"
 
-	// "encoding/json"
-	// "io/ioutil"
+	"path/filepath"
 
 	common "github.com/maximilien/i18n4cf/common"
 )
@@ -14,8 +13,11 @@ import (
 type CreateTranslations struct {
 	Options common.Options
 
-	Filename      string
-	OutputDirname string
+	Filename       string
+	OutputDirname  string
+	SourceLanguage string
+
+	Languages []string
 
 	ExtractedStrings map[string]common.StringInfo
 
@@ -24,13 +26,18 @@ type CreateTranslations struct {
 }
 
 func NewCreateTranslations(options common.Options) CreateTranslations {
-	fmt.Println("New CreateTranslations with options:", options)
+	languages, err := common.ParseLanguages(options.LanguagesFlag)
+	if err != nil {
+		fmt.Println("gi18n: ERROR parsing languages:", options.LanguagesFlag)
+	}
 
 	return CreateTranslations{Options: options,
-		Filename:      options.FilenameFlag,
-		OutputDirname: options.OutputDirFlag,
-		TotalStrings:  0,
-		TotalFiles:    0}
+		Filename:       options.FilenameFlag,
+		OutputDirname:  options.OutputDirFlag,
+		SourceLanguage: options.SourceLanguageFlag,
+		Languages:      languages,
+		TotalStrings:   0,
+		TotalFiles:     0}
 }
 
 func (ct *CreateTranslations) Println(a ...interface{}) (int, error) {
@@ -47,4 +54,45 @@ func (ct *CreateTranslations) Printf(msg string, a ...interface{}) (int, error) 
 	}
 
 	return 0, nil
+}
+
+func (ct *CreateTranslations) CreateTranslationFiles(sourceFilename string) error {
+	ct.Println("gi18n: creating translation files for:", sourceFilename)
+	ct.Filename = sourceFilename
+
+	for _, language := range ct.Languages {
+		ct.Println("gi18n: creating translation file copy for language:", language)
+		err := ct.createTranslationFile(sourceFilename, language)
+		if err != nil {
+			return fmt.Errorf("gi18n: could not create translation file for language: ", language)
+		}
+		ct.Println()
+	}
+
+	return nil
+}
+
+func (ct *CreateTranslations) checkFile(fileName string) (string, string, error) {
+	fileInfo, err := os.Stat(fileName)
+	if err != nil {
+		return "", "", err
+	}
+
+	if !fileInfo.Mode().IsRegular() {
+		return "", "", fmt.Errorf("gi18n: non-regular source file %s (%s)", fileInfo.Name(), fileInfo.Mode().String())
+	}
+
+	return fileInfo.Name(), fileName[:len(fileName)-len(fileInfo.Name())-1], nil
+}
+
+func (ct *CreateTranslations) createTranslationFile(sourceFilename string, language string) error {
+	fileName, _, err := ct.checkFile(sourceFilename)
+	if err != nil {
+		return err
+	}
+
+	destFilename := filepath.Join(ct.OutputDirname, strings.Replace(fileName, ct.Options.SourceLanguageFlag, language, -1))
+	ct.Println("gi18n: creating translation file:", destFilename)
+
+	return common.CopyFileContents(sourceFilename, destFilename)
 }
