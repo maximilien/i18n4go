@@ -78,6 +78,7 @@ func init() {
 
 	flag.StringVar(&options.SourceLanguageFlag, "source-language", "en", "the source language of the file, typically also part of the file name, e.g., \"en_US\"")
 	flag.StringVar(&options.LanguagesFlag, "languages", "", "a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"")
+	flag.StringVar(&options.GoogleTranslateApiKeyFlag, "google-translate-api-key", "", "your public Google Translate API key which is used to generate translations (charge is applicable)")
 
 	flag.BoolVar(&options.VerboseFlag, "v", false, "verbose mode where lots of output is generated during execution")
 	flag.BoolVar(&options.PoFlag, "p", true, "generate standard .po file for translation")

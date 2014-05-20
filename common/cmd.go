@@ -10,8 +10,9 @@ type Options struct {
 	DryRunFlag  bool
 	PoFlag      bool
 
-	SourceLanguageFlag string
-	LanguagesFlag      string
+	SourceLanguageFlag        string
+	LanguagesFlag             string
+	GoogleTranslateApiKeyFlag string
 
 	OutputDirFlag          string
 	OutputMatchImportFlag  bool
