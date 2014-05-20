@@ -161,6 +161,7 @@ Developing *
 ============
 
 1. Run `go get code.google.com/p/go.tools/cmd/vet`
+2. Run `go get github.com/cloudfoundry/cli ...` to install test dependencies
 1. Write a Ginkgo test.
 1. Run `bin/test` and watch the test fail.
 1. Make the test pass.
