@@ -3,6 +3,7 @@ package create_translations
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"strings"
 
 	"encoding/json"
@@ -110,6 +111,15 @@ func (ct *CreateTranslations) CreateTranslationFiles(sourceFilename string) erro
 				return fmt.Errorf("gi18n: could not save Google Translate i18n strings to file: ", destFilename)
 			}
 
+			if ct.Options.PoFlag {
+				poFilename := destFilename[:len(destFilename)-len(".json")] + ".po"
+				err = ct.saveI18nStringsInPo(poFilename, modifiedI18nStringInfos)
+				if err != nil {
+					ct.Println(err)
+					return fmt.Errorf("gi18n: could not save PO file: ", poFilename)
+				}
+			}
+
 			ct.Println()
 		} else {
 			_, err := ct.createTranslationFile(sourceFilename, language)
@@ -121,6 +131,26 @@ func (ct *CreateTranslations) CreateTranslationFiles(sourceFilename string) erro
 
 	ct.Println()
 
+	return nil
+}
+
+func (ct *CreateTranslations) saveI18nStringsInPo(fileName string, i18nStrings []common.I18nStringInfo) error {
+	ct.Println("gi18n: creating and saving i18n strings to .po file:", fileName)
+
+	if !ct.Options.DryRunFlag && len(i18nStrings) != 0 {
+		file, err := os.Create(fileName)
+		defer file.Close()
+		if err != nil {
+			ct.Println(err)
+			return err
+		}
+
+		for _, stringInfo := range i18nStrings {
+			file.Write([]byte("msgid " + strconv.Quote(stringInfo.ID) + "\n"))
+			file.Write([]byte("msgstr " + strconv.Quote(stringInfo.Translation) + "\n"))
+			file.Write([]byte("\n"))
+		}
+	}
 	return nil
 }
 
