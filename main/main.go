@@ -22,7 +22,7 @@ func main() {
 
 	if options.ExtractStringsCmdFlag {
 		extractStringsCmd()
-	} else if options.ExtractStringsCmdFlag {
+	} else if options.CreateTranslationsCmdFlag {
 		createTranslationsCmd()
 	} else {
 		usage()
@@ -40,7 +40,10 @@ func createTranslationsCmd() {
 
 	startTime := time.Now()
 
-	//TODO: implement here
+	err := createTranslations.CreateTranslationFiles(options.FilenameFlag)
+	if err != nil {
+		createTranslations.Println("gi18n: Could not create translation files, err:", err)
+	}
 
 	duration := time.Now().Sub(startTime)
 	createTranslations.Println("Total time:", duration)
@@ -70,10 +73,11 @@ func extractStringsCmd() {
 func init() {
 	flag.BoolVar(&options.HelpFlag, "h", false, "prints the usage")
 
-	flag.BoolVar(&options.ExtractStringsCmdFlag, "extract-strings", true, "want to extract strings from file or directory")
-	flag.BoolVar(&options.CreateTranslationsCmdFlag, "create-translations", true, "create translation files for different languages using a source file")
+	flag.BoolVar(&options.ExtractStringsCmdFlag, "extract-strings", false, "want to extract strings from file or directory")
+	flag.BoolVar(&options.CreateTranslationsCmdFlag, "create-translations", false, "create translation files for different languages using a source file")
 
-	flag.StringVar(&options.IgnoreRegexp, "languages", "", "a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"")
+	flag.StringVar(&options.SourceLanguageFlag, "source-language", "en", "the source language of the file, typically also part of the file name, e.g., \"en_US\"")
+	flag.StringVar(&options.LanguagesFlag, "languages", "", "a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"")
 
 	flag.BoolVar(&options.VerboseFlag, "v", false, "verbose mode where lots of output is generated during execution")
 	flag.BoolVar(&options.PoFlag, "p", true, "generate standard .po file for translation")
@@ -124,6 +128,7 @@ gi18n -extract-strings [-vpe] [-o <outputDir>] -f <fileName> | -d [-r] [-ignore-
 
   -create-translations    the create translations command flag
 
+  -source-language		  the source language of the file, typically also part of the file name, e.g., \"en_US\"
   -languages 	          a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
   -o                      the output directory where the newly created translation files will be placed
 `
