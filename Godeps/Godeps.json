@@ -1,10 +1,69 @@
 {
 	"ImportPath": "github.com/maximilien/i18n4cf",
-	"GoVersion": "go1.2.1",
+	"GoVersion": "go1.2",
 	"Packages": [
 		"./..."
 	],
 	"Deps": [
+		{
+			"ImportPath": "code.google.com/p/go.crypto/ssh/terminal",
+			"Comment": "null-209",
+			"Rev": "23b39e4e860172e1983ded00a9d2f7e42b7683d0"
+		},
+		{
+			"ImportPath": "code.google.com/p/go.net/websocket",
+			"Comment": "null-131",
+			"Rev": "b50b866786741d3f936d7456f6bd4c2641e2b042"
+		},
+		{
+			"ImportPath": "code.google.com/p/gogoprotobuf/proto",
+			"Rev": "dc9b8350fb4568b6562900df872672f378242552"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry/cli/cf",
+			"Comment": "v6.1.2-54-g91a805a",
+			"Rev": "91a805a8119a4d36b148ff3ea0a4c82bb81dfe16"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry/cli/fileutils",
+			"Comment": "v6.1.2-54-g91a805a",
+			"Rev": "91a805a8119a4d36b148ff3ea0a4c82bb81dfe16"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry/cli/generic",
+			"Comment": "v6.1.2-54-g91a805a",
+			"Rev": "91a805a8119a4d36b148ff3ea0a4c82bb81dfe16"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry/cli/glob",
+			"Comment": "v6.1.2-54-g91a805a",
+			"Rev": "91a805a8119a4d36b148ff3ea0a4c82bb81dfe16"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry/gofileutils/fileutils",
+			"Rev": "a4a0cae5ff8a342ba01fce700b9e41c6942c0e5e"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry/loggregator_consumer",
+			"Rev": "c9c42074d681db3ca94700c140588292d023c93d"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry/loggregatorlib/logmessage",
+			"Rev": "b2f1c6577e09b5727076c72f4096e3cc5cfd737d"
+		},
+		{
+			"ImportPath": "github.com/cloudfoundry/loggregatorlib/signature",
+			"Rev": "b2f1c6577e09b5727076c72f4096e3cc5cfd737d"
+		},
+		{
+			"ImportPath": "github.com/codegangsta/cli",
+			"Comment": "1.0.0-31-gc606efc",
+			"Rev": "c606efc92b966e5f627f2785d28e7e92787e08d0"
+		},
+		{
+			"ImportPath": "github.com/gorilla/websocket",
+			"Rev": "10a95d14a3a215f5e2045d3dbbcd29f1ab209586"
+		},
 		{
 			"ImportPath": "github.com/onsi/ginkgo",
 			"Rev": "51ddbbc2ace9f9ad4cf06ba63442ea2ef2019837"
