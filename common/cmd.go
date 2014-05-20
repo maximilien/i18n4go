@@ -1,11 +1,14 @@
 package common
 
 type Options struct {
-	HelpFlag              bool
-	ExtractStringsCmdFlag bool
-	VerboseFlag           bool
-	DryRunFlag            bool
-	PoFlag                bool
+	HelpFlag bool
+
+	ExtractStringsCmdFlag     bool
+	CreateTranslationsCmdFlag bool
+
+	VerboseFlag bool
+	DryRunFlag  bool
+	PoFlag      bool
 
 	OutputDirFlag          string
 	OutputMatchImportFlag  bool

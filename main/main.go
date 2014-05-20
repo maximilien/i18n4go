@@ -9,7 +9,9 @@ import (
 
 	"runtime/debug"
 
+	"github.com/maximilien/i18n4cf/cmds/create_translations"
 	"github.com/maximilien/i18n4cf/cmds/extract_strings"
+
 	common "github.com/maximilien/i18n4cf/common"
 )
 
@@ -20,10 +22,28 @@ func main() {
 
 	if options.ExtractStringsCmdFlag {
 		extractStringsCmd()
+	} else if options.ExtractStringsCmdFlag {
+		createTranslationsCmd()
 	} else {
 		usage()
 		return
 	}
+}
+
+func createTranslationsCmd() {
+	if options.HelpFlag || (options.FilenameFlag == "") {
+		usage()
+		return
+	}
+
+	createTranslations := create_translations.NewCreateTranslations(options)
+
+	startTime := time.Now()
+
+	//TODO: implement here
+
+	duration := time.Now().Sub(startTime)
+	createTranslations.Println("Total time:", duration)
 }
 
 func extractStringsCmd() {
@@ -51,6 +71,9 @@ func init() {
 	flag.BoolVar(&options.HelpFlag, "h", false, "prints the usage")
 
 	flag.BoolVar(&options.ExtractStringsCmdFlag, "extract-strings", true, "want to extract strings from file or directory")
+	flag.BoolVar(&options.CreateTranslationsCmdFlag, "create-translations", true, "create translation files for different languages using a source file")
+
+	flag.StringVar(&options.IgnoreRegexp, "languages", "", "a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"")
 
 	flag.BoolVar(&options.VerboseFlag, "v", false, "verbose mode where lots of output is generated during execution")
 	flag.BoolVar(&options.PoFlag, "p", true, "generate standard .po file for translation")
@@ -61,9 +84,6 @@ func init() {
 	flag.StringVar(&options.OutputDirFlag, "o", "", "output directory where the translation files will be placed")
 	flag.BoolVar(&options.OutputFlatFlag, "output-flat", true, "generated files are created in the specified output directory")
 	flag.BoolVar(&options.OutputMatchPackageFlag, "output-match-package", false, "generated files are created in directory to match the package name")
-	//TODO: disabled until we find we do not need and then remove
-	//  -output-match-import    generated files are created in directory to match the import structure
-	//flag.BoolVar(&options.OutputMatchImportFlag, "output-match-import", false, "generated files are created in directory to match the import structure")
 
 	flag.StringVar(&options.FilenameFlag, "f", "", "the file name for which strings are extracted")
 	flag.StringVar(&options.DirnameFlag, "d", "", "the dir name for which all .go files will have their strings extracted")
@@ -99,6 +119,13 @@ gi18n -extract-strings [-vpe] [-o <outputDir>] -f <fileName> | -d [-r] [-ignore-
   -d                      the directory containing the go files to extract strings
 
   -ignore-regexp          a perl-style regular expression for files to ignore, e.g., ".*test.*"
+
+  CREATE-TRANSLATIONS:
+
+  -create-translations    the create translations command flag
+
+  -languages 	          a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
+  -o                      the output directory where the newly created translation files will be placed
 `
 	fmt.Println(usageString)
 }
