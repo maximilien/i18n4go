@@ -101,37 +101,39 @@ func init() {
 
 func usage() {
 	usageString := `
-gi18n -extract-strings [-vpe] [-o <outputDir>] -f <fileName> | -d [-r] [-ignore-regexp <regex>] <dirName>
-  -h                      prints the usage
+gi18n [-command] [-vpe] [-o <outputDir>] -f <fileName> | -d [-r] [-ignore-regexp <regex>] <dirName>
+  -h                        prints the usage
 
-  -v                      verbose
-  -dry-run                prevents any output files from being created
-  -p                      to generate standard .po files for translation
+  -v                        verbose
+  -dry-run                  prevents any output files from being created
+  -p                        to generate standard .po files for translation
 
   EXTRACT-STRINGS:
 
-  -extract-strings        the extract strings command flag
+  -extract-strings          the extract strings command flag
 
-  -o                      the output directory where the translation files will be placed
-  -output-flat            generated files are created in the specified output directory (default)
-  -output-match-package   generated files are created in directory to match the package name
+  -o                        the output directory where the translation files will be placed
+  -output-flat              generated files are created in the specified output directory (default)
+  -output-match-package     generated files are created in directory to match the package name
 
-  -e                      the JSON file with strings to be excluded, defaults to excluded.json if present
+  -e                        the JSON file with strings to be excluded, defaults to excluded.json if present
 
-  -f                      the go file name to extract strings
+  -f                        the go file name to extract strings
 
-  -r                      recursesively extract strings from all subdirectories
-  -d                      the directory containing the go files to extract strings
+  -r                        recursesively extract strings from all subdirectories
+  -d                        the directory containing the go files to extract strings
 
-  -ignore-regexp          a perl-style regular expression for files to ignore, e.g., ".*test.*"
+  -ignore-regexp            a perl-style regular expression for files to ignore, e.g., ".*test.*"
 
   CREATE-TRANSLATIONS:
 
-  -create-translations    the create translations command flag
+  -create-translations      the create translations command flag
 
-  -source-language		  the source language of the file, typically also part of the file name, e.g., \"en_US\"
-  -languages 	          a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
-  -o                      the output directory where the newly created translation files will be placed
+  -google-translate-api-key your public Google Translate API key which is used to generate translations (charge is applicable)
+
+  -source-language		    the source language of the file, typically also part of the file name, e.g., \"en_US\"
+  -languages 	            a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
+  -o                        the output directory where the newly created translation files will be placed
 `
 	fmt.Println(usageString)
 }
