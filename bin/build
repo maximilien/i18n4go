@@ -3,5 +3,8 @@ set -e
 
 export GOPATH=$(godep path):$GOPATH
 
+echo -e "\n Formatting packages..."
+  go fmt ./...
+
 echo -e "\nGenerating Binary..."
 go build -o $(dirname $0)/../out/gi18n ./main/main.go
