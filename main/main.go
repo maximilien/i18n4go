@@ -12,10 +12,10 @@ import (
 	"github.com/maximilien/i18n4cf/cmds/create_translations"
 	"github.com/maximilien/i18n4cf/cmds/extract_strings"
 
-	common "github.com/maximilien/i18n4cf/common"
+	"github.com/maximilien/i18n4cf/cmds"
 )
 
-var options common.Options
+var options cmds.Options
 
 func main() {
 	defer handlePanic()

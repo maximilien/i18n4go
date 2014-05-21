@@ -17,15 +17,17 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
-	common "github.com/maximilien/i18n4cf/common"
+	"github.com/maximilien/i18n4cf/cmds"
+	"github.com/maximilien/i18n4cf/common"
 )
 
 type ExtractStrings struct {
-	Options common.Options
+	options cmds.Options
+
+	i18nFilename string
+	poFilename   string
 
 	Filename      string
-	I18nFilename  string
-	PoFilename    string
 	OutputDirname string
 
 	ExtractedStrings map[string]common.StringInfo
@@ -39,7 +41,7 @@ type ExtractStrings struct {
 	IgnoreRegexp *regexp.Regexp
 }
 
-func NewExtractStrings(options common.Options) ExtractStrings {
+func NewExtractStrings(options cmds.Options) ExtractStrings {
 	var compiledRegexp *regexp.Regexp
 	if options.IgnoreRegexp != "" {
 		compiledReg, err := regexp.Compile(options.IgnoreRegexp)
@@ -49,7 +51,7 @@ func NewExtractStrings(options common.Options) ExtractStrings {
 		compiledRegexp = compiledReg
 	}
 
-	return ExtractStrings{Options: options,
+	return ExtractStrings{options: options,
 		Filename:         "extracted_strings.json",
 		OutputDirname:    options.OutputDirFlag,
 		ExtractedStrings: nil,
@@ -61,8 +63,12 @@ func NewExtractStrings(options common.Options) ExtractStrings {
 		IgnoreRegexp:     compiledRegexp}
 }
 
+func (es *ExtractStrings) Options() cmds.Options {
+	return es.options
+}
+
 func (es *ExtractStrings) Println(a ...interface{}) (int, error) {
-	if es.Options.VerboseFlag {
+	if es.options.VerboseFlag {
 		return fmt.Println(a...)
 	}
 
@@ -70,7 +76,7 @@ func (es *ExtractStrings) Println(a ...interface{}) (int, error) {
 }
 
 func (es *ExtractStrings) Printf(msg string, a ...interface{}) (int, error) {
-	if es.Options.VerboseFlag {
+	if es.options.VerboseFlag {
 		return fmt.Printf(msg, a...)
 	}
 
@@ -79,7 +85,7 @@ func (es *ExtractStrings) Printf(msg string, a ...interface{}) (int, error) {
 
 func (es *ExtractStrings) InspectFile(filename string) error {
 	es.Println("gi18n: extracting strings from file:", filename)
-	if es.Options.DryRunFlag {
+	if es.options.DryRunFlag {
 		es.Println("WARNING running in -dry-run mode")
 	}
 
@@ -98,7 +104,7 @@ func (es *ExtractStrings) InspectFile(filename string) error {
 		absFilePath = filepath.Join(os.Getenv("PWD"), absFilePath)
 	}
 
-	fileInfo, err := getFileName(absFilePath)
+	fileInfo, err := common.GetAbsFileInfo(absFilePath)
 	if err != nil {
 		es.Println(err)
 	}
@@ -138,14 +144,14 @@ func (es *ExtractStrings) InspectFile(filename string) error {
 	es.Printf("Extracted %d strings from file: %s\n", len(es.ExtractedStrings), absFilePath)
 
 	var outputDirname = es.OutputDirname
-	if es.Options.OutputDirFlag != "" {
-		if es.Options.OutputMatchImportFlag {
+	if es.options.OutputDirFlag != "" {
+		if es.options.OutputMatchImportFlag {
 			outputDirname, err = es.findImportPath(absFilePath)
 			if err != nil {
 				es.Println(err)
 				return err
 			}
-		} else if es.Options.OutputMatchPackageFlag {
+		} else if es.options.OutputMatchPackageFlag {
 			outputDirname, err = es.findPackagePath(absFilePath)
 			if err != nil {
 				es.Println(err)
@@ -153,7 +159,7 @@ func (es *ExtractStrings) InspectFile(filename string) error {
 			}
 		}
 	} else {
-		outputDirname, err = es.findFilePath(absFilePath)
+		outputDirname, err = common.FindFilePath(absFilePath)
 		if err != nil {
 			es.Println(err)
 			return err
@@ -166,14 +172,14 @@ func (es *ExtractStrings) InspectFile(filename string) error {
 		return err
 	}
 
-	err = es.saveI18nStrings(outputDirname)
+	err = common.SaveStrings(es, es.ExtractedStrings, outputDirname, es.i18nFilename)
 	if err != nil {
 		es.Println(err)
 		return err
 	}
 
-	if es.Options.PoFlag {
-		err = es.saveI18nStringsInPo(outputDirname)
+	if es.options.PoFlag {
+		err = common.SaveStringsInPo(es, es.ExtractedStrings, outputDirname, es.poFilename)
 		if err != nil {
 			es.Println(err)
 			return err
@@ -200,10 +206,10 @@ func (es *ExtractStrings) InspectDir(dirName string, recursive bool) error {
 		es.Println("Extracting strings in package:", k)
 		for fileName, _ := range pkg.Files {
 			if es.IgnoreRegexp != nil && es.IgnoreRegexp.MatchString(fileName) {
-				es.Println("Using ignore-regexp:", es.Options.IgnoreRegexp)
+				es.Println("Using ignore-regexp:", es.options.IgnoreRegexp)
 				continue
 			} else {
-				es.Println("No match for ignore-regexp:", es.Options.IgnoreRegexp)
+				es.Println("No match for ignore-regexp:", es.options.IgnoreRegexp)
 			}
 
 			if strings.HasSuffix(fileName, ".go") {
@@ -231,49 +237,10 @@ func (es *ExtractStrings) InspectDir(dirName string, recursive bool) error {
 	return nil
 }
 
-func getFileName(filePath string) (os.FileInfo, error) {
-	var absFilePath = filePath
-	if !filepath.IsAbs(absFilePath) {
-		absFilePath = filepath.Join(os.Getenv("PWD"), absFilePath)
-	}
-
-	file, err := os.OpenFile(absFilePath, os.O_RDONLY, 0)
-	defer file.Close()
-	if err != nil {
-		fmt.Println("ERROR opening file", err)
-		return nil, err
-	}
-
-	return file.Stat()
-}
-
-func (es *ExtractStrings) createOutputDirsIfNeeded(outputDirname string) error {
-	_, err := os.Stat(outputDirname)
-	if os.IsNotExist(err) {
-		es.Println("Creating output directory:", outputDirname)
-		err = os.MkdirAll(outputDirname, 0777)
-		if err != nil {
-			fmt.Println("ERROR opening output directory", err)
-			return err
-		}
-	}
-	return nil
-}
-
-func (es *ExtractStrings) findFilePath(filename string) (string, error) {
-	path := es.OutputDirname
-	fileInfo, err := os.Stat(filename)
-	if err != nil {
-		fmt.Println("ERROR opening file", err)
-		return "", err
-	}
-	path = filename[0 : len(filename)-len(fileInfo.Name())]
-	return path, nil
-}
-
 func (es *ExtractStrings) findImportPath(filename string) (string, error) {
 	path := es.OutputDirname
-	filePath, err := es.findFilePath(filename)
+
+	filePath, err := common.FindFilePath(filename)
 	if err != nil {
 		fmt.Println("ERROR opening file", err)
 		return "", err
@@ -291,7 +258,7 @@ func (es *ExtractStrings) findImportPath(filename string) (string, error) {
 func (es *ExtractStrings) findPackagePath(filename string) (string, error) {
 	path := es.OutputDirname
 
-	filePath, err := es.findFilePath(filename)
+	filePath, err := common.FindFilePath(filename)
 	if err != nil {
 		fmt.Println("ERROR opening file", err)
 		return "", err
@@ -311,7 +278,7 @@ func (es *ExtractStrings) saveExtractedStrings(outputDirname string) error {
 		es.Println("Saving extracted strings to file:", es.Filename)
 	}
 
-	es.createOutputDirsIfNeeded(outputDirname)
+	common.CreateOutputDirsIfNeeded(outputDirname)
 
 	stringInfos := make([]common.StringInfo, 0)
 	for _, stringInfo := range es.ExtractedStrings {
@@ -326,7 +293,7 @@ func (es *ExtractStrings) saveExtractedStrings(outputDirname string) error {
 		return err
 	}
 
-	if !es.Options.DryRunFlag && len(stringInfos) != 0 {
+	if !es.options.DryRunFlag && len(stringInfos) != 0 {
 		file, err := os.Create(filepath.Join(outputDirname, es.Filename[strings.LastIndex(es.Filename, string(os.PathSeparator))+1:len(es.Filename)]))
 		defer file.Close()
 		if err != nil {
@@ -340,89 +307,28 @@ func (es *ExtractStrings) saveExtractedStrings(outputDirname string) error {
 	return nil
 }
 
-func (es *ExtractStrings) saveI18nStrings(outputDirname string) error {
-	if len(es.ExtractedStrings) != 0 {
-		es.Println("Saving extracted i18n strings to file:", es.I18nFilename)
-	}
-
-	es.createOutputDirsIfNeeded(outputDirname)
-
-	i18nStringInfos := make([]common.I18nStringInfo, len(es.ExtractedStrings))
-	i := 0
-	for _, stringInfo := range es.ExtractedStrings {
-		i18nStringInfos[i] = common.I18nStringInfo{ID: stringInfo.Value, Translation: stringInfo.Value}
-		i++
-	}
-
-	jsonData, err := json.MarshalIndent(i18nStringInfos, "", "   ")
-	if err != nil {
-		es.Println(err)
-		return err
-	}
-
-	if !es.Options.DryRunFlag && len(i18nStringInfos) != 0 {
-		file, err := os.Create(filepath.Join(outputDirname, es.I18nFilename[strings.LastIndex(es.I18nFilename, string(os.PathSeparator))+1:len(es.I18nFilename)]))
-		defer file.Close()
-		if err != nil {
-			es.Println(err)
-			return err
-		}
-
-		file.Write(jsonData)
-	}
-
-	return nil
-}
-
-func (es *ExtractStrings) saveI18nStringsInPo(outputDirname string) error {
-	if len(es.ExtractedStrings) != 0 {
-		es.Println("Creating and saving i18n strings to .po file:", es.PoFilename)
-	}
-
-	if !es.Options.DryRunFlag && len(es.ExtractedStrings) != 0 {
-		es.createOutputDirsIfNeeded(outputDirname)
-		file, err := os.Create(filepath.Join(outputDirname, es.PoFilename[strings.LastIndex(es.PoFilename, string(os.PathSeparator))+1:len(es.PoFilename)]))
-		defer file.Close()
-		if err != nil {
-			es.Println(err)
-			return err
-		}
-
-		for _, stringInfo := range es.ExtractedStrings {
-			file.Write([]byte("# filename: " + strings.Split(es.PoFilename, ".en.po")[0] +
-				", offset: " + strconv.Itoa(stringInfo.Offset) +
-				", line: " + strconv.Itoa(stringInfo.Line) +
-				", column: " + strconv.Itoa(stringInfo.Column) + "\n"))
-			file.Write([]byte("msgid " + strconv.Quote(stringInfo.Value) + "\n"))
-			file.Write([]byte("msgstr " + strconv.Quote(stringInfo.Value) + "\n"))
-			file.Write([]byte("\n"))
-		}
-	}
-	return nil
-}
-
 func (es *ExtractStrings) setFilename(filename string) {
 	es.Filename = filename + ".extracted.json"
 }
 
 func (es *ExtractStrings) setI18nFilename(filename string) {
-	es.I18nFilename = filename + ".en.json"
+	es.i18nFilename = filename + ".en.json"
 }
 
 func (es *ExtractStrings) setPoFilename(filename string) {
-	es.PoFilename = filename + ".en.po"
+	es.poFilename = filename + ".en.po"
 }
 
 func (es *ExtractStrings) loadExcludedStrings() error {
-	_, err := os.Stat(es.Options.ExcludedFilenameFlag)
+	_, err := os.Stat(es.options.ExcludedFilenameFlag)
 	if os.IsNotExist(err) {
-		es.Println("Could not find:", es.Options.ExcludedFilenameFlag)
+		es.Println("Could not find:", es.options.ExcludedFilenameFlag)
 		return nil
 	}
 
-	es.Println("Excluding strings in file:", es.Options.ExcludedFilenameFlag)
+	es.Println("Excluding strings in file:", es.options.ExcludedFilenameFlag)
 
-	content, err := ioutil.ReadFile(es.Options.ExcludedFilenameFlag)
+	content, err := ioutil.ReadFile(es.options.ExcludedFilenameFlag)
 	if err != nil {
 		fmt.Print(err)
 		return err
@@ -443,15 +349,15 @@ func (es *ExtractStrings) loadExcludedStrings() error {
 }
 
 func (es *ExtractStrings) loadExcludedRegexps() error {
-	_, err := os.Stat(es.Options.ExcludedFilenameFlag)
+	_, err := os.Stat(es.options.ExcludedFilenameFlag)
 	if os.IsNotExist(err) {
-		es.Println("Could not find:", es.Options.ExcludedFilenameFlag)
+		es.Println("Could not find:", es.options.ExcludedFilenameFlag)
 		return nil
 	}
 
-	es.Println("Excluding regexps in file:", es.Options.ExcludedFilenameFlag)
+	es.Println("Excluding regexps in file:", es.options.ExcludedFilenameFlag)
 
-	content, err := ioutil.ReadFile(es.Options.ExcludedFilenameFlag)
+	content, err := ioutil.ReadFile(es.options.ExcludedFilenameFlag)
 	if err != nil {
 		fmt.Print(err)
 		return err
