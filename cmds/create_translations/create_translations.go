@@ -91,7 +91,7 @@ func (ct *CreateTranslations) CreateTranslationFiles(sourceFilename string) erro
 			i18nStringInfos, err := ct.loadI18nStringInfos(sourceFilename)
 			if err != nil {
 				ct.Println(err)
-				return fmt.Errorf("gi18n: could not load i18n strings from file: ", destFilename)
+				return fmt.Errorf("gi18n: could not load i18n strings from file: %s", destFilename)
 			}
 
 			ct.Println("gi18n: attempting to use Google Translate to translate source strings in: ", language)
@@ -108,7 +108,7 @@ func (ct *CreateTranslations) CreateTranslationFiles(sourceFilename string) erro
 			err = ct.saveI18nStringInfos(destFilename, modifiedI18nStringInfos)
 			if err != nil {
 				ct.Println(err)
-				return fmt.Errorf("gi18n: could not save Google Translate i18n strings to file: ", destFilename)
+				return fmt.Errorf("gi18n: could not save Google Translate i18n strings to file: %s", destFilename)
 			}
 
 			if ct.Options.PoFlag {
@@ -116,7 +116,7 @@ func (ct *CreateTranslations) CreateTranslationFiles(sourceFilename string) erro
 				err = ct.saveI18nStringsInPo(poFilename, modifiedI18nStringInfos)
 				if err != nil {
 					ct.Println(err)
-					return fmt.Errorf("gi18n: could not save PO file: ", poFilename)
+					return fmt.Errorf("gi18n: could not save PO file: %s", poFilename)
 				}
 			}
 
@@ -124,7 +124,7 @@ func (ct *CreateTranslations) CreateTranslationFiles(sourceFilename string) erro
 		} else {
 			_, err := ct.createTranslationFile(sourceFilename, language)
 			if err != nil {
-				return fmt.Errorf("gi18n: could not create default translation file for language: ", language)
+				return fmt.Errorf("gi18n: could not create default translation file for language: %s", language)
 			}
 		}
 	}
