@@ -11,7 +11,6 @@ import (
 
 	"net/http"
 	"net/url"
-
 	"path/filepath"
 
 	common "github.com/maximilien/i18n4cf/common"
