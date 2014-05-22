@@ -45,7 +45,7 @@ type GoogleTranslateTranslation struct {
 }
 
 func NewCreateTranslations(options cmds.Options) CreateTranslations {
-	languages := common.ParseLanguages(options.LanguagesFlag)
+	languages := common.ParseStringList(options.LanguagesFlag, ",")
 
 	return CreateTranslations{options: options,
 		Filename:       options.FilenameFlag,

@@ -14,13 +14,13 @@ import (
 	"github.com/maximilien/i18n4cf/cmds"
 )
 
-func ParseLanguages(languages string) []string {
-	langArray := strings.Split(languages, ",")
-	parsedLanguages := make([]string, len(langArray))
-	for i, language := range langArray {
-		parsedLanguages[i] = strings.Trim(language, " ")
+func ParseStringList(stringList string, delimiter string) []string {
+	stringArray := strings.Split(stringList, delimiter)
+	parsedStrings := make([]string, len(stringArray))
+	for i, aString := range stringArray {
+		parsedStrings[i] = strings.Trim(aString, " ")
 	}
-	return parsedLanguages
+	return parsedStrings
 }
 
 func CopyFileContents(src, dst string) error {
