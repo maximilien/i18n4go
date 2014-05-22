@@ -1,6 +1,7 @@
 package common
 
 import (
+	"fmt"
 	"os"
 
 	"io/ioutil"
@@ -21,6 +22,19 @@ func ParseStringList(stringList string, delimiter string) []string {
 		parsedStrings[i] = strings.Trim(aString, " ")
 	}
 	return parsedStrings
+}
+
+func CheckFile(fileName string) (string, string, error) {
+	fileInfo, err := os.Stat(fileName)
+	if err != nil {
+		return "", "", err
+	}
+
+	if !fileInfo.Mode().IsRegular() {
+		return "", "", fmt.Errorf("Non-regular source file %s (%s)", fileInfo.Name(), fileInfo.Mode().String())
+	}
+
+	return fileInfo.Name(), fileName[:len(fileName)-len(fileInfo.Name())-1], nil
 }
 
 func CopyFileContents(src, dst string) error {

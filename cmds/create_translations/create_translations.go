@@ -85,7 +85,7 @@ func (ct *CreateTranslations) CreateTranslationFiles(sourceFilename string) erro
 		ct.Println("gi18n: creating translation file copy for language:", language)
 
 		if ct.options.GoogleTranslateApiKeyFlag != "" {
-			fileName, _, err := ct.checkFile(sourceFilename)
+			fileName, _, err := common.CheckFile(sourceFilename)
 			if err != nil {
 				return err
 			}
@@ -135,19 +135,6 @@ func (ct *CreateTranslations) CreateTranslationFiles(sourceFilename string) erro
 	ct.Println()
 
 	return nil
-}
-
-func (ct *CreateTranslations) checkFile(fileName string) (string, string, error) {
-	fileInfo, err := os.Stat(fileName)
-	if err != nil {
-		return "", "", err
-	}
-
-	if !fileInfo.Mode().IsRegular() {
-		return "", "", fmt.Errorf("gi18n: non-regular source file %s (%s)", fileInfo.Name(), fileInfo.Mode().String())
-	}
-
-	return fileInfo.Name(), fileName[:len(fileName)-len(fileInfo.Name())-1], nil
 }
 
 func (ct *CreateTranslations) loadI18nStringInfos(fileName string) ([]common.I18nStringInfo, error) {
@@ -202,7 +189,7 @@ func (ct *CreateTranslations) googleTranslate(translateString string, language s
 }
 
 func (ct *CreateTranslations) createTranslationFile(sourceFilename string, language string) (string, error) {
-	fileName, _, err := ct.checkFile(sourceFilename)
+	fileName, _, err := common.CheckFile(sourceFilename)
 	if err != nil {
 		return "", err
 	}
