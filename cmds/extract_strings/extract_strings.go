@@ -43,8 +43,8 @@ type ExtractStrings struct {
 
 func NewExtractStrings(options cmds.Options) ExtractStrings {
 	var compiledRegexp *regexp.Regexp
-	if options.IgnoreRegexp != "" {
-		compiledReg, err := regexp.Compile(options.IgnoreRegexp)
+	if options.IgnoreRegexpFlag != "" {
+		compiledReg, err := regexp.Compile(options.IgnoreRegexpFlag)
 		if err != nil {
 			fmt.Println("WARNING compiling ignore-regexp:", err)
 		}
@@ -206,10 +206,10 @@ func (es *ExtractStrings) InspectDir(dirName string, recursive bool) error {
 		es.Println("Extracting strings in package:", k)
 		for fileName, _ := range pkg.Files {
 			if es.IgnoreRegexp != nil && es.IgnoreRegexp.MatchString(fileName) {
-				es.Println("Using ignore-regexp:", es.options.IgnoreRegexp)
+				es.Println("Using ignore-regexp:", es.options.IgnoreRegexpFlag)
 				continue
 			} else {
-				es.Println("No match for ignore-regexp:", es.options.IgnoreRegexp)
+				es.Println("No match for ignore-regexp:", es.options.IgnoreRegexpFlag)
 			}
 
 			if strings.HasSuffix(fileName, ".go") {
