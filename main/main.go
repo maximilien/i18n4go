@@ -11,6 +11,7 @@ import (
 
 	"github.com/maximilien/i18n4cf/cmds/create_translations"
 	"github.com/maximilien/i18n4cf/cmds/extract_strings"
+	"github.com/maximilien/i18n4cf/cmds/verify_strings"
 
 	"github.com/maximilien/i18n4cf/cmds"
 )
@@ -24,29 +25,12 @@ func main() {
 		extractStringsCmd()
 	} else if options.CreateTranslationsCmdFlag {
 		createTranslationsCmd()
+	} else if options.VerifyStringsCmdFlag {
+		verifyStringsCmd()
 	} else {
 		usage()
 		return
 	}
-}
-
-func createTranslationsCmd() {
-	if options.HelpFlag || (options.FilenameFlag == "") {
-		usage()
-		return
-	}
-
-	createTranslations := create_translations.NewCreateTranslations(options)
-
-	startTime := time.Now()
-
-	err := createTranslations.CreateTranslationFiles(options.FilenameFlag)
-	if err != nil {
-		createTranslations.Println("gi18n: Could not create translation files, err:", err)
-	}
-
-	duration := time.Now().Sub(startTime)
-	createTranslations.Println("Total time:", duration)
 }
 
 func extractStringsCmd() {
@@ -70,6 +54,45 @@ func extractStringsCmd() {
 	extractStrings.Println("Total time:", duration)
 }
 
+func createTranslationsCmd() {
+	if options.HelpFlag || (options.FilenameFlag == "") {
+		usage()
+		return
+	}
+
+	createTranslations := create_translations.NewCreateTranslations(options)
+
+	startTime := time.Now()
+
+	err := createTranslations.CreateTranslationFiles(options.FilenameFlag)
+	if err != nil {
+		createTranslations.Println("gi18n: Could not create translation files, err:", err)
+	}
+
+	duration := time.Now().Sub(startTime)
+	createTranslations.Println("Total time:", duration)
+}
+
+func verifyStringsCmd() {
+	if options.HelpFlag || (options.FilenameFlag == "") {
+		usage()
+		return
+	}
+
+	verifyStrings := verify_strings.NewVerifyStrings(options)
+
+	startTime := time.Now()
+
+	//TODO: verify here
+	// err := createTranslations.CreateTranslationFiles(options.FilenameFlag)
+	// if err != nil {
+	// 	createTranslations.Println("gi18n: Could not create translation files, err:", err)
+	// }
+
+	duration := time.Now().Sub(startTime)
+	verifyStrings.Println("Total time:", duration)
+}
+
 func init() {
 	flag.BoolVar(&options.HelpFlag, "h", false, "prints the usage")
 
@@ -78,13 +101,13 @@ func init() {
 
 	flag.StringVar(&options.SourceLanguageFlag, "source-language", "en", "the source language of the file, typically also part of the file name, e.g., \"en_US\"")
 	flag.StringVar(&options.LanguagesFlag, "languages", "", "a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"")
-	flag.StringVar(&options.GoogleTranslateApiKeyFlag, "google-translate-api-key", "", "your public Google Translate API key which is used to generate translations (charge is applicable)")
+	flag.StringVar(&options.GoogleTranslateApiKeyFlag, "google-translate-api-key", "", "[optional] your public Google Translate API key which is used to generate translations (charge is applicable)")
 
 	flag.BoolVar(&options.VerboseFlag, "v", false, "verbose mode where lots of output is generated during execution")
 	flag.BoolVar(&options.PoFlag, "p", true, "generate standard .po file for translation")
 	flag.BoolVar(&options.DryRunFlag, "dry-run", false, "prevents any output files from being created")
 
-	flag.StringVar(&options.ExcludedFilenameFlag, "e", "excluded.json", "the excluded JSON file name, all strings there will be excluded")
+	flag.StringVar(&options.ExcludedFilenameFlag, "e", "excluded.json", "[optional] the excluded JSON file name, all strings there will be excluded")
 
 	flag.StringVar(&options.OutputDirFlag, "o", "", "output directory where the translation files will be placed")
 	flag.BoolVar(&options.OutputFlatFlag, "output-flat", true, "generated files are created in the specified output directory")
@@ -94,7 +117,11 @@ func init() {
 	flag.StringVar(&options.DirnameFlag, "d", "", "the dir name for which all .go files will have their strings extracted")
 	flag.BoolVar(&options.RecurseFlag, "r", false, "recursively extract strings from all files in the same directory as filename or dirName")
 
-	flag.StringVar(&options.IgnoreRegexp, "ignore-regexp", "", "a perl-style regular expression for files to ignore, e.g., \".*test.*\"")
+	flag.StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", "", "a perl-style regular expression for files to ignore, e.g., \".*test.*\"")
+
+	flag.BoolVar(&options.VerifyStringsCmdFlag, "verify-strings", false, "the verify strings command")
+
+	flag.StringVar(&options.LanguageFilesFlag, "language-files", "", `[optional] a comma separated list of target files for different languages to compare,  e.g., \"en, en_US, fr_FR, es\"	                                                                  if not specified then the languages flag is used to find target files in same directory as source`)
 
 	flag.Parse()
 }
@@ -110,13 +137,13 @@ gi18n [-command] [-vpe] [-o <outputDir>] -f <fileName> | -d [-r] [-ignore-regexp
 
   EXTRACT-STRINGS:
 
-  -extract-strings          the extract strings command flag
+  -extract-strings          the extract strings command
 
   -o                        the output directory where the translation files will be placed
   -output-flat              generated files are created in the specified output directory (default)
   -output-match-package     generated files are created in directory to match the package name
 
-  -e                        the JSON file with strings to be excluded, defaults to excluded.json if present
+  -e                        [optional] the JSON file with strings to be excluded, defaults to excluded.json if present
 
   -f                        the go file name to extract strings
 
@@ -125,14 +152,26 @@ gi18n [-command] [-vpe] [-o <outputDir>] -f <fileName> | -d [-r] [-ignore-regexp
 
   -ignore-regexp            a perl-style regular expression for files to ignore, e.g., ".*test.*"
 
+  VERIFY-TRANSLATIONS:
+
+  -verify-strings           the verify strings command
+
+  -f                        the source translation file
+  -language-files           [optional] a comma separated list of target files for different languages to compare, e.g., \"en, en_US, fr_FR, es\"
+                            if not specified then the languages flag is used to find target files in same directory as source
+
+  -languages                [optional] a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
+
   CREATE-TRANSLATIONS:
 
-  -create-translations      the create translations command flag
+  -create-translations      the create translations command
 
-  -google-translate-api-key your public Google Translate API key which is used to generate translations (charge is applicable)
+  -google-translate-api-key [optional] your public Google Translate API key which is used to generate translations (charge is applicable)
 
-  -source-language		    the source language of the file, typically also part of the file name, e.g., \"en_US\"
-  -languages 	            a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
+  -f                        the source translation file
+
+  -source-language          [optional] the source language of the file, typically also part of the file name, e.g., \"en_US\"
+  -languages                a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
   -o                        the output directory where the newly created translation files will be placed
 `
 	fmt.Println(usageString)
