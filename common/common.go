@@ -17,9 +17,11 @@ import (
 
 func ParseStringList(stringList string, delimiter string) []string {
 	stringArray := strings.Split(stringList, delimiter)
-	parsedStrings := make([]string, len(stringArray))
-	for i, aString := range stringArray {
-		parsedStrings[i] = strings.Trim(aString, " ")
+	var parsedStrings []string
+	for _, aString := range stringArray {
+		if aString != "" {
+			parsedStrings = append(parsedStrings, strings.Trim(strings.Trim(aString, " "), "\""))
+		}
 	}
 	return parsedStrings
 }
@@ -163,7 +165,6 @@ func SaveI18nStringsInPo(cmd cmds.CommandInterface, i18nStrings []I18nStringInfo
 }
 
 func SaveI18nStringInfos(cmd cmds.CommandInterface, i18nStringInfos []I18nStringInfo, fileName string) error {
-	cmd.Println("fileName:", fileName)
 	jsonData, err := json.MarshalIndent(i18nStringInfos, "", "   ")
 	if err != nil {
 		cmd.Println(err)
@@ -179,4 +180,34 @@ func SaveI18nStringInfos(cmd cmds.CommandInterface, i18nStringInfos []I18nString
 	}
 
 	return nil
+}
+
+func LoadI18nStringInfos(fileName string) ([]I18nStringInfo, error) {
+	_, err := os.Stat(fileName)
+	if os.IsNotExist(err) {
+		return nil, err
+	}
+
+	content, err := ioutil.ReadFile(fileName)
+	if err != nil {
+		return nil, err
+	}
+
+	var i18nStringInfos []I18nStringInfo
+	err = json.Unmarshal(content, &i18nStringInfos)
+	if err != nil {
+		return nil, err
+	}
+
+	return i18nStringInfos, nil
+}
+
+func CreateI18nStringInfoMap(i18nStringInfos []I18nStringInfo) map[string]I18nStringInfo {
+	inputMap := make(map[string]I18nStringInfo, len(i18nStringInfos))
+
+	for _, i18nStringInfo := range i18nStringInfos {
+		inputMap[i18nStringInfo.ID] = i18nStringInfo
+	}
+
+	return inputMap
 }

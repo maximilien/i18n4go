@@ -2,7 +2,6 @@ package create_translations
 
 import (
 	"fmt"
-	"os"
 	"strings"
 
 	"encoding/json"
@@ -76,22 +75,21 @@ func (ct *CreateTranslations) Printf(msg string, a ...interface{}) (int, error) 
 	return 0, nil
 }
 
-func (ct *CreateTranslations) CreateTranslationFiles(sourceFilename string) error {
-	ct.Println("gi18n: creating translation files for:", sourceFilename)
+func (ct *CreateTranslations) Run() error {
+	ct.Println("gi18n: creating translation files for:", ct.Filename)
 	ct.Println()
-	ct.Filename = sourceFilename
 
 	for _, language := range ct.Languages {
 		ct.Println("gi18n: creating translation file copy for language:", language)
 
 		if ct.options.GoogleTranslateApiKeyFlag != "" {
-			fileName, _, err := common.CheckFile(sourceFilename)
+			fileName, _, err := common.CheckFile(ct.Filename)
 			if err != nil {
 				return err
 			}
 
 			destFilename := filepath.Join(ct.OutputDirname, strings.Replace(fileName, ct.options.SourceLanguageFlag, language, -1))
-			i18nStringInfos, err := ct.loadI18nStringInfos(sourceFilename)
+			i18nStringInfos, err := common.LoadI18nStringInfos(ct.Filename)
 			if err != nil {
 				ct.Println(err)
 				return fmt.Errorf("gi18n: could not load i18n strings from file: %s", destFilename)
@@ -125,7 +123,7 @@ func (ct *CreateTranslations) CreateTranslationFiles(sourceFilename string) erro
 
 			ct.Println()
 		} else {
-			_, err := ct.createTranslationFile(sourceFilename, language)
+			_, err := ct.createTranslationFile(ct.Filename, language)
 			if err != nil {
 				return fmt.Errorf("gi18n: could not create default translation file for language: %s", language)
 			}
@@ -137,27 +135,16 @@ func (ct *CreateTranslations) CreateTranslationFiles(sourceFilename string) erro
 	return nil
 }
 
-func (ct *CreateTranslations) loadI18nStringInfos(fileName string) ([]common.I18nStringInfo, error) {
-	_, err := os.Stat(fileName)
-	if os.IsNotExist(err) {
-		ct.Println("gi18n: could not find file:", fileName)
-		return nil, err
-	}
-
-	content, err := ioutil.ReadFile(fileName)
+func (ct *CreateTranslations) createTranslationFile(sourceFilename string, language string) (string, error) {
+	fileName, _, err := common.CheckFile(sourceFilename)
 	if err != nil {
-		ct.Println(err)
-		return nil, err
+		return "", err
 	}
 
-	var i18nStringInfos []common.I18nStringInfo
-	err = json.Unmarshal(content, &i18nStringInfos)
-	if err != nil {
-		ct.Println(err)
-		return nil, err
-	}
+	destFilename := filepath.Join(ct.OutputDirname, strings.Replace(fileName, ct.options.SourceLanguageFlag, language, -1))
+	ct.Println("gi18n: creating translation file:", destFilename)
 
-	return i18nStringInfos, nil
+	return destFilename, common.CopyFileContents(sourceFilename, destFilename)
 }
 
 func (ct *CreateTranslations) googleTranslate(translateString string, language string) (string, string, error) {
@@ -186,16 +173,4 @@ func (ct *CreateTranslations) googleTranslate(translateString string, language s
 	}
 
 	return googleTranslateData.Data.Translations[0].TranslatedText, googleTranslateData.Data.Translations[0].DetectedSourceLanguage, err
-}
-
-func (ct *CreateTranslations) createTranslationFile(sourceFilename string, language string) (string, error) {
-	fileName, _, err := common.CheckFile(sourceFilename)
-	if err != nil {
-		return "", err
-	}
-
-	destFilename := filepath.Join(ct.OutputDirname, strings.Replace(fileName, ct.options.SourceLanguageFlag, language, -1))
-	ct.Println("gi18n: creating translation file:", destFilename)
-
-	return destFilename, common.CopyFileContents(sourceFilename, destFilename)
 }

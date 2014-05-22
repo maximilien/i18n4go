@@ -42,14 +42,13 @@ func extractStringsCmd() {
 	extractStrings := extract_strings.NewExtractStrings(options)
 
 	startTime := time.Now()
-	if options.FilenameFlag != "" {
-		extractStrings.InspectFile(options.FilenameFlag)
-	} else {
-		extractStrings.InspectDir(options.DirnameFlag, options.RecurseFlag)
-		extractStrings.Println()
-		extractStrings.Println("Total files parsed:", extractStrings.TotalFiles)
-		extractStrings.Println("Total extracted strings:", extractStrings.TotalStrings)
+
+	err := extractStrings.Run()
+	if err != nil {
+		extractStrings.Println("gi18n: Could not extract strings, err:", err)
+		os.Exit(1)
 	}
+
 	duration := time.Now().Sub(startTime)
 	extractStrings.Println("Total time:", duration)
 }
@@ -64,9 +63,10 @@ func createTranslationsCmd() {
 
 	startTime := time.Now()
 
-	err := createTranslations.CreateTranslationFiles(options.FilenameFlag)
+	err := createTranslations.Run()
 	if err != nil {
 		createTranslations.Println("gi18n: Could not create translation files, err:", err)
+		os.Exit(1)
 	}
 
 	duration := time.Now().Sub(startTime)
@@ -83,11 +83,11 @@ func verifyStringsCmd() {
 
 	startTime := time.Now()
 
-	//TODO: verify here
-	// err := createTranslations.CreateTranslationFiles(options.FilenameFlag)
-	// if err != nil {
-	// 	createTranslations.Println("gi18n: Could not create translation files, err:", err)
-	// }
+	err := verifyStrings.Run()
+	if err != nil {
+		verifyStrings.Println("gi18n: Could not verify strings for input filename, err:", err)
+		os.Exit(1)
+	}
 
 	duration := time.Now().Sub(startTime)
 	verifyStrings.Println("Total time:", duration)
@@ -157,6 +157,7 @@ gi18n [-command] [-vpe] [-o <outputDir>] -f <fileName> | -d [-r] [-ignore-regexp
   -verify-strings           the verify strings command
 
   -f                        the source translation file
+  -source-language          the source language of the source translation file"
   -language-files           [optional] a comma separated list of target files for different languages to compare, e.g., \"en, en_US, fr_FR, es\"
                             if not specified then the languages flag is used to find target files in same directory as source
 

@@ -83,6 +83,22 @@ func (es *ExtractStrings) Printf(msg string, a ...interface{}) (int, error) {
 	return 0, nil
 }
 
+func (es *ExtractStrings) Run() error {
+	if es.options.FilenameFlag != "" {
+		return es.InspectFile(es.options.FilenameFlag)
+	} else {
+		err := es.InspectDir(es.options.DirnameFlag, es.options.RecurseFlag)
+		if err != nil {
+			es.Println("gi18n: could not extract strings from directory:", es.options.DirnameFlag)
+			return err
+		}
+		es.Println()
+		es.Println("Total files parsed:", es.TotalFiles)
+		es.Println("Total extracted strings:", es.TotalStrings)
+	}
+	return nil
+}
+
 func (es *ExtractStrings) InspectFile(filename string) error {
 	es.Println("gi18n: extracting strings from file:", filename)
 	if es.options.DryRunFlag {

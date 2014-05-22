@@ -35,4 +35,5 @@ type CommandInterface interface {
 	Println(a ...interface{}) (int, error)
 	Printf(msg string, a ...interface{}) (int, error)
 	Options() Options
+	Run() error
 }
