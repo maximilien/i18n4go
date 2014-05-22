@@ -43,3 +43,23 @@ func (vs *VerifyStrings) Printf(msg string, a ...interface{}) (int, error) {
 
 	return 0, nil
 }
+
+func (vs *VerifyStrings) Run() error {
+	//Check input file
+	//Get list of target files
+	//verify() each target file
+
+	return nil
+}
+
+func (vs *VerifyStrings) verify(inputFilename string, targetFilename string) error {
+	//Check target file
+	//Get list of StringInfo from input file as map
+	//Get list of StringInfo from target file as array
+	//for each stringInfo in target file StringInfo list array
+	//  Check that stringInfo.ID is in input file StringInfo list
+	//  Remove stringInfo.ID from input fileStringInfo list
+	//Check if the input file StringInfo map is empty or not
+
+	return nil
+}
