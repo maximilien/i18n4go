@@ -1,4 +1,4 @@
-package extract_strings_test
+package verify_strings_test
 
 import (
 	. "github.com/onsi/ginkgo"
@@ -10,7 +10,7 @@ import (
 	"testing"
 )
 
-func TestExtractStrings(t *testing.T) {
+func TestVerifyStrings(t *testing.T) {
 	BeforeSuite(test_helpers.BuildExecutable)
 
 	AfterSuite(func() {
@@ -18,5 +18,5 @@ func TestExtractStrings(t *testing.T) {
 	})
 
 	RegisterFailHandler(Fail)
-	RunSpecs(t, "ExtractStrings Suite")
+	RunSpecs(t, "VerifyStrings Suite")
 }
