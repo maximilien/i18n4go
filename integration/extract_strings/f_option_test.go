@@ -17,7 +17,7 @@ var _ = Describe("extract-strings -f fileName", func() {
 
 	Context("compare generated and expected file", func() {
 		BeforeEach(func() {
-			session := Runi18n("-extract-strings", "-v", "-f", filepath.Join(INPUT_FILES_PATH, "app.go"))
+			session := Runi18n("-extract-strings", "-v", "-p", "-f", filepath.Join(INPUT_FILES_PATH, "app.go"))
 			Ω(session.ExitCode()).Should(Equal(0))
 		})
 

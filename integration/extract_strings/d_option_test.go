@@ -24,7 +24,7 @@ var _ = Describe("extract-strings -d dirName", func() {
 			OUTPUT_PATH, err = ioutil.TempDir("", "gi18n4cf")
 			Ω(err).ToNot(HaveOccurred())
 
-			session := Runi18n("-extract-strings", "-v", "-d", INPUT_DIR_PATH, "-o", OUTPUT_PATH)
+			session := Runi18n("-extract-strings", "-v", "-p", "-d", INPUT_DIR_PATH, "-o", OUTPUT_PATH)
 			Ω(session.ExitCode()).Should(Equal(0))
 		})
 
@@ -66,7 +66,7 @@ var _ = Describe("extract-strings -d dirName", func() {
 			OUTPUT_PATH, err = ioutil.TempDir("", "gi18n4cf")
 			Ω(err).ToNot(HaveOccurred())
 
-			session := Runi18n("-extract-strings", "-v", "-d", INPUT_DIR_PATH, "-o", OUTPUT_PATH, "-r")
+			session := Runi18n("-extract-strings", "-v", "-p", "-d", INPUT_DIR_PATH, "-o", OUTPUT_PATH, "-r")
 			Ω(session.ExitCode()).Should(Equal(0))
 		})
 

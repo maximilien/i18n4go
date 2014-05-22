@@ -104,7 +104,7 @@ func init() {
 	flag.StringVar(&options.GoogleTranslateApiKeyFlag, "google-translate-api-key", "", "[optional] your public Google Translate API key which is used to generate translations (charge is applicable)")
 
 	flag.BoolVar(&options.VerboseFlag, "v", false, "verbose mode where lots of output is generated during execution")
-	flag.BoolVar(&options.PoFlag, "p", true, "generate standard .po file for translation")
+	flag.BoolVar(&options.PoFlag, "p", false, "generate standard .po file for translation")
 	flag.BoolVar(&options.DryRunFlag, "dry-run", false, "prevents any output files from being created")
 
 	flag.StringVar(&options.ExcludedFilenameFlag, "e", "excluded.json", "[optional] the excluded JSON file name, all strings there will be excluded")
