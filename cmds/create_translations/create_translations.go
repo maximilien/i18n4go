@@ -91,7 +91,7 @@ func (ct *CreateTranslations) Run() error {
 		} else {
 			destFilename, err := ct.createTranslationFile(ct.Filename, language)
 			if err != nil {
-				return fmt.Errorf("gi18n: could not create default translation file for language: %s", language)
+				return fmt.Errorf("gi18n: could not create default translation file for language: %s\nerr:%s", language, err.Error())
 			}
 			ct.Println(fmt.Printf("gi18n: created default translation file %s", destFilename))
 		}

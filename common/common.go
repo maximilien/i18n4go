@@ -40,6 +40,11 @@ func CheckFile(fileName string) (string, string, error) {
 }
 
 func CopyFileContents(src, dst string) error {
+	err := CreateOutputDirsIfNeeded(filepath.Dir(dst))
+	if err != nil {
+		return err
+	}
+
 	byteArray, err := ioutil.ReadFile(src)
 	if err != nil {
 		return err
