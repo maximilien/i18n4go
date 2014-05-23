@@ -118,6 +118,17 @@ func (vs *VerifyStrings) verify(inputFilename string, targetFilename string) err
 		}
 	}
 
+	if len(targetExtraStringInfos) > 0 {
+		vs.Println("gi18n: WARNING target file contains total of extra keys:", len(targetExtraStringInfos))
+
+		diffFilename, err := vs.generateExtraKeysDiffFile(targetExtraStringInfos, targetFilename)
+		if err != nil {
+			vs.Println("gi18n: ERROR could not create the diff file:", err)
+			return err
+		}
+		vs.Println("gi18n: generated diff file:", diffFilename)
+	}
+
 	if len(inputMap) > 0 {
 		vs.Println("gi18n: ERROR input file does not match target file:", targetFilename)
 
@@ -128,17 +139,6 @@ func (vs *VerifyStrings) verify(inputFilename string, targetFilename string) err
 		vs.Println("gi18n: generated diff file:", diffFilename)
 
 		return fmt.Errorf("gi18n: target file is missing i18n strings with IDs: %s", strings.Join(keysForI18nStringInfoMap(inputMap), ","))
-	}
-
-	if len(targetExtraStringInfos) > 0 {
-		vs.Println("gi18n: WARNING target file contains total of extra keys:", len(targetExtraStringInfos))
-
-		diffFilename, err := vs.generateExtraKeysDiffFile(targetExtraStringInfos, targetFilename)
-		if err != nil {
-			vs.Println("gi18n: ERROR could not create the diff file:", err)
-			return err
-		}
-		vs.Println("gi18n: generated diff file:", diffFilename)
 	}
 
 	return nil

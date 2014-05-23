@@ -58,21 +58,46 @@ var _ = Describe("verify-strings -f fileName -languages \"[lang,?]+\"", func() {
 
 		Context("fails verification", func() {
 			Context("with one language file", func() {
-				BeforeEach(func() {
-					session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(INPUT_FILES_PATH, "quota.go.en.json"), "-languages", "\"de\"", "-o", EXPECTED_FILES_PATH, "-source-language", "en")
-					Ω(session.ExitCode()).Should(Equal(1))
-				})
+				Context("with missing keys", func() {
+					BeforeEach(func() {
+						session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(INPUT_FILES_PATH, "quota.go.en.json"), "-languages", "\"de\"", "-o", EXPECTED_FILES_PATH, "-source-language", "en")
+						Ω(session.ExitCode()).Should(Equal(1))
+					})
 
-				AfterEach(func() {
-					RemoveAllFiles(
-						GetFilePath(EXPECTED_FILES_PATH, "quota.go.de.json.missing.diff.json"),
-					)
-				})
+					AfterEach(func() {
+						RemoveAllFiles(
+							GetFilePath(EXPECTED_FILES_PATH, "quota.go.de.json.missing.diff.json"),
+						)
+					})
 
-				It("with invalid keys", func() {
-					fileInfo, err := os.Stat(GetFilePath(EXPECTED_FILES_PATH, "quota.go.de.json.missing.diff.json"))
-					Ω(err).Should(BeNil())
-					Ω(fileInfo.Name()).Should(Equal("quota.go.de.json.missing.diff.json"))
+					It("generates missing diff file", func() {
+						fileInfo, err := os.Stat(GetFilePath(EXPECTED_FILES_PATH, "quota.go.de.json.missing.diff.json"))
+						Ω(err).Should(BeNil())
+						Ω(fileInfo.Name()).Should(Equal("quota.go.de.json.missing.diff.json"))
+					})
+				})
+				Context("with missing and extra keys", func() {
+					BeforeEach(func() {
+						session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(INPUT_FILES_PATH, "quota.go.en.json"), "-languages", "\"af\"", "-o", EXPECTED_FILES_PATH, "-source-language", "en")
+						Ω(session.ExitCode()).Should(Equal(1))
+					})
+
+					AfterEach(func() {
+						RemoveAllFiles(
+							GetFilePath(EXPECTED_FILES_PATH, "quota.go.af.json.missing.diff.json"),
+							GetFilePath(EXPECTED_FILES_PATH, "quota.go.af.json.extra.diff.json"),
+						)
+					})
+
+					It("generates missing and extra diff file", func() {
+						fileInfo, err := os.Stat(GetFilePath(EXPECTED_FILES_PATH, "quota.go.af.json.missing.diff.json"))
+						Ω(err).Should(BeNil())
+						Ω(fileInfo.Name()).Should(Equal("quota.go.af.json.missing.diff.json"))
+
+						fileInfo, err = os.Stat(GetFilePath(EXPECTED_FILES_PATH, "quota.go.af.json.extra.diff.json"))
+						Ω(err).Should(BeNil())
+						Ω(fileInfo.Name()).Should(Equal("quota.go.af.json.extra.diff.json"))
+					})
 				})
 			})
 

@@ -1,0 +1,30 @@
+[
+   {
+      "id": "Show quota info",
+      "translation": "Wys kwota info"
+   },
+   {
+      "id": "Routes",
+      "translation": "Roetes"
+   },
+   {
+      "id": "Services",
+      "translation": "Dienste"
+   },
+   {
+      "id": "CF_NAME quota QUOTA",
+      "translation": "CF_NAME aandeel fooi"
+   },
+   {
+      "id": "Getting quota {{.QuotaName}} info as {{.Username}}...",
+      "translation": "Aan die kwota {{.QuotaName}} Info as {{.Username}} ..."
+   },
+   {
+      "id": "Memory Limit",
+      "translation": "Memory perk"
+   },
+   {
+      "id": "Paid service plans",
+      "translation": "Betaalde diens planne"
+   }
+]
