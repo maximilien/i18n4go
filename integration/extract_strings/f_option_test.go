@@ -65,8 +65,6 @@ var _ = Describe("extract-strings -f fileName", func() {
 			Ω(session.ExitCode()).Should(Equal(0))
 		})
 
-		//    AfterEach(func() { os.RemoveAll(OUTPUT_PATH) })
-
 		It("does not generate any files", func() {
 			println(OUTPUT_PATH)
 			files, err := ioutil.ReadDir(OUTPUT_PATH)
