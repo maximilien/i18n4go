@@ -53,7 +53,7 @@ func (ms *MergeStrings) Run() error {
 
 func (ms *MergeStrings) combineStringInfosPerDirectory(directory string) error {
 	files, directories := getFilesAndDir(directory)
-	fileList := matchFileToSourceLanguage(files, ms.SourceLanguage)
+	fileList := ms.matchFileToSourceLanguage(files, ms.SourceLanguage)
 
 	combinedMap := map[string]common.I18nStringInfo{}
 	for _, file := range fileList {
@@ -65,7 +65,9 @@ func (ms *MergeStrings) combineStringInfosPerDirectory(directory string) error {
 		combineStringInfo(StringInfos, combinedMap)
 	}
 
-	common.SaveI18nStringInfos(ms, mapValues2Array(combinedMap), filepath.Join(directory, ms.SourceLanguage+".all.json"))
+	filePath := filepath.Join(directory, ms.SourceLanguage+".all.json")
+	common.SaveI18nStringInfos(ms, mapValues2Array(combinedMap), filePath)
+	ms.Println("gi18n: saving combined language file: " + filePath)
 
 	if ms.RecurseFlag {
 		for _, directory = range directories {
@@ -92,12 +94,12 @@ func getFilesAndDir(dir string) (files []string, dirs []string) {
 	return
 }
 
-func matchFileToSourceLanguage(files []string, lang string) (list []string) {
+func (ms MergeStrings) matchFileToSourceLanguage(files []string, lang string) (list []string) {
 	languageMatcher := "go." + lang + ".json"
 	for _, file := range files {
 		if strings.Contains(file, languageMatcher) {
 			list = append(list, file)
-			fmt.Println(file)
+			ms.Println("gi18n: scanning file: " + file)
 		}
 	}
 	return
