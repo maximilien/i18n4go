@@ -12,6 +12,7 @@ import (
 	"github.com/maximilien/i18n4cf/cmds/create_translations"
 	"github.com/maximilien/i18n4cf/cmds/extract_strings"
 	"github.com/maximilien/i18n4cf/cmds/rewrite_package"
+	"github.com/maximilien/i18n4cf/cmds/merge_strings"
 	"github.com/maximilien/i18n4cf/cmds/verify_strings"
 
 	"github.com/maximilien/i18n4cf/cmds"
@@ -30,6 +31,8 @@ func main() {
 		verifyStringsCmd()
 	} else if options.RewritePackageCmdFlag {
 		rewritePackageCmd()
+	} else if options.MergeStringsCmdFlag {
+		mergeStringsCmd()
 	} else {
 		usage()
 		return
@@ -116,6 +119,26 @@ func rewritePackageCmd() {
 	cmd.Println("Total time:", duration)
 }
 
+func mergeStringsCmd() {
+	if options.HelpFlag || (options.DirnameFlag == "") {
+		usage()
+		return
+	}
+
+	mergeStrings := merge_strings.NewMergeStrings(options)
+
+	startTime := time.Now()
+
+	err := mergeStrings.Run()
+	if err != nil {
+		mergeStrings.Println("gi18n: Could not merge strings, err:", err)
+		os.Exit(1)
+	}
+
+	duration := time.Now().Sub(startTime)
+	mergeStrings.Println("Total time:", duration)
+}
+
 func init() {
 	flag.BoolVar(&options.HelpFlag, "h", false, "prints the usage")
 
@@ -144,6 +167,7 @@ func init() {
 	flag.StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", "", "a perl-style regular expression for files to ignore, e.g., \".*test.*\"")
 
 	flag.BoolVar(&options.VerifyStringsCmdFlag, "verify-strings", false, "the verify strings command")
+	flag.BoolVar(&options.MergeStringsCmdFlag, "merge-strings", false, "the merge strings command")
 
 	flag.StringVar(&options.LanguageFilesFlag, "language-files", "", `[optional] a comma separated list of target files for different languages to compare,  e.g., \"en, en_US, fr_FR, es\"	                                                                  if not specified then the languages flag is used to find target files in same directory as source`)
 

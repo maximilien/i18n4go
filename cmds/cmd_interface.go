@@ -7,6 +7,7 @@ type Options struct {
 	CreateTranslationsCmdFlag bool
 	VerifyStringsCmdFlag      bool
 	RewritePackageCmdFlag     bool
+	MergeStringsCmdFlag       bool
 
 	VerboseFlag bool
 	DryRunFlag  bool
