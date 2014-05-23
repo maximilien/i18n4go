@@ -11,8 +11,8 @@ import (
 
 	"github.com/maximilien/i18n4cf/cmds/create_translations"
 	"github.com/maximilien/i18n4cf/cmds/extract_strings"
-	"github.com/maximilien/i18n4cf/cmds/rewrite_package"
 	"github.com/maximilien/i18n4cf/cmds/merge_strings"
+	"github.com/maximilien/i18n4cf/cmds/rewrite_package"
 	"github.com/maximilien/i18n4cf/cmds/verify_strings"
 
 	"github.com/maximilien/i18n4cf/cmds"
