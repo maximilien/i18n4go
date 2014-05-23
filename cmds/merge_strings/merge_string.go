@@ -13,16 +13,15 @@ import (
 type MergeStrings struct {
 	options cmds.Options
 
-	combinedMap    map[string]common.I18nStringInfo
-	OutputDirname  string
+	RecurseFlag    bool
 	SourceLanguage string
 	Directory      string
 }
 
 func NewMergeStrings(options cmds.Options) MergeStrings {
-	return MergeStrings{options: options,
-		combinedMap:    make(map[string]common.I18nStringInfo),
-		OutputDirname:  options.OutputDirFlag,
+	return MergeStrings{
+		options:        options,
+		RecurseFlag:    options.RecurseFlag,
 		SourceLanguage: options.SourceLanguageFlag,
 		Directory:      options.DirnameFlag,
 	}
@@ -49,15 +48,33 @@ func (ms *MergeStrings) Printf(msg string, a ...interface{}) (int, error) {
 }
 
 func (ms *MergeStrings) Run() error {
-	files, _ := getFilesAndDir(ms.Directory)
+	return ms.combineStringInfosPerDirectory(ms.Directory)
+}
+
+func (ms *MergeStrings) combineStringInfosPerDirectory(directory string) error {
+	files, directories := getFilesAndDir(directory)
 	fileList := matchFileToSourceLanguage(files, ms.SourceLanguage)
 
+	combinedMap := map[string]common.I18nStringInfo{}
 	for _, file := range fileList {
-		StringInfos, _ := common.LoadI18nStringInfos(file)
-		ms.combineStringInfo(StringInfos)
+		StringInfos, err := common.LoadI18nStringInfos(file)
+		if err != nil {
+			return err
+		}
+
+		combineStringInfo(StringInfos, combinedMap)
 	}
 
-	common.SaveI18nStringInfos(ms, ms.mapValues2Array(), filepath.Join(ms.Directory, ms.SourceLanguage+".all.json"))
+	common.SaveI18nStringInfos(ms, mapValues2Array(combinedMap), filepath.Join(directory, ms.SourceLanguage+".all.json"))
+
+	if ms.RecurseFlag {
+		for _, directory = range directories {
+			err := ms.combineStringInfosPerDirectory(directory)
+			if err != nil {
+				return err
+			}
+		}
+	}
 
 	return nil
 }
@@ -86,16 +103,16 @@ func matchFileToSourceLanguage(files []string, lang string) (list []string) {
 	return
 }
 
-func (ms *MergeStrings) combineStringInfo(stringInfoList []common.I18nStringInfo) {
+func combineStringInfo(stringInfoList []common.I18nStringInfo, combinedMap map[string]common.I18nStringInfo) {
 	for _, stringInfo := range stringInfoList {
-		if _, ok := ms.combinedMap[stringInfo.ID]; !ok {
-			ms.combinedMap[stringInfo.ID] = stringInfo
+		if _, ok := combinedMap[stringInfo.ID]; !ok {
+			combinedMap[stringInfo.ID] = stringInfo
 		}
 	}
 }
 
-func (ms *MergeStrings) mapValues2Array() (stringInfoList []common.I18nStringInfo) {
-	for _, stringInfo := range ms.combinedMap {
+func mapValues2Array(combinedMap map[string]common.I18nStringInfo) (stringInfoList []common.I18nStringInfo) {
+	for _, stringInfo := range combinedMap {
 		stringInfoList = append(stringInfoList, stringInfo)
 	}
 	return

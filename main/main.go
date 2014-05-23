@@ -178,29 +178,38 @@ func init() {
 
 func usage() {
 	usageString := `
-gi18n [-command] [-vpe] [-o <outputDir>] -f <fileName> | -d [-r] [-ignore-regexp <regex>] <dirName>
-  -h                        prints the usage
+usage: gi18n -extract-string [-vpe] [-dry-run] [-output-flat|-output-match-package|-o <outputDir>] -f <fileName>
+   or: gi18n -extract-string [-vpe] [-dry-run] [-output-flat|-output-match-package|-o <outputDir>] [-r] [-ignore-regexp <regex>] -d <dirName>
 
+usage: gi18n -verify-string [-v] [-source-language <language>] -f <fileName> -language-files <language files>
+   or: gi18n -verify-string [-v] [-source-language <language>] -f <fileName> -languages <lang1,lang2,...>
+
+usage: gi18n -create-translations [-v] [-google-translate-api-key <api key>] [-source-language <language>] -f <fileName> -languages <lang1,lang2,...> -o <outputDir>
+
+usage: gi18n -merge-strings [-v] [-r] [-source-language <language>] -d <directory>
+
+  -h                        prints the usage
   -v                        verbose
-  -dry-run                  prevents any output files from being created
-  -p                        to generate standard .po files for translation
 
   EXTRACT-STRINGS:
 
   -extract-strings          the extract strings command
 
-  -o                        the output directory where the translation files will be placed
+  -p                        to generate standard .po files for translation
+  -e                        [optional] the JSON file with strings to be excluded, defaults to excluded.json if present
+  -dry-run                  [optional] prevents any output files from being created
+
+
   -output-flat              generated files are created in the specified output directory (default)
   -output-match-package     generated files are created in directory to match the package name
-
-  -e                        [optional] the JSON file with strings to be excluded, defaults to excluded.json if present
+  -o                        the output directory where the translation files will be placed
 
   -f                        the go file name to extract strings
 
-  -r                        recursesively extract strings from all subdirectories
   -d                        the directory containing the go files to extract strings
 
-  -ignore-regexp            a perl-style regular expression for files to ignore, e.g., ".*test.*"
+  -r                        [optional] recursesively extract strings from all subdirectories
+  -ignore-regexp            [optional] a perl-style regular expression for files to ignore, e.g., ".*test.*"
 
   REWRITE-PACKAGE-FOR-I18N
 
@@ -213,24 +222,35 @@ gi18n [-command] [-vpe] [-o <outputDir>] -f <fileName> | -d [-r] [-ignore-regexp
 
   -verify-strings           the verify strings command
 
-  -f                        the source translation file
-  -source-language          the source language of the source translation file"
-  -language-files           [optional] a comma separated list of target files for different languages to compare, e.g., \"en, en_US, fr_FR, es\"
-                            if not specified then the languages flag is used to find target files in same directory as source
+  -source-language          [optional] the source language of the source translation file (default to 'en')
 
-  -languages                [optional] a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
+  -f                        the source translation file
+
+  -language-files           a comma separated list of target files for different languages to compare, e.g., \"en, en_US, fr_FR, es\"
+                            if not specified then the languages flag is used to find target files in same directory as source
+  -languages                a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
+
 
   CREATE-TRANSLATIONS:
 
   -create-translations      the create translations command
 
   -google-translate-api-key [optional] your public Google Translate API key which is used to generate translations (charge is applicable)
+  -source-language          [optional] the source language of the file, typically also part of the file name, e.g., \"en_US\"
 
   -f                        the source translation file
-
-  -source-language          [optional] the source language of the file, typically also part of the file name, e.g., \"en_US\"
   -languages                a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
   -o                        the output directory where the newly created translation files will be placed
+
+  MERGE STRINGS:
+
+  -merge-strings            merges multiple <filename>.go.<language>.json files into a <language>.all.json
+
+  -r                        [optional] recursesively combine files from all subdirectories
+  -source-language          [optional] the source language of the file, typically also part of the file name, e.g., \"en_US\" (default to 'en')
+
+  -d                        the directory containing the json files to combine
+
 `
 	fmt.Println(usageString)
 }
