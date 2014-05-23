@@ -118,6 +118,7 @@ func (vs *VerifyStrings) verify(inputFilename string, targetFilename string) err
 		}
 	}
 
+	var verficationError error
 	if len(targetExtraStringInfos) > 0 {
 		vs.Println("gi18n: WARNING target file contains total of extra keys:", len(targetExtraStringInfos))
 
@@ -127,6 +128,7 @@ func (vs *VerifyStrings) verify(inputFilename string, targetFilename string) err
 			return err
 		}
 		vs.Println("gi18n: generated diff file:", diffFilename)
+		verficationError = fmt.Errorf("gi18n: target file has extra i18n strings with IDs: %s", strings.Join(keysForI18nStringInfos(targetExtraStringInfos), ","))
 	}
 
 	if len(inputMap) > 0 {
@@ -135,13 +137,21 @@ func (vs *VerifyStrings) verify(inputFilename string, targetFilename string) err
 		diffFilename, err := vs.generateMissingKeysDiffFile(valuesForI18nStringInfoMap(inputMap), targetFilename)
 		if err != nil {
 			vs.Println("gi18n: ERROR could not create the diff file:", err)
+			return err
 		}
 		vs.Println("gi18n: generated diff file:", diffFilename)
-
-		return fmt.Errorf("gi18n: target file is missing i18n strings with IDs: %s", strings.Join(keysForI18nStringInfoMap(inputMap), ","))
+		verficationError = fmt.Errorf("gi18n: target file is missing i18n strings with IDs: %s", strings.Join(keysForI18nStringInfoMap(inputMap), ","))
 	}
 
-	return nil
+	return verficationError
+}
+
+func keysForI18nStringInfos(in18nStringInfos []common.I18nStringInfo) []string {
+	var keys []string
+	for _, stringInfo := range in18nStringInfos {
+		keys = append(keys, stringInfo.ID)
+	}
+	return keys
 }
 
 func keysForI18nStringInfoMap(inputMap map[string]common.I18nStringInfo) []string {

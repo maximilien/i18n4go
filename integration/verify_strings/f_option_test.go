@@ -126,67 +126,65 @@ var _ = Describe("verify-strings -f fileName -languages \"[lang,?]+\"", func() {
 			})
 		})
 
-		Context("warns verifications", func() {
-			Context("with language file", func() {
-				BeforeEach(func() {
-					session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(INPUT_FILES_PATH, "quota.go.en.json"), "-languages", "\"ja\"", "-o", EXPECTED_FILES_PATH)
-					Ω(session.ExitCode()).Should(Equal(0))
-				})
-
-				AfterEach(func() {
-					RemoveAllFiles(
-						GetFilePath(EXPECTED_FILES_PATH, "quota.go.ja.json.extra.diff.json"),
-					)
-				})
-
-				It("with additional keys", func() {
-					fileInfo, err := os.Stat(GetFilePath(EXPECTED_FILES_PATH, "quota.go.ja.json.extra.diff.json"))
-					Ω(err).Should(BeNil())
-					Ω(fileInfo.Name()).Should(Equal("quota.go.ja.json.extra.diff.json"))
-				})
+		Context("with language file", func() {
+			BeforeEach(func() {
+				session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(INPUT_FILES_PATH, "quota.go.en.json"), "-languages", "\"ja\"", "-o", EXPECTED_FILES_PATH)
+				Ω(session.ExitCode()).Should(Equal(1))
 			})
 
-			Context("with multiple language file", func() {
-				BeforeEach(func() {
-					session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(INPUT_FILES_PATH, "quota.go.en.json"), "-languages", "\"ja,cs\"", "-o", EXPECTED_FILES_PATH)
-					Ω(session.ExitCode()).Should(Equal(0))
-				})
-
-				AfterEach(func() {
-					RemoveAllFiles(
-						GetFilePath(EXPECTED_FILES_PATH, "quota.go.ja.json.extra.diff.json"),
-						GetFilePath(EXPECTED_FILES_PATH, "quota.go.cs.json.extra.diff.json"),
-					)
-				})
-
-				It("with additional keys", func() {
-					fileInfo, err := os.Stat(GetFilePath(EXPECTED_FILES_PATH, "quota.go.ja.json.extra.diff.json"))
-					Ω(err).Should(BeNil())
-					Ω(fileInfo.Name()).Should(Equal("quota.go.ja.json.extra.diff.json"))
-
-					fileInfo, err = os.Stat(GetFilePath(EXPECTED_FILES_PATH, "quota.go.cs.json.extra.diff.json"))
-					Ω(err).Should(BeNil())
-					Ω(fileInfo.Name()).Should(Equal("quota.go.cs.json.extra.diff.json"))
-				})
+			AfterEach(func() {
+				RemoveAllFiles(
+					GetFilePath(EXPECTED_FILES_PATH, "quota.go.ja.json.extra.diff.json"),
+				)
 			})
 
-			Context("when missing a language file", func() {
-				BeforeEach(func() {
-					session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(INPUT_FILES_PATH, "quota.go.en.json"), "-languages", "\"ja,ht\"", "-o", EXPECTED_FILES_PATH)
-					Ω(session.ExitCode()).Should(Equal(1))
-				})
+			It("with additional keys", func() {
+				fileInfo, err := os.Stat(GetFilePath(EXPECTED_FILES_PATH, "quota.go.ja.json.extra.diff.json"))
+				Ω(err).Should(BeNil())
+				Ω(fileInfo.Name()).Should(Equal("quota.go.ja.json.extra.diff.json"))
+			})
+		})
 
-				AfterEach(func() {
-					RemoveAllFiles(
-						GetFilePath(EXPECTED_FILES_PATH, "quota.go.ja.json.extra.diff.json"),
-					)
-				})
+		Context("with multiple language file", func() {
+			BeforeEach(func() {
+				session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(INPUT_FILES_PATH, "quota.go.en.json"), "-languages", "\"ja,cs\"", "-o", EXPECTED_FILES_PATH)
+				Ω(session.ExitCode()).Should(Equal(1))
+			})
 
-				It("with additional keys", func() {
-					fileInfo, err := os.Stat(GetFilePath(EXPECTED_FILES_PATH, "quota.go.ja.json.extra.diff.json"))
-					Ω(err).Should(BeNil())
-					Ω(fileInfo.Name()).Should(Equal("quota.go.ja.json.extra.diff.json"))
-				})
+			AfterEach(func() {
+				RemoveAllFiles(
+					GetFilePath(EXPECTED_FILES_PATH, "quota.go.ja.json.extra.diff.json"),
+					GetFilePath(EXPECTED_FILES_PATH, "quota.go.cs.json.extra.diff.json"),
+				)
+			})
+
+			It("with additional keys", func() {
+				fileInfo, err := os.Stat(GetFilePath(EXPECTED_FILES_PATH, "quota.go.ja.json.extra.diff.json"))
+				Ω(err).Should(BeNil())
+				Ω(fileInfo.Name()).Should(Equal("quota.go.ja.json.extra.diff.json"))
+
+				fileInfo, err = os.Stat(GetFilePath(EXPECTED_FILES_PATH, "quota.go.cs.json.extra.diff.json"))
+				Ω(err).Should(BeNil())
+				Ω(fileInfo.Name()).Should(Equal("quota.go.cs.json.extra.diff.json"))
+			})
+		})
+
+		Context("when missing a language file", func() {
+			BeforeEach(func() {
+				session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(INPUT_FILES_PATH, "quota.go.en.json"), "-languages", "\"ja,ht\"", "-o", EXPECTED_FILES_PATH)
+				Ω(session.ExitCode()).Should(Equal(1))
+			})
+
+			AfterEach(func() {
+				RemoveAllFiles(
+					GetFilePath(EXPECTED_FILES_PATH, "quota.go.ja.json.extra.diff.json"),
+				)
+			})
+
+			It("with additional keys", func() {
+				fileInfo, err := os.Stat(GetFilePath(EXPECTED_FILES_PATH, "quota.go.ja.json.extra.diff.json"))
+				Ω(err).Should(BeNil())
+				Ω(fileInfo.Name()).Should(Equal("quota.go.ja.json.extra.diff.json"))
 			})
 		})
 	})
