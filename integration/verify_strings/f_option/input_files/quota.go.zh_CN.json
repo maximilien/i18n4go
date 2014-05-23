@@ -1,0 +1,30 @@
+[
+   {
+      "id": "Show quota info",
+      "translation": "显示配额信息"
+   },
+   {
+      "id": "Routes",
+      "translation": "路线"
+   },
+   {
+      "id": "Services",
+      "translation": "服务"
+   },
+   {
+      "id": "CF_NAME quota QUOTA",
+      "translation": "CF_NAME份额费用QUOTA"
+   },
+   {
+      "id": "Getting quota {{.QuotaName}} info as {{.Username}}...",
+      "translation": "获得配额{{.QuotaName}}信息为{{.Username}} ..."
+   },
+   {
+      "id": "Memory",
+      "translation": "记忆"
+   },
+   {
+      "id": "Paid service plans",
+      "translation": "有偿服务计划"
+   }
+]

@@ -1,0 +1,34 @@
+[
+   {
+      "id": "Show quota info",
+      "translation": "表示クォータ情報"
+   },
+   {
+      "id": "Routes",
+      "translation": "ルート"
+   },
+   {
+      "id": "Services",
+      "translation": "サービス"
+   },
+   {
+      "id": "CF_NAME quota QUOTA",
+      "translation": "CF_NAMEシェア料"
+   },
+   {
+      "id": "Getting quota {{.QuotaName}} info as {{.Username}}...",
+      "translation": "{{.Username}}ユーザー名}}のように、クォータ{{.QuotaName}}の情報を取得中..."
+   },
+   {
+      "id": "Memory",
+      "translation": "メモリ"
+   },
+   {
+      "id": "Memory Limit",
+      "translation": "メモリの制限"
+   },
+   {
+      "id": "Paid service plans",
+      "translation": "有料のサービスプラン"
+   }
+]

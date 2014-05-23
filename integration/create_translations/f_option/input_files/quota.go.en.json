@@ -1,0 +1,30 @@
+[
+    {
+        "id": "Show quota info",
+        "translation": "Show quota info"
+    },
+    {
+        "id": "Routes",
+        "translation": "Routes"
+    },
+    {
+        "id": "Services",
+        "translation": "Services"
+    },
+    {
+        "id": "CF_NAME quota QUOTA",
+        "translation": "CF_NAME quota QUOTA"
+    },
+    {
+        "id": "Getting quota {{.QuotaName}} info as {{.Username}}...",
+        "translation": "Getting quota {{.QuotaName}} info as {{.Username}}..."
+    },
+    {
+        "id": "Memory",
+        "translation": "Memory"
+    },
+    {
+        "id": "Paid service plans",
+        "translation": "Paid service plans"
+    }
+]

@@ -1,0 +1,26 @@
+[
+   {
+      "id": "Show quota info",
+      "translation": "Zeige Quote info"
+   },
+   {
+      "id": "Routes",
+      "translation": "Routen"
+   },
+   {
+      "id": "Services",
+      "translation": "Dienstleistungen"
+   },
+   {
+      "id": "CF_NAME quota QUOTA",
+      "translation": "CF_NAME Aktien FEE"
+   },
+   {
+      "id": "Memory",
+      "translation": "Speicher"
+   },
+   {
+      "id": "Paid service plans",
+      "translation": "Paid Service-Pläne"
+   }
+]

@@ -1,0 +1,34 @@
+[
+   {
+      "id": "Show quota info",
+      "translation": "Info Zobrazit kvóta"
+   },
+   {
+      "id": "Routes",
+      "translation": "Trasy"
+   },
+   {
+      "id": "Services",
+      "translation": "Služby"
+   },
+   {
+      "id": "CF_NAME quota QUOTA",
+      "translation": "CF_NAME podíl POPLATEK"
+   },
+   {
+      "id": "Getting quota {{.QuotaName}} info as {{.Username}}...",
+      "translation": "Jak kvóty {{.QuotaName}} info jako {{.Username}} ..."
+   },
+   {
+      "id": "Memory",
+      "translation": "Paměť"
+   },
+   {
+      "id": "Memory Limit",
+      "translation": "Limit paměti"
+   },
+   {
+      "id": "Paid service plans",
+      "translation": "Placené servisní plány"
+   }
+]
