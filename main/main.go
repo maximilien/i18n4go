@@ -97,7 +97,7 @@ func verifyStringsCmd() {
 }
 
 func rewritePackageCmd() {
-	if options.HelpFlag || (options.FilenameFlag == "") || (options.DirnameFlag == "") {
+	if options.HelpFlag || (options.FilenameFlag == "") {
 		usage()
 		return
 	}
