@@ -8,7 +8,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("merge-strings -d dirName", func() {
+var _ = Describe("merge-strings -d dirName -r", func() {
 	var (
 		INPUT_FILES_PATH    = filepath.Join("r_option", "input_files")
 		EXPECTED_FILES_PATH = filepath.Join("r_option", "expected_output")
