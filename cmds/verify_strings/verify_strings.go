@@ -9,7 +9,7 @@ import (
 	"github.com/maximilien/i18n4cf/common"
 )
 
-type VerifyStrings struct {
+type verifyStrings struct {
 	options cmds.Options
 
 	InputFilename string
@@ -20,11 +20,11 @@ type VerifyStrings struct {
 	Languages         []string
 }
 
-func NewVerifyStrings(options cmds.Options) VerifyStrings {
+func NewVerifyStrings(options cmds.Options) verifyStrings {
 	languageFilenames := common.ParseStringList(options.LanguageFilesFlag, ",")
 	languages := common.ParseStringList(options.LanguagesFlag, ",")
 
-	return VerifyStrings{options: options,
+	return verifyStrings{options: options,
 		InputFilename:     options.FilenameFlag,
 		OutputDirname:     options.OutputDirFlag,
 		LanguageFilenames: languageFilenames,
@@ -33,11 +33,11 @@ func NewVerifyStrings(options cmds.Options) VerifyStrings {
 	}
 }
 
-func (vs *VerifyStrings) Options() cmds.Options {
+func (vs *verifyStrings) Options() cmds.Options {
 	return vs.options
 }
 
-func (vs *VerifyStrings) Println(a ...interface{}) (int, error) {
+func (vs *verifyStrings) Println(a ...interface{}) (int, error) {
 	if vs.options.VerboseFlag {
 		return fmt.Println(a...)
 	}
@@ -45,7 +45,7 @@ func (vs *VerifyStrings) Println(a ...interface{}) (int, error) {
 	return 0, nil
 }
 
-func (vs *VerifyStrings) Printf(msg string, a ...interface{}) (int, error) {
+func (vs *verifyStrings) Printf(msg string, a ...interface{}) (int, error) {
 	if vs.options.VerboseFlag {
 		return fmt.Printf(msg, a...)
 	}
@@ -53,7 +53,7 @@ func (vs *VerifyStrings) Printf(msg string, a ...interface{}) (int, error) {
 	return 0, nil
 }
 
-func (vs *VerifyStrings) Run() error {
+func (vs *verifyStrings) Run() error {
 	fileName, filePath, err := common.CheckFile(vs.InputFilename)
 	if err != nil {
 		vs.Println("gi18n: Error checking input filename: ", vs.InputFilename)
@@ -72,7 +72,7 @@ func (vs *VerifyStrings) Run() error {
 	return err
 }
 
-func (vs *VerifyStrings) determineTargetFilenames(inputFilename string, inputFilePath string) []string {
+func (vs *verifyStrings) determineTargetFilenames(inputFilename string, inputFilePath string) []string {
 	if len(vs.LanguageFilenames) != 0 {
 		return vs.LanguageFilenames
 	}
@@ -87,7 +87,7 @@ func (vs *VerifyStrings) determineTargetFilenames(inputFilename string, inputFil
 	return targetFilenames
 }
 
-func (vs *VerifyStrings) verify(inputFilename string, targetFilename string) error {
+func (vs *verifyStrings) verify(inputFilename string, targetFilename string) error {
 	common.CheckFile(targetFilename)
 
 	inputI18nStringInfos, err := common.LoadI18nStringInfos(inputFilename)
@@ -170,7 +170,7 @@ func valuesForI18nStringInfoMap(inputMap map[string]common.I18nStringInfo) []com
 	return values
 }
 
-func (vs *VerifyStrings) generateMissingKeysDiffFile(missingStringInfos []common.I18nStringInfo, fileName string) (string, error) {
+func (vs *verifyStrings) generateMissingKeysDiffFile(missingStringInfos []common.I18nStringInfo, fileName string) (string, error) {
 	name, pathName, err := common.CheckFile(fileName)
 	if err != nil {
 		return "", err
@@ -187,7 +187,7 @@ func (vs *VerifyStrings) generateMissingKeysDiffFile(missingStringInfos []common
 	return diffFilename, common.SaveI18nStringInfos(vs, missingStringInfos, diffFilename)
 }
 
-func (vs *VerifyStrings) generateExtraKeysDiffFile(extraStringInfos []common.I18nStringInfo, fileName string) (string, error) {
+func (vs *verifyStrings) generateExtraKeysDiffFile(extraStringInfos []common.I18nStringInfo, fileName string) (string, error) {
 	name, pathName, err := common.CheckFile(fileName)
 	if err != nil {
 		return "", err

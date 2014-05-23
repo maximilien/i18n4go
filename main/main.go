@@ -11,6 +11,7 @@ import (
 
 	"github.com/maximilien/i18n4cf/cmds/create_translations"
 	"github.com/maximilien/i18n4cf/cmds/extract_strings"
+	"github.com/maximilien/i18n4cf/cmds/rewrite_package"
 	"github.com/maximilien/i18n4cf/cmds/verify_strings"
 
 	"github.com/maximilien/i18n4cf/cmds"
@@ -27,6 +28,8 @@ func main() {
 		createTranslationsCmd()
 	} else if options.VerifyStringsCmdFlag {
 		verifyStringsCmd()
+	} else if options.RewritePackageCmdFlag {
+		rewritePackageCmd()
 	} else {
 		usage()
 		return
@@ -39,18 +42,18 @@ func extractStringsCmd() {
 		return
 	}
 
-	extractStrings := extract_strings.NewExtractStrings(options)
+	cmd := extract_strings.NewExtractStrings(options)
 
 	startTime := time.Now()
 
-	err := extractStrings.Run()
+	err := cmd.Run()
 	if err != nil {
-		extractStrings.Println("gi18n: Could not extract strings, err:", err)
+		cmd.Println("gi18n: Could not extract strings, err:", err)
 		os.Exit(1)
 	}
 
 	duration := time.Now().Sub(startTime)
-	extractStrings.Println("Total time:", duration)
+	cmd.Println("Total time:", duration)
 }
 
 func createTranslationsCmd() {
@@ -59,18 +62,18 @@ func createTranslationsCmd() {
 		return
 	}
 
-	createTranslations := create_translations.NewCreateTranslations(options)
+	cmd := create_translations.NewCreateTranslations(options)
 
 	startTime := time.Now()
 
-	err := createTranslations.Run()
+	err := cmd.Run()
 	if err != nil {
-		createTranslations.Println("gi18n: Could not create translation files, err:", err)
+		cmd.Println("gi18n: Could not create translation files, err:", err)
 		os.Exit(1)
 	}
 
 	duration := time.Now().Sub(startTime)
-	createTranslations.Println("Total time:", duration)
+	cmd.Println("Total time:", duration)
 }
 
 func verifyStringsCmd() {
@@ -79,18 +82,38 @@ func verifyStringsCmd() {
 		return
 	}
 
-	verifyStrings := verify_strings.NewVerifyStrings(options)
+	cmd := verify_strings.NewVerifyStrings(options)
 
 	startTime := time.Now()
 
-	err := verifyStrings.Run()
+	err := cmd.Run()
 	if err != nil {
-		verifyStrings.Println("gi18n: Could not verify strings for input filename, err:", err)
+		cmd.Println("gi18n: Could not verify strings for input filename, err:", err)
 		os.Exit(1)
 	}
 
 	duration := time.Now().Sub(startTime)
-	verifyStrings.Println("Total time:", duration)
+	cmd.Println("Total time:", duration)
+}
+
+func rewritePackageCmd() {
+	if options.HelpFlag || (options.FilenameFlag == "") || (options.DirnameFlag == "") {
+		usage()
+		return
+	}
+
+	cmd := rewrite_package.NewRewritePackage(options)
+
+	startTime := time.Now()
+
+	err := cmd.Run()
+	if err != nil {
+		cmd.Println("gi18n: Could not verify strings for input filename, err:", err)
+		os.Exit(1)
+	}
+
+	duration := time.Now().Sub(startTime)
+	cmd.Println("Total time:", duration)
 }
 
 func init() {
@@ -98,6 +121,7 @@ func init() {
 
 	flag.BoolVar(&options.ExtractStringsCmdFlag, "extract-strings", false, "want to extract strings from file or directory")
 	flag.BoolVar(&options.CreateTranslationsCmdFlag, "create-translations", false, "create translation files for different languages using a source file")
+	flag.BoolVar(&options.RewritePackageCmdFlag, "rewrite-package", false, "rewrites the specified source file to translate previously-extracted strings")
 
 	flag.StringVar(&options.SourceLanguageFlag, "source-language", "en", "the source language of the file, typically also part of the file name, e.g., \"en_US\"")
 	flag.StringVar(&options.LanguagesFlag, "languages", "", "a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"")
@@ -122,6 +146,8 @@ func init() {
 	flag.BoolVar(&options.VerifyStringsCmdFlag, "verify-strings", false, "the verify strings command")
 
 	flag.StringVar(&options.LanguageFilesFlag, "language-files", "", `[optional] a comma separated list of target files for different languages to compare,  e.g., \"en, en_US, fr_FR, es\"	                                                                  if not specified then the languages flag is used to find target files in same directory as source`)
+
+	flag.StringVar(&options.I18nStringsFilenameFlag, "i18n-strings-filename", "", "a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command")
 
 	flag.Parse()
 }
@@ -151,6 +177,13 @@ gi18n [-command] [-vpe] [-o <outputDir>] -f <fileName> | -d [-r] [-ignore-regexp
   -d                        the directory containing the go files to extract strings
 
   -ignore-regexp            a perl-style regular expression for files to ignore, e.g., ".*test.*"
+
+  REWRITE-PACKAGE-FOR-I18N
+
+  -f                        the source go file to be rewritten
+  -d                        the directory containing the go files to rewrite
+  -i18n-strings-filename    a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command
+  -o                        [optional] output diretory for rewritten file. If not specified, the original file will be overwritten
 
   VERIFY-TRANSLATIONS:
 

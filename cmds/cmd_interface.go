@@ -6,6 +6,7 @@ type Options struct {
 	ExtractStringsCmdFlag     bool
 	CreateTranslationsCmdFlag bool
 	VerifyStringsCmdFlag      bool
+	RewritePackageCmdFlag     bool
 
 	VerboseFlag bool
 	DryRunFlag  bool
@@ -29,6 +30,8 @@ type Options struct {
 	IgnoreRegexpFlag string
 
 	LanguageFilesFlag string
+
+	I18nStringsFilenameFlag string
 }
 
 type CommandInterface interface {

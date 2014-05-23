@@ -21,7 +21,7 @@ import (
 	"github.com/maximilien/i18n4cf/common"
 )
 
-type ExtractStrings struct {
+type extractStrings struct {
 	options cmds.Options
 
 	i18nFilename string
@@ -41,7 +41,7 @@ type ExtractStrings struct {
 	IgnoreRegexp *regexp.Regexp
 }
 
-func NewExtractStrings(options cmds.Options) ExtractStrings {
+func NewExtractStrings(options cmds.Options) extractStrings {
 	var compiledRegexp *regexp.Regexp
 	if options.IgnoreRegexpFlag != "" {
 		compiledReg, err := regexp.Compile(options.IgnoreRegexpFlag)
@@ -51,7 +51,7 @@ func NewExtractStrings(options cmds.Options) ExtractStrings {
 		compiledRegexp = compiledReg
 	}
 
-	return ExtractStrings{options: options,
+	return extractStrings{options: options,
 		Filename:         "extracted_strings.json",
 		OutputDirname:    options.OutputDirFlag,
 		ExtractedStrings: nil,
@@ -63,11 +63,11 @@ func NewExtractStrings(options cmds.Options) ExtractStrings {
 		IgnoreRegexp:     compiledRegexp}
 }
 
-func (es *ExtractStrings) Options() cmds.Options {
+func (es *extractStrings) Options() cmds.Options {
 	return es.options
 }
 
-func (es *ExtractStrings) Println(a ...interface{}) (int, error) {
+func (es *extractStrings) Println(a ...interface{}) (int, error) {
 	if es.options.VerboseFlag {
 		return fmt.Println(a...)
 	}
@@ -75,7 +75,7 @@ func (es *ExtractStrings) Println(a ...interface{}) (int, error) {
 	return 0, nil
 }
 
-func (es *ExtractStrings) Printf(msg string, a ...interface{}) (int, error) {
+func (es *extractStrings) Printf(msg string, a ...interface{}) (int, error) {
 	if es.options.VerboseFlag {
 		return fmt.Printf(msg, a...)
 	}
@@ -83,7 +83,7 @@ func (es *ExtractStrings) Printf(msg string, a ...interface{}) (int, error) {
 	return 0, nil
 }
 
-func (es *ExtractStrings) Run() error {
+func (es *extractStrings) Run() error {
 	if es.options.FilenameFlag != "" {
 		return es.InspectFile(es.options.FilenameFlag)
 	} else {
@@ -99,7 +99,7 @@ func (es *ExtractStrings) Run() error {
 	return nil
 }
 
-func (es *ExtractStrings) InspectFile(filename string) error {
+func (es *extractStrings) InspectFile(filename string) error {
 	es.Println("gi18n: extracting strings from file:", filename)
 	if es.options.DryRunFlag {
 		es.Println("WARNING running in -dry-run mode")
@@ -205,7 +205,7 @@ func (es *ExtractStrings) InspectFile(filename string) error {
 	return nil
 }
 
-func (es *ExtractStrings) InspectDir(dirName string, recursive bool) error {
+func (es *extractStrings) InspectDir(dirName string, recursive bool) error {
 	es.Printf("gi18n: inspecting dir %s, recursive: %t\n", dirName, recursive)
 	es.Println()
 
@@ -253,7 +253,7 @@ func (es *ExtractStrings) InspectDir(dirName string, recursive bool) error {
 	return nil
 }
 
-func (es *ExtractStrings) findImportPath(filename string) (string, error) {
+func (es *extractStrings) findImportPath(filename string) (string, error) {
 	path := es.OutputDirname
 
 	filePath, err := common.FindFilePath(filename)
@@ -271,7 +271,7 @@ func (es *ExtractStrings) findImportPath(filename string) (string, error) {
 	return path, nil
 }
 
-func (es *ExtractStrings) findPackagePath(filename string) (string, error) {
+func (es *extractStrings) findPackagePath(filename string) (string, error) {
 	path := es.OutputDirname
 
 	filePath, err := common.FindFilePath(filename)
@@ -289,7 +289,7 @@ func (es *ExtractStrings) findPackagePath(filename string) (string, error) {
 	return filepath.Join(path, pkg.Name), nil
 }
 
-func (es *ExtractStrings) saveExtractedStrings(outputDirname string) error {
+func (es *extractStrings) saveExtractedStrings(outputDirname string) error {
 	if len(es.ExtractedStrings) != 0 {
 		es.Println("Saving extracted strings to file:", es.Filename)
 	}
@@ -323,19 +323,19 @@ func (es *ExtractStrings) saveExtractedStrings(outputDirname string) error {
 	return nil
 }
 
-func (es *ExtractStrings) setFilename(filename string) {
+func (es *extractStrings) setFilename(filename string) {
 	es.Filename = filename + ".extracted.json"
 }
 
-func (es *ExtractStrings) setI18nFilename(filename string) {
+func (es *extractStrings) setI18nFilename(filename string) {
 	es.i18nFilename = filename + ".en.json"
 }
 
-func (es *ExtractStrings) setPoFilename(filename string) {
+func (es *extractStrings) setPoFilename(filename string) {
 	es.poFilename = filename + ".en.po"
 }
 
-func (es *ExtractStrings) loadExcludedStrings() error {
+func (es *extractStrings) loadExcludedStrings() error {
 	_, err := os.Stat(es.options.ExcludedFilenameFlag)
 	if os.IsNotExist(err) {
 		es.Println("Could not find:", es.options.ExcludedFilenameFlag)
@@ -364,7 +364,7 @@ func (es *ExtractStrings) loadExcludedStrings() error {
 	return nil
 }
 
-func (es *ExtractStrings) loadExcludedRegexps() error {
+func (es *extractStrings) loadExcludedRegexps() error {
 	_, err := os.Stat(es.options.ExcludedFilenameFlag)
 	if os.IsNotExist(err) {
 		es.Println("Could not find:", es.options.ExcludedFilenameFlag)
@@ -398,7 +398,7 @@ func (es *ExtractStrings) loadExcludedRegexps() error {
 	return nil
 }
 
-func (es *ExtractStrings) extractString(f *ast.File, fset *token.FileSet) error {
+func (es *extractStrings) extractString(f *ast.File, fset *token.FileSet) error {
 	ast.Inspect(f, func(n ast.Node) bool {
 		var s string
 		switch x := n.(type) {
@@ -420,7 +420,7 @@ func (es *ExtractStrings) extractString(f *ast.File, fset *token.FileSet) error 
 	return nil
 }
 
-func (es *ExtractStrings) excludeImports(astFile *ast.File) {
+func (es *extractStrings) excludeImports(astFile *ast.File) {
 	for i := range astFile.Imports {
 		importString, _ := strconv.Unquote(astFile.Imports[i].Path.Value)
 		es.FilteredStrings[importString] = importString
@@ -428,7 +428,7 @@ func (es *ExtractStrings) excludeImports(astFile *ast.File) {
 
 }
 
-func (es *ExtractStrings) filter(aString string) bool {
+func (es *extractStrings) filter(aString string) bool {
 	for i := range common.BLANKS {
 		if aString == common.BLANKS[i] {
 			return true

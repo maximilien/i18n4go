@@ -15,7 +15,7 @@ import (
 	"github.com/maximilien/i18n4cf/common"
 )
 
-type CreateTranslations struct {
+type createTranslations struct {
 	options cmds.Options
 
 	Filename       string
@@ -43,10 +43,10 @@ type GoogleTranslateTranslation struct {
 	DetectedSourceLanguage string `json:"detectedSourceLanguage"`
 }
 
-func NewCreateTranslations(options cmds.Options) CreateTranslations {
+func NewCreateTranslations(options cmds.Options) createTranslations {
 	languages := common.ParseStringList(options.LanguagesFlag, ",")
 
-	return CreateTranslations{options: options,
+	return createTranslations{options: options,
 		Filename:       options.FilenameFlag,
 		OutputDirname:  options.OutputDirFlag,
 		SourceLanguage: options.SourceLanguageFlag,
@@ -55,11 +55,11 @@ func NewCreateTranslations(options cmds.Options) CreateTranslations {
 		TotalFiles:     0}
 }
 
-func (ct *CreateTranslations) Options() cmds.Options {
+func (ct *createTranslations) Options() cmds.Options {
 	return ct.options
 }
 
-func (ct *CreateTranslations) Println(a ...interface{}) (int, error) {
+func (ct *createTranslations) Println(a ...interface{}) (int, error) {
 	if ct.options.VerboseFlag {
 		return fmt.Println(a...)
 	}
@@ -67,7 +67,7 @@ func (ct *CreateTranslations) Println(a ...interface{}) (int, error) {
 	return 0, nil
 }
 
-func (ct *CreateTranslations) Printf(msg string, a ...interface{}) (int, error) {
+func (ct *createTranslations) Printf(msg string, a ...interface{}) (int, error) {
 	if ct.options.VerboseFlag {
 		return fmt.Printf(msg, a...)
 	}
@@ -75,7 +75,7 @@ func (ct *CreateTranslations) Printf(msg string, a ...interface{}) (int, error) 
 	return 0, nil
 }
 
-func (ct *CreateTranslations) Run() error {
+func (ct *createTranslations) Run() error {
 	ct.Println("gi18n: creating translation files for:", ct.Filename)
 	ct.Println()
 
@@ -102,7 +102,7 @@ func (ct *CreateTranslations) Run() error {
 	return nil
 }
 
-func (ct *CreateTranslations) createTranslationFileWithGoogleTranslate(language string) (string, error) {
+func (ct *createTranslations) createTranslationFileWithGoogleTranslate(language string) (string, error) {
 	fileName, _, err := common.CheckFile(ct.Filename)
 	if err != nil {
 		return "", err
@@ -151,7 +151,7 @@ func (ct *CreateTranslations) createTranslationFileWithGoogleTranslate(language 
 	return destFilename, nil
 }
 
-func (ct *CreateTranslations) createTranslationFile(sourceFilename string, language string) (string, error) {
+func (ct *createTranslations) createTranslationFile(sourceFilename string, language string) (string, error) {
 	fileName, _, err := common.CheckFile(sourceFilename)
 	if err != nil {
 		return "", err
@@ -173,7 +173,7 @@ func (ct *CreateTranslations) createTranslationFile(sourceFilename string, langu
 	return destFilename, common.CopyFileContents(sourceFilename, destFilename)
 }
 
-func (ct *CreateTranslations) googleTranslate(translateString string, language string) (string, string, error) {
+func (ct *createTranslations) googleTranslate(translateString string, language string) (string, string, error) {
 	escapedTranslateString := url.QueryEscape(translateString)
 	googleTranslateUrl := "https://www.googleapis.com/language/translate/v2?key=" + ct.options.GoogleTranslateApiKeyFlag + "&target=" + language + "&q=" + escapedTranslateString
 
