@@ -1,0 +1,86 @@
+[
+   {
+      "id": "the excluded JSON file name, all strings there will be excluded",
+      "translation": "the excluded JSON file name, all strings there will be excluded"
+   },
+   {
+      "id": "the file name for which strings are extracted",
+      "translation": "the file name for which strings are extracted"
+   },
+   {
+      "id": "create translation files for different languages using a source file",
+      "translation": "create translation files for different languages using a source file"
+   },
+   {
+      "id": "prints the usage",
+      "translation": "prints the usage"
+   },
+   {
+      "id": "Potato",
+      "translation": "Potato bananana cream pie"
+   },
+   {
+      "id": "verbose mode where lots of output is generated during execution",
+      "translation": "verbose mode where lots of output is generated during execution"
+   },
+   {
+      "id": "output directory where the translation files will be placed",
+      "translation": "output directory where the translation files will be placed"
+   },
+   {
+      "id": "the dir name for which all .go files will have their strings extracted",
+      "translation": "the dir name for which all .go files will have their strings extracted"
+   },
+   {
+      "id": "generated files are created in directory to match the package name",
+      "translation": "generated files are created in directory to match the package name"
+   },
+   {
+      "id": "prevents any output files from being created",
+      "translation": "prevents any output files from being created"
+   },
+   {
+      "id": "want to extract strings from file or directory",
+      "translation": "want to extract strings from file or directory"
+   },
+   {
+      "id": "the source language of the file, typically also part of the file name, e.g., \"en_US\"",
+      "translation": "the source language of the file, typically also part of the file name, e.g., \"en_US\""
+   },
+   {
+      "id": "your public Google Translate API key which is used to generate translations (charge is applicable)",
+      "translation": "your public Google Translate API key which is used to generate translations (charge is applicable)"
+   },
+   {
+      "id": "generate standard .po file for translation",
+      "translation": "generate standard .po file for translation"
+   },
+   {
+      "id": "Total files parsed:",
+      "translation": "Total files parsed:"
+   },
+   {
+      "id": "recursively extract strings from all files in the same directory as filename or dirName",
+      "translation": "recursively extract strings from all files in the same directory as filename or dirName"
+   },
+   {
+      "id": "An unexpected type of error",
+      "translation": "An unexpected type of error"
+   },
+   {
+      "id": "Total time:",
+      "translation": "Total time:"
+   },
+   {
+      "id": "generated files are created in the specified output directory",
+      "translation": "generated files are created in the specified output directory"
+   },
+   {
+      "id": "Total extracted strings:",
+      "translation": "Total extracted strings:"
+   },
+   {
+      "id": "a perl-style regular expression for files to ignore, e.g., \".*test.*\"",
+      "translation": "a perl-style regular expression for files to ignore, e.g., \".*test.*\""
+   }
+]
