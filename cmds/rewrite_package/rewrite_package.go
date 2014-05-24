@@ -91,6 +91,12 @@ func (rp *rewritePackage) Run() error {
 		return err
 	}
 
+	err = rp.appendInitFunc(astFile)
+	if err != nil {
+		rp.Println("gi18n: error appending init() to AST file:", err.Error())
+		return err
+	}
+
 	err = rp.saveASTFile(astFile, fileSet)
 	if err != nil {
 		rp.Println("gi18n: error saving AST file:", err.Error())
@@ -98,6 +104,39 @@ func (rp *rewritePackage) Run() error {
 	}
 
 	return err
+}
+
+func (rp *rewritePackage) appendInitFunc(astFile *ast.File) error {
+	fileSet := token.NewFileSet()
+	cwd, err := os.Getwd()
+	pathToFile := filepath.Join(cwd, "..", "..", "cmds", "rewrite_package", "code_snippets", "init_func.go.example")
+	astSnippet, err := parser.ParseFile(fileSet, pathToFile, nil, 0)
+	if err != nil {
+		return err
+	}
+
+	for _, x := range astSnippet.Decls[0:len(astSnippet.Decls)] {
+		ast.Inspect(x, func(node ast.Node) bool {
+			if node == nil {
+				return false
+			}
+
+			switch node.(type) {
+			case *ast.Ident:
+				node.(*ast.Ident).NamePos += 10000
+			case *ast.BasicLit:
+				if node.(*ast.BasicLit).Value == `"__PACKAGE__NAME__"` {
+					packageName := "\"" + astFile.Name.Name + "\""
+					node.(*ast.BasicLit).Value = packageName
+				}
+			}
+			return true
+		})
+	}
+
+	astFile.Decls = append(astFile.Decls[:1], append(astSnippet.Decls[0:len(astSnippet.Decls)], astFile.Decls[1:]...)...)
+
+	return nil
 }
 
 func (rp *rewritePackage) rewriteImports(astFile *ast.File) error {

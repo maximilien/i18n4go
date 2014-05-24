@@ -8,6 +8,15 @@ import (
 	"path/filepath"
 )
 
+var T goi18n.TranslateFunc
+
+func init() {
+	var err error
+	T, err = i18n.Init("input_files", i18n.GetResourcesPath())
+	if err != nil {
+		panic(err)
+	}
+}
 func Something() {
 	fmt.Printf("HAI")
 	if os.Getenv("SOMETHING") {
