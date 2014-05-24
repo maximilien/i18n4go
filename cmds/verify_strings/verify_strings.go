@@ -100,7 +100,10 @@ func (vs *verifyStrings) verify(inputFilename string, targetFilename string) err
 		return fmt.Errorf("gi18n: Error input file: %s is empty", inputFilename)
 	}
 
-	inputMap := common.CreateI18nStringInfoMap(inputI18nStringInfos)
+	inputMap, err := common.CreateI18nStringInfoMap(inputI18nStringInfos)
+	if err != nil {
+		return fmt.Errorf("File has duplicated key: %s\n%s", inputFilename, err)
+	}
 
 	targetI18nStringInfos, err := common.LoadI18nStringInfos(targetFilename)
 	if err != nil {

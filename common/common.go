@@ -1,6 +1,7 @@
 package common
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -207,12 +208,18 @@ func LoadI18nStringInfos(fileName string) ([]I18nStringInfo, error) {
 	return i18nStringInfos, nil
 }
 
-func CreateI18nStringInfoMap(i18nStringInfos []I18nStringInfo) map[string]I18nStringInfo {
+func CreateI18nStringInfoMap(i18nStringInfos []I18nStringInfo) (map[string]I18nStringInfo, error) {
 	inputMap := make(map[string]I18nStringInfo, len(i18nStringInfos))
 
 	for _, i18nStringInfo := range i18nStringInfos {
-		inputMap[i18nStringInfo.ID] = i18nStringInfo
+
+		if _, ok := inputMap[i18nStringInfo.ID]; !ok {
+			inputMap[i18nStringInfo.ID] = i18nStringInfo
+		} else {
+			return nil, errors.New("Duplicated key found: " + i18nStringInfo.ID)
+		}
+
 	}
 
-	return inputMap
+	return inputMap, nil
 }
