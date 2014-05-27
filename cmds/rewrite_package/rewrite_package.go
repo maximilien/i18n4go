@@ -123,7 +123,7 @@ func (rp *rewritePackage) appendInitFunc(astFile *ast.File) error {
 
 			switch node.(type) {
 			case *ast.Ident:
-				node.(*ast.Ident).NamePos += 10000
+				node.(*ast.Ident).NamePos = 1
 			case *ast.BasicLit:
 				if node.(*ast.BasicLit).Value == `"__PACKAGE__NAME__"` {
 					packageName := "\"" + astFile.Name.Name + "\""
