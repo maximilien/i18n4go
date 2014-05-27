@@ -128,6 +128,8 @@ func (rp *rewritePackage) insertTFuncCall(astFile *ast.File) error {
 				rp.valueSpecTFunc(node.(*ast.ValueSpec))
 			case *ast.CompositeLit:
 				rp.compositeLitTFunc(node.(*ast.CompositeLit))
+			case *ast.KeyValueExpr:
+				rp.keyValueExprTFunc(node.(*ast.KeyValueExpr))
 			}
 
 			return true
@@ -135,6 +137,16 @@ func (rp *rewritePackage) insertTFuncCall(astFile *ast.File) error {
 	}
 
 	return nil
+}
+
+func (rp *rewritePackage) keyValueExprTFunc(keyValueExpr *ast.KeyValueExpr) {
+	if key, ok := keyValueExpr.Key.(*ast.BasicLit); ok {
+		keyValueExpr.Key = rp.wrapBasicLitWithT(key)
+	}
+
+	if value, ok := keyValueExpr.Value.(*ast.BasicLit); ok {
+		keyValueExpr.Value = rp.wrapBasicLitWithT(value)
+	}
 }
 
 func (rp *rewritePackage) compositeLitTFunc(compositeLit *ast.CompositeLit) bool {

@@ -27,6 +27,9 @@ func Something() {
 	moreStrings = []string{T("are"), T("tricky")}
 	println(yetAnotherString, moreStrings)
 
+	mappyMap := map[string]string{T("hello"): T("world")}
+	println(mappyMap)
+
 	fmt.Printf(T("HAI"))
 	if os.Getenv(T("SOMETHING")) {
 		fmt.Printf(filepath.Clean(os.Getenv(T("something"))))
