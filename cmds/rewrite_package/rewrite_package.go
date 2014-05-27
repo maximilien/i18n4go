@@ -97,6 +97,12 @@ func (rp *rewritePackage) Run() error {
 		return err
 	}
 
+	err = rp.insertTFuncCall(astFile)
+	if err != nil {
+		rp.Println("gi18n: error appending T() to AST file:", err.Error())
+		return err
+	}
+
 	err = rp.saveASTFile(astFile, fileSet)
 	if err != nil {
 		rp.Println("gi18n: error saving AST file:", err.Error())
@@ -104,6 +110,42 @@ func (rp *rewritePackage) Run() error {
 	}
 
 	return err
+}
+
+func (rp *rewritePackage) insertTFuncCall(astFile *ast.File) error {
+	declarations := astFile.Decls[1:]
+
+	for _, decl := range declarations {
+		var callExpr *ast.CallExpr
+		ast.Inspect(decl, func(node ast.Node) bool {
+			if node == nil {
+				return false
+			}
+
+			switch node.(type) {
+			case *ast.CallExpr:
+				callExpr = node.(*ast.CallExpr)
+			case *ast.BasicLit:
+				tStatement := rp.wrapBasicLitWithT(node.(*ast.BasicLit))
+				if callExpr != nil {
+					for index, arg := range callExpr.Args {
+						if arg == node {
+							callExpr.Args[index] = tStatement
+						}
+					}
+				}
+			}
+
+			return true
+		})
+	}
+
+	return nil
+}
+
+func (rp *rewritePackage) wrapBasicLitWithT(basicLit *ast.BasicLit) *ast.CallExpr {
+	tIdent := &ast.Ident{Name: "T"}
+	return &ast.CallExpr{Fun: tIdent, Args: []ast.Expr{basicLit}}
 }
 
 func (rp *rewritePackage) appendInitFunc(astFile *ast.File) error {

@@ -12,14 +12,14 @@ var T goi18n.TranslateFunc
 
 func init() {
 	var err error
-	T, err = i18n.Init("input_files", i18n.GetResourcesPath())
+	T, err = i18n.Init(T("input_files"), i18n.GetResourcesPath())
 	if err != nil {
 		panic(err)
 	}
 }
 func Something() {
-	fmt.Printf("HAI")
-	if os.Getenv("SOMETHING") {
-		fmt.Printf(filepath.Clean(os.Getenv("something")))
+	fmt.Printf(T("HAI"))
+	if os.Getenv(T("SOMETHING")) {
+		fmt.Printf(filepath.Clean(os.Getenv(T("something"))))
 	}
 }
