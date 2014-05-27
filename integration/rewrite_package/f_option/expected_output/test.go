@@ -22,6 +22,11 @@ func Something() {
 	var anotherString string = T("world")
 	println(someString, anotherString)
 
+	yetAnotherString := []string{T("tricky tests")}
+	var moreStrings []string
+	moreStrings = []string{T("are"), T("tricky")}
+	println(yetAnotherString, moreStrings)
+
 	fmt.Printf(T("HAI"))
 	if os.Getenv(T("SOMETHING")) {
 		fmt.Printf(filepath.Clean(os.Getenv(T("something"))))

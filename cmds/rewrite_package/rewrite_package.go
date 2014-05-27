@@ -126,6 +126,8 @@ func (rp *rewritePackage) insertTFuncCall(astFile *ast.File) error {
 				rp.assignStmtTFunc(node.(*ast.AssignStmt))
 			case *ast.ValueSpec:
 				rp.valueSpecTFunc(node.(*ast.ValueSpec))
+			case *ast.CompositeLit:
+				rp.compositeLitTFunc(node.(*ast.CompositeLit))
 			}
 
 			return true
@@ -133,6 +135,16 @@ func (rp *rewritePackage) insertTFuncCall(astFile *ast.File) error {
 	}
 
 	return nil
+}
+
+func (rp *rewritePackage) compositeLitTFunc(compositeLit *ast.CompositeLit) bool {
+	for index, arg := range compositeLit.Elts {
+		if asLit, ok := arg.(*ast.BasicLit); ok {
+			compositeLit.Elts[index] = rp.wrapBasicLitWithT(asLit)
+		}
+	}
+
+	return true
 }
 
 func (rp *rewritePackage) assignStmtTFunc(assignStmt *ast.AssignStmt) bool {
