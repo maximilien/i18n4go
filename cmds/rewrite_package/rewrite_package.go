@@ -116,23 +116,11 @@ func (rp *rewritePackage) insertTFuncCall(astFile *ast.File) error {
 	declarations := astFile.Decls[1:]
 
 	for _, decl := range declarations {
-		var callExpr *ast.CallExpr
 		ast.Inspect(decl, func(node ast.Node) bool {
-			if node == nil {
-				return false
-			}
-
 			switch node.(type) {
 			case *ast.CallExpr:
-				callExpr = node.(*ast.CallExpr)
-			case *ast.BasicLit:
-				tStatement := rp.wrapBasicLitWithT(node.(*ast.BasicLit))
-				if callExpr != nil {
-					for index, arg := range callExpr.Args {
-						if arg == node {
-							callExpr.Args[index] = tStatement
-						}
-					}
+				if !rp.callExprTFunc(node.(*ast.CallExpr)) {
+					return false // don't recurse infinitely
 				}
 			}
 
@@ -141,6 +129,21 @@ func (rp *rewritePackage) insertTFuncCall(astFile *ast.File) error {
 	}
 
 	return nil
+}
+
+func (rp *rewritePackage) callExprTFunc(callExpr *ast.CallExpr) bool {
+	callFuncIdent, ok := callExpr.Fun.(*ast.Ident)
+	if ok && callFuncIdent.Name == "T" { // yeah, not the best
+		return false
+	}
+
+	for index, arg := range callExpr.Args {
+		if asLit, ok := arg.(*ast.BasicLit); ok {
+			callExpr.Args[index] = rp.wrapBasicLitWithT(asLit)
+		}
+	}
+
+	return true
 }
 
 func (rp *rewritePackage) wrapBasicLitWithT(basicLit *ast.BasicLit) *ast.CallExpr {
