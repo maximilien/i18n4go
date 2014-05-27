@@ -18,6 +18,10 @@ func init() {
 	}
 }
 func Something() {
+	someString := T("hello")
+	var anotherString string = T("world")
+	println(someString, anotherString)
+
 	fmt.Printf(T("HAI"))
 	if os.Getenv(T("SOMETHING")) {
 		fmt.Printf(filepath.Clean(os.Getenv(T("something"))))

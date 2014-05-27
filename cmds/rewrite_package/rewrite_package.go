@@ -122,6 +122,10 @@ func (rp *rewritePackage) insertTFuncCall(astFile *ast.File) error {
 				if !rp.callExprTFunc(node.(*ast.CallExpr)) {
 					return false // don't recurse infinitely
 				}
+			case *ast.AssignStmt:
+				rp.assignStmtTFunc(node.(*ast.AssignStmt))
+			case *ast.ValueSpec:
+				rp.valueSpecTFunc(node.(*ast.ValueSpec))
 			}
 
 			return true
@@ -129,6 +133,26 @@ func (rp *rewritePackage) insertTFuncCall(astFile *ast.File) error {
 	}
 
 	return nil
+}
+
+func (rp *rewritePackage) assignStmtTFunc(assignStmt *ast.AssignStmt) bool {
+	for index, arg := range assignStmt.Rhs {
+		if asLit, ok := arg.(*ast.BasicLit); ok {
+			assignStmt.Rhs[index] = rp.wrapBasicLitWithT(asLit)
+		}
+	}
+
+	return true
+}
+
+func (rp *rewritePackage) valueSpecTFunc(valueSpec *ast.ValueSpec) bool {
+	for index, arg := range valueSpec.Values {
+		if asLit, ok := arg.(*ast.BasicLit); ok {
+			valueSpec.Values[index] = rp.wrapBasicLitWithT(asLit)
+		}
+	}
+
+	return true
 }
 
 func (rp *rewritePackage) callExprTFunc(callExpr *ast.CallExpr) bool {
