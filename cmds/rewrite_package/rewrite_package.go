@@ -19,7 +19,12 @@ import (
 )
 
 const (
-	INIT_CODE_SNIPPET = `package code_snippets
+	INIT_CODE_SNIPPET = `package __PACKAGE__NAME__
+
+import (
+	"github.com/cloudfoundry/cli/cf/i18n"
+	goi18n "github.com/nicksnyder/go-i18n/i18n"
+)
 
 var T goi18n.TranslateFunc
 
@@ -30,13 +35,6 @@ func init() {
 		panic(err)
 	}
 }`
-)
-
-var (
-	IMPORT_MAP = map[string]string{
-		"":       `"github.com/cloudfoundry/cli/cf/i18n"`,
-		"goi18n": `"github.com/nicksnyder/go-i18n/i18n"`,
-	}
 )
 
 type rewritePackage struct {
@@ -114,12 +112,11 @@ func (rp *rewritePackage) processDir(dirName string, recursive bool) error {
 			} else {
 				continue
 			}
-		}
-
-		if !fileInfo.IsDir() {
+		} else if filepath.Base(fileInfo.Name()) != "i18n_init.go" {
 			err := rp.processFilename(filepath.Join(dirName, fileInfo.Name()))
 			if err != nil {
 				rp.Println(err)
+				return err
 			}
 		}
 	}
@@ -147,15 +144,10 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 		return err
 	}
 
-	err = rp.rewriteImports(astFile)
+	outputDir := filepath.Join(rp.OutputDirname, filepath.Dir(rp.relativePathForFile(fileName)))
+	err = rp.addInitFuncToPackage(astFile.Name.Name, outputDir)
 	if err != nil {
-		rp.Println("gi18n: error rewriting the imports on AST file:", err.Error())
-		return err
-	}
-
-	err = rp.appendInitFunc(astFile)
-	if err != nil {
-		rp.Println("gi18n: error appending init() to AST file:", err.Error())
+		rp.Println("gi18n: error adding init() func to package:", err.Error())
 		return err
 	}
 
@@ -293,6 +285,14 @@ func (rp *rewritePackage) wrapBasicLitWithT(basicLit *ast.BasicLit) *ast.CallExp
 	return &ast.CallExpr{Fun: tIdent, Args: []ast.Expr{basicLit}}
 }
 
+func (rp *rewritePackage) addInitFuncToPackage(packageName, outputDir string) error {
+	rp.Println("gi18n: adding init func to package:", packageName, " to output dir:", outputDir)
+
+	common.CreateOutputDirsIfNeeded(outputDir)
+	content := strings.Replace(INIT_CODE_SNIPPET, "__PACKAGE__NAME__", packageName, -1)
+	return ioutil.WriteFile(filepath.Join(outputDir, "i18n_init.go"), []byte(content), 0666)
+}
+
 func (rp *rewritePackage) appendInitFunc(astFile *ast.File) error {
 	fileSet := token.NewFileSet()
 
@@ -332,24 +332,6 @@ func (rp *rewritePackage) appendInitFunc(astFile *ast.File) error {
 	}
 
 	astFile.Decls = append(astFile.Decls[:1], append(astSnippet.Decls[0:len(astSnippet.Decls)], astFile.Decls[1:]...)...)
-
-	return nil
-}
-
-func (rp *rewritePackage) rewriteImports(astFile *ast.File) error {
-	importDecl, err := common.ImportsForASTFile(astFile)
-	if err != nil {
-		return err
-	}
-
-	for importName, importPath := range IMPORT_MAP {
-		importSpec := &ast.ImportSpec{
-			Name: &ast.Ident{Name: importName},
-			Path: &ast.BasicLit{Value: importPath, Kind: token.STRING},
-		}
-
-		importDecl.Specs = append(importDecl.Specs, importSpec)
-	}
 
 	return nil
 }
