@@ -6,7 +6,11 @@ import (
 	"path/filepath"
 )
 
-func Something() {
+type t struct {
+	myString string
+}
+
+func Something() string {
 	someString := "hello"
 	var anotherString string = "world"
 	println(someString, anotherString)
@@ -19,8 +23,16 @@ func Something() {
 	mappyMap := map[string]string{"hello": "world"}
 	println(mappyMap)
 
+	myT := t{myString: "my string"}
+	println(myT)
+
+	trickyT := t{"this is a tricky case"}
+	println(trickyT)
+
 	fmt.Printf("HAI")
 	if os.Getenv("SOMETHING") {
 		fmt.Printf(filepath.Clean(os.Getenv("something")))
 	}
+
+	return "enqueuedequeueenqueuebananapants"
 }

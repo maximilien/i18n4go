@@ -130,6 +130,8 @@ func (rp *rewritePackage) insertTFuncCall(astFile *ast.File) error {
 				rp.compositeLitTFunc(node.(*ast.CompositeLit))
 			case *ast.KeyValueExpr:
 				rp.keyValueExprTFunc(node.(*ast.KeyValueExpr))
+			case *ast.ReturnStmt:
+				rp.returnStmtTFunc(node.(*ast.ReturnStmt))
 			}
 
 			return true
@@ -137,6 +139,14 @@ func (rp *rewritePackage) insertTFuncCall(astFile *ast.File) error {
 	}
 
 	return nil
+}
+
+func (rp *rewritePackage) returnStmtTFunc(returnStmt *ast.ReturnStmt) {
+	for index, arg := range returnStmt.Results {
+		if asLit, ok := arg.(*ast.BasicLit); ok {
+			returnStmt.Results[index] = rp.wrapBasicLitWithT(asLit)
+		}
+	}
 }
 
 func (rp *rewritePackage) keyValueExprTFunc(keyValueExpr *ast.KeyValueExpr) {
