@@ -18,6 +18,20 @@ import (
 	"strings"
 )
 
+const (
+	INIT_CODE_SNIPPET = `package code_snippets
+
+var T goi18n.TranslateFunc
+
+func init() {
+	var err error
+	T, err = i18n.Init("__PACKAGE__NAME__", i18n.GetResourcesPath())
+	if err != nil {
+		panic(err)
+	}
+}`
+)
+
 var (
 	IMPORT_MAP = map[string]string{
 		"":       `"github.com/cloudfoundry/cli/cf/i18n"`,
@@ -261,8 +275,18 @@ func (rp *rewritePackage) wrapBasicLitWithT(basicLit *ast.BasicLit) *ast.CallExp
 
 func (rp *rewritePackage) appendInitFunc(astFile *ast.File) error {
 	fileSet := token.NewFileSet()
-	cwd, err := os.Getwd()
-	pathToFile := filepath.Join(cwd, "..", "..", "cmds", "rewrite_package", "code_snippets", "init_func.go.example")
+
+	file, err := common.CreateTmpFile(INIT_CODE_SNIPPET)
+	if err != nil {
+		return err
+	}
+
+	pathToFile := file.Name()
+	defer func() {
+		file.Close()
+		os.Remove(file.Name())
+	}()
+
 	astSnippet, err := parser.ParseFile(fileSet, pathToFile, nil, 0)
 	if err != nil {
 		return err

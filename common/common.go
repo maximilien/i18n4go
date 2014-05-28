@@ -27,6 +27,17 @@ func ParseStringList(stringList string, delimiter string) []string {
 	return parsedStrings
 }
 
+func CreateTmpFile(content string) (*os.File, error) {
+	tmpFile, err := ioutil.TempFile("", "")
+	if err != nil {
+		return nil, err
+	}
+
+	ioutil.WriteFile(tmpFile.Name(), []byte(content), 666)
+
+	return tmpFile, nil
+}
+
 func CheckFile(fileName string) (string, string, error) {
 	fileInfo, err := os.Stat(fileName)
 	if err != nil {
