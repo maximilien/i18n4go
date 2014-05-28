@@ -34,12 +34,16 @@ func Something() string {
 
 	mappyMap := map[string]string{T("hello"): T("world")}
 	println(mappyMap)
+	println(mappyMap[T("hello")])
 
 	myT := t{myString: T("my string")}
 	println(myT)
 
 	trickyT := t{T("this is a tricky case")}
 	println(trickyT)
+
+	concatenatedStrings := T("foo") + T(" ") + T("bar")
+	println(concatenatedStrings)
 
 	fmt.Printf(T("HAI"))
 	if os.Getenv(T("SOMETHING")) {

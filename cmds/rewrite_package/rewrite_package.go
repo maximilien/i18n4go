@@ -195,6 +195,10 @@ func (rp *rewritePackage) insertTFuncCall(astFile *ast.File) error {
 				rp.keyValueExprTFunc(node.(*ast.KeyValueExpr))
 			case *ast.ReturnStmt:
 				rp.returnStmtTFunc(node.(*ast.ReturnStmt))
+			case *ast.BinaryExpr:
+				rp.binaryExprTFunc(node.(*ast.BinaryExpr))
+			case *ast.IndexExpr:
+				rp.indexExprTFunc(node.(*ast.IndexExpr))
 			}
 
 			return true
@@ -202,6 +206,22 @@ func (rp *rewritePackage) insertTFuncCall(astFile *ast.File) error {
 	}
 
 	return nil
+}
+
+func (rp *rewritePackage) indexExprTFunc(indexExpr *ast.IndexExpr) {
+	if index, ok := indexExpr.Index.(*ast.BasicLit); ok {
+		indexExpr.Index = rp.wrapBasicLitWithT(index)
+	}
+}
+
+func (rp *rewritePackage) binaryExprTFunc(binaryExpr *ast.BinaryExpr) {
+	if x, ok := binaryExpr.X.(*ast.BasicLit); ok {
+		binaryExpr.X = rp.wrapBasicLitWithT(x)
+	}
+
+	if y, ok := binaryExpr.Y.(*ast.BasicLit); ok {
+		binaryExpr.Y = rp.wrapBasicLitWithT(y)
+	}
 }
 
 func (rp *rewritePackage) returnStmtTFunc(returnStmt *ast.ReturnStmt) {
