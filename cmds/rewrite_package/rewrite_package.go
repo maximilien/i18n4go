@@ -15,6 +15,7 @@ import (
 	"github.com/maximilien/i18n4cf/common"
 
 	"path/filepath"
+	"strings"
 )
 
 var (
@@ -31,6 +32,9 @@ type rewritePackage struct {
 	OutputDirname       string
 	I18nStringsFilename string
 
+	Dirname string
+	Recurse bool
+
 	ExtractedStrings map[string]common.StringInfo
 
 	TotalStrings int
@@ -42,8 +46,10 @@ func NewRewritePackage(options cmds.Options) rewritePackage {
 		Filename:            options.FilenameFlag,
 		OutputDirname:       options.OutputDirFlag,
 		I18nStringsFilename: options.I18nStringsFilenameFlag,
-		TotalStrings:        0,
-		TotalFiles:          0}
+
+		Dirname: options.DirnameFlag,
+		Recurse: options.RecurseFlag,
+	}
 }
 
 func (rp *rewritePackage) Options() cmds.Options {
@@ -67,14 +73,56 @@ func (rp *rewritePackage) Printf(msg string, a ...interface{}) (int, error) {
 }
 
 func (rp *rewritePackage) Run() error {
-	rp.Println("gi18n: rewriting strings for source file:", rp.Filename)
+	if rp.options.FilenameFlag != "" {
+		return rp.processFilename(rp.options.FilenameFlag)
+	} else {
+		err := rp.processDir(rp.options.DirnameFlag, rp.options.RecurseFlag)
+		if err != nil {
+			rp.Println("gi18n: could not rewrite strings from directory:", rp.options.DirnameFlag)
+			return err
+		}
+		rp.Println()
+		rp.Println("Total files parsed:", rp.TotalFiles)
+		rp.Println("Total extracted strings:", rp.TotalStrings)
+	}
+	return nil
+}
+
+func (rp *rewritePackage) processDir(dirName string, recursive bool) error {
+	rp.Printf("gi18n: rewriting strings in dir %s, recursive: %t\n", dirName, recursive)
+	rp.Println()
+
+	fileInfos, _ := ioutil.ReadDir(dirName)
+	for _, fileInfo := range fileInfos {
+		if fileInfo.IsDir() {
+			if recursive {
+				rp.processDir(filepath.Join(dirName, fileInfo.Name()), recursive)
+			} else {
+				continue
+			}
+		}
+
+		if !fileInfo.IsDir() {
+			err := rp.processFilename(filepath.Join(dirName, fileInfo.Name()))
+			if err != nil {
+				rp.Println(err)
+			}
+		}
+	}
+
+	return nil
+}
+
+func (rp *rewritePackage) processFilename(fileName string) error {
+	rp.TotalFiles += 1
+	rp.Println("gi18n: rewriting strings for source file:", fileName)
 	if rp.options.DryRunFlag {
 		rp.Println("WARNING running in -dry-run mode")
 	}
 
 	fileSet := token.NewFileSet()
 
-	var absFilePath = rp.Filename
+	var absFilePath = fileName
 	if !filepath.IsAbs(absFilePath) {
 		absFilePath = filepath.Join(os.Getenv("PWD"), absFilePath)
 	}
@@ -103,7 +151,8 @@ func (rp *rewritePackage) Run() error {
 		return err
 	}
 
-	err = rp.saveASTFile(astFile, fileSet)
+	relativeFilePath := rp.relativePathForFile(fileName)
+	err = rp.saveASTFile(relativeFilePath, fileName, astFile, fileSet)
 	if err != nil {
 		rp.Println("gi18n: error saving AST file:", err.Error())
 		return err
@@ -205,6 +254,7 @@ func (rp *rewritePackage) callExprTFunc(callExpr *ast.CallExpr) bool {
 }
 
 func (rp *rewritePackage) wrapBasicLitWithT(basicLit *ast.BasicLit) *ast.CallExpr {
+	rp.TotalStrings++
 	tIdent := &ast.Ident{Name: "T"}
 	return &ast.CallExpr{Fun: tIdent, Args: []ast.Expr{basicLit}}
 }
@@ -260,22 +310,30 @@ func (rp *rewritePackage) rewriteImports(astFile *ast.File) error {
 	return nil
 }
 
-func (rp *rewritePackage) saveASTFile(astFile *ast.File, fileSet *token.FileSet) error {
+func (rp *rewritePackage) saveASTFile(relativeFilePath, fileName string, astFile *ast.File, fileSet *token.FileSet) error {
 	var buffer bytes.Buffer
 	if err := format.Node(&buffer, fileSet, astFile); err != nil {
 		return err
 	}
 
-	fileName := filepath.Base(rp.Filename)
-	pathToFile := filepath.Join(rp.OutputDirname, fileName)
-
-	fileInfo, err := os.Stat(rp.Filename)
+	pathToFile := filepath.Join(rp.OutputDirname, relativeFilePath)
+	fileInfo, err := os.Stat(fileName)
 	if err != nil {
 		return err
 	}
+
+	common.CreateOutputDirsIfNeeded(filepath.Dir(pathToFile))
 
 	rp.Println("saving file to path", pathToFile)
 	ioutil.WriteFile(pathToFile, buffer.Bytes(), fileInfo.Mode())
 
 	return nil
+}
+
+func (rp *rewritePackage) relativePathForFile(fileName string) string {
+	if rp.Dirname != "" {
+		return strings.Replace(fileName, rp.Dirname, "", -1)
+	} else {
+		return filepath.Base(fileName)
+	}
 }

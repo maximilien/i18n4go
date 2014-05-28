@@ -100,7 +100,7 @@ func verifyStringsCmd() {
 }
 
 func rewritePackageCmd() {
-	if options.HelpFlag || (options.FilenameFlag == "") {
+	if options.HelpFlag || (options.FilenameFlag == "" && options.DirnameFlag == "") {
 		usage()
 		return
 	}
