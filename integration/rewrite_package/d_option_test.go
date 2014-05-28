@@ -15,17 +15,19 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 		rootPath            = ""
 		INPUT_FILES_PATH    = filepath.Join("f_option", "input_files")
 		EXPECTED_FILES_PATH = filepath.Join("f_option", "expected_output")
+		outputDir           = ""
 	)
 
 	BeforeEach(func() {
 		dir, err := os.Getwd()
 		Ω(err).ShouldNot(HaveOccurred())
 		rootPath = filepath.Join(dir, "..", "..")
+		outputDir = filepath.Join(rootPath, "tmp")
 
 		session := Runi18n(
 			"-rewrite-package",
 			"-d", INPUT_FILES_PATH,
-			"-o", filepath.Join(rootPath, "tmp"),
+			"-o", outputDir,
 			"-r",
 			"-v",
 		)
@@ -41,7 +43,7 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 
 		expectedOutput := string(bytes)
 
-		generatedOutputFile := filepath.Join(rootPath, "tmp", "test.go")
+		generatedOutputFile := filepath.Join(outputDir, "test.go")
 		bytes, err = ioutil.ReadFile(generatedOutputFile)
 		Ω(err).ShouldNot(HaveOccurred())
 
@@ -56,7 +58,7 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 
 		expectedOutput := string(bytes)
 
-		generatedOutputFile := filepath.Join(rootPath, "tmp", "nested_dir", "test.go")
+		generatedOutputFile := filepath.Join(outputDir, "nested_dir", "test.go")
 		bytes, err = ioutil.ReadFile(generatedOutputFile)
 		Ω(err).ShouldNot(HaveOccurred())
 
@@ -65,7 +67,7 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 	})
 
 	It("adds a i18n_init.go per package", func() {
-		initFile := filepath.Join(rootPath, "tmp", "i18n_init.go")
+		initFile := filepath.Join(outputDir, "i18n_init.go")
 		expectedBytes, err := ioutil.ReadFile(initFile)
 		Ω(err).ShouldNot(HaveOccurred())
 		expected := strings.TrimSpace(string(expectedBytes))
@@ -77,7 +79,7 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 
 		Ω(actual).Should(Equal(expected))
 
-		initFile = filepath.Join(rootPath, "tmp", "nested_dir", "i18n_init.go")
+		initFile = filepath.Join(outputDir, "nested_dir", "i18n_init.go")
 		expectedBytes, err = ioutil.ReadFile(initFile)
 		Ω(err).ShouldNot(HaveOccurred())
 		expected = strings.TrimSpace(string(expectedBytes))
@@ -88,5 +90,10 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 		actual = strings.TrimSpace(string(actualBytes))
 
 		Ω(actual).Should(Equal(expected))
+	})
+
+	It("does not translate test files", func() {
+		_, doesFileExistErr := os.Stat(filepath.Join(outputDir, "a_really_bad_test.go"))
+		Ω(os.IsNotExist(doesFileExistErr)).Should(BeTrue())
 	})
 })

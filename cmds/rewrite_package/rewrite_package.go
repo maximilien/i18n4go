@@ -160,6 +160,11 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 		return err
 	}
 
+	if strings.HasSuffix(fileName, "_test.go") {
+		rp.Println("cowardly refusing to translate the strings in test file:", fileName)
+		return nil
+	}
+
 	outputDir := filepath.Join(rp.OutputDirname, filepath.Dir(rp.relativePathForFile(fileName)))
 	err = rp.addInitFuncToPackage(astFile.Name.Name, outputDir)
 	if err != nil {

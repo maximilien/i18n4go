@@ -25,17 +25,17 @@ func Something() string {
 	println(mappyMap[T("hello")])
 
 	myT := t{myString: T("my string")}
-	println(myT)
+	println(myT.myString)
 
 	trickyT := t{T("this is a tricky case")}
-	println(trickyT)
+	println(trickyT.myString)
 
 	concatenatedStrings := T("foo") + T(" ") + T("bar")
 	println(concatenatedStrings)
 
 	fmt.Printf(T("HAI"))
-	if os.Getenv(T("SOMETHING")) {
-		fmt.Printf(filepath.Clean(os.Getenv(T("something"))))
+	if os.Getenv(T("SOMETHING")) != T("") {
+		fmt.Printf(filepath.Clean(os.Getenv(T("SOMETHING"))))
 	}
 
 	return T("enqueuedequeueenqueuebananapants")
