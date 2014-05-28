@@ -47,7 +47,7 @@ type rewritePackage struct {
 	Dirname string
 	Recurse bool
 
-	ExtractedStrings map[string]common.StringInfo
+	ExtractedStrings map[string]common.I18nStringInfo
 
 	TotalStrings int
 	TotalFiles   int
@@ -85,18 +85,37 @@ func (rp *rewritePackage) Printf(msg string, a ...interface{}) (int, error) {
 }
 
 func (rp *rewritePackage) Run() error {
+	var err error
+
+	if err = rp.loadStringsToBeTranslated(); err != nil {
+		return err
+	}
+
 	if rp.options.FilenameFlag != "" {
-		return rp.processFilename(rp.options.FilenameFlag)
+		err = rp.processFilename(rp.options.FilenameFlag)
 	} else {
-		err := rp.processDir(rp.options.DirnameFlag, rp.options.RecurseFlag)
+		err = rp.processDir(rp.options.DirnameFlag, rp.options.RecurseFlag)
+	}
+
+	rp.Println()
+	rp.Println("Total files parsed:", rp.TotalFiles)
+	rp.Println("Total extracted strings:", rp.TotalStrings)
+	return err
+}
+
+func (rp *rewritePackage) loadStringsToBeTranslated() error {
+	if rp.I18nStringsFilename != "" {
+		stringList, err := common.LoadI18nStringInfos(rp.I18nStringsFilename)
 		if err != nil {
-			rp.Println("gi18n: could not rewrite strings from directory:", rp.options.DirnameFlag)
 			return err
 		}
-		rp.Println()
-		rp.Println("Total files parsed:", rp.TotalFiles)
-		rp.Println("Total extracted strings:", rp.TotalStrings)
+
+		rp.ExtractedStrings, err = common.CreateI18nStringInfoMap(stringList)
+		if err != nil {
+			return err
+		}
 	}
+
 	return nil
 }
 
@@ -127,9 +146,6 @@ func (rp *rewritePackage) processDir(dirName string, recursive bool) error {
 func (rp *rewritePackage) processFilename(fileName string) error {
 	rp.TotalFiles += 1
 	rp.Println("gi18n: rewriting strings for source file:", fileName)
-	if rp.options.DryRunFlag {
-		rp.Println("WARNING running in -dry-run mode")
-	}
 
 	fileSet := token.NewFileSet()
 
@@ -168,7 +184,13 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 }
 
 func (rp *rewritePackage) insertTFuncCall(astFile *ast.File) error {
-	declarations := astFile.Decls[1:]
+	rp.Println("gi18n: inserting T() calls for strings that need to be translated")
+	var declarations []ast.Decl
+	if len(astFile.Imports) > 0 {
+		declarations = astFile.Decls[1:]
+	} else {
+		declarations = astFile.Decls[0:]
+	}
 
 	for _, decl := range declarations {
 		ast.Inspect(decl, func(node ast.Node) bool {
@@ -279,7 +301,17 @@ func (rp *rewritePackage) callExprTFunc(callExpr *ast.CallExpr) bool {
 	return true
 }
 
-func (rp *rewritePackage) wrapBasicLitWithT(basicLit *ast.BasicLit) *ast.CallExpr {
+func (rp *rewritePackage) wrapBasicLitWithT(basicLit *ast.BasicLit) ast.Expr {
+	if basicLit.Kind != token.STRING {
+		return basicLit
+	}
+
+	valueWithoutQuotes := basicLit.Value[1 : len(basicLit.Value)-1]
+	_, ok := rp.ExtractedStrings[valueWithoutQuotes]
+	if !ok && rp.ExtractedStrings != nil {
+		return basicLit
+	}
+
 	rp.TotalStrings++
 	tIdent := &ast.Ident{Name: "T"}
 	return &ast.CallExpr{Fun: tIdent, Args: []ast.Expr{basicLit}}

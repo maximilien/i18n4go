@@ -111,7 +111,7 @@ func rewritePackageCmd() {
 
 	err := cmd.Run()
 	if err != nil {
-		cmd.Println("gi18n: Could not verify strings for input filename, err:", err)
+		cmd.Println("gi18n: Could not successfully rewrite package, err:", err)
 		os.Exit(1)
 	}
 
