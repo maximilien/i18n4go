@@ -48,7 +48,7 @@ func CheckFile(fileName string) (string, string, error) {
 		return "", "", fmt.Errorf("Non-regular source file %s (%s)", fileInfo.Name(), fileInfo.Mode().String())
 	}
 
-	return fileInfo.Name(), fileName[:len(fileName)-len(fileInfo.Name())-1], nil
+	return filepath.Base(fileName), filepath.Dir(fileName), nil
 }
 
 func CopyFileContents(src, dst string) error {
