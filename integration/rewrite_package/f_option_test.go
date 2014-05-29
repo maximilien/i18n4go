@@ -19,52 +19,91 @@ var _ = Describe("rewrite-package -f filename", func() {
 		expectedFilesPath string
 	)
 
-	BeforeEach(func() {
-		dir, err := os.Getwd()
-		Ω(err).ShouldNot(HaveOccurred())
-		rootPath = filepath.Join(dir, "..", "..")
+	Context("all strings to rewrite are simple strings", func() {
+		BeforeEach(func() {
+			dir, err := os.Getwd()
+			Ω(err).ShouldNot(HaveOccurred())
+			rootPath = filepath.Join(dir, "..", "..")
 
-		fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
-		inputFilesPath = filepath.Join(fixturesPath, "f_option", "input_files")
-		expectedFilesPath = filepath.Join(fixturesPath, "f_option", "expected_output")
+			fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
+			inputFilesPath = filepath.Join(fixturesPath, "f_option", "input_files")
+			expectedFilesPath = filepath.Join(fixturesPath, "f_option", "expected_output")
 
-		session := Runi18n(
-			"-rewrite-package",
-			"-f", filepath.Join(inputFilesPath, "test.go"),
-			"-o", filepath.Join(rootPath, "tmp"),
-			"-v",
-		)
+			session := Runi18n(
+				"-rewrite-package",
+				"-f", filepath.Join(inputFilesPath, "test.go"),
+				"-o", filepath.Join(rootPath, "tmp"),
+				"-v",
+			)
 
-		Ω(session.ExitCode()).Should(Equal(0))
+			Ω(session.ExitCode()).Should(Equal(0))
+		})
+
+		It("rewrites the input file with T() wrappers around strings", func() {
+			expectedOutputFile := filepath.Join(expectedFilesPath, "test.go")
+			bytes, err := ioutil.ReadFile(expectedOutputFile)
+			Ω(err).ShouldNot(HaveOccurred())
+
+			expectedOutput := string(bytes)
+
+			generatedOutputFile := filepath.Join(rootPath, "tmp", "test.go")
+			bytes, err = ioutil.ReadFile(generatedOutputFile)
+			Ω(err).ShouldNot(HaveOccurred())
+
+			actualOutput := string(bytes)
+
+			Ω(actualOutput).Should(Equal(expectedOutput))
+		})
+
+		It("adds T func declaration and i18n init() func", func() {
+			initFile := filepath.Join(rootPath, "tmp", "i18n_init.go")
+			expectedBytes, err := ioutil.ReadFile(initFile)
+			Ω(err).ShouldNot(HaveOccurred())
+			expected := strings.TrimSpace(string(expectedBytes))
+
+			expectedInitFile := filepath.Join(expectedFilesPath, "i18n_init.go")
+			actualBytes, err := ioutil.ReadFile(expectedInitFile)
+			Ω(err).ShouldNot(HaveOccurred())
+			actual := strings.TrimSpace(string(actualBytes))
+
+			Ω(actual).Should(Equal(expected))
+		})
 	})
 
-	It("rewrites the input file with T() wrappers around strings", func() {
-		expectedOutputFile := filepath.Join(expectedFilesPath, "test.go")
-		bytes, err := ioutil.ReadFile(expectedOutputFile)
-		Ω(err).ShouldNot(HaveOccurred())
+	Context("strings to rewrite contain complex interpolated strings", func() {
+		BeforeEach(func() {
+			dir, err := os.Getwd()
+			Ω(err).ShouldNot(HaveOccurred())
+			rootPath = filepath.Join(dir, "..", "..")
 
-		expectedOutput := string(bytes)
+			fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
+			inputFilesPath = filepath.Join(fixturesPath, "f_option", "input_files")
+			expectedFilesPath = filepath.Join(fixturesPath, "f_option", "expected_output")
 
-		generatedOutputFile := filepath.Join(rootPath, "tmp", "test.go")
-		bytes, err = ioutil.ReadFile(generatedOutputFile)
-		Ω(err).ShouldNot(HaveOccurred())
+			session := Runi18n(
+				"-rewrite-package",
+				"-f", filepath.Join(inputFilesPath, "test_interpolated_strings.go"),
+				"-o", filepath.Join(rootPath, "tmp"),
+				"-v",
+			)
 
-		actualOutput := string(bytes)
+			Ω(session.ExitCode()).Should(Equal(0))
+		})
 
-		Ω(actualOutput).Should(Equal(expectedOutput))
-	})
+		It("rewrites the input file with T() wrappers around strings", func() {
+			expectedOutputFile := filepath.Join(expectedFilesPath, "test_interpolated_strings.go")
+			bytes, err := ioutil.ReadFile(expectedOutputFile)
+			Ω(err).ShouldNot(HaveOccurred())
 
-	It("adds T func declaration and i18n init() func", func() {
-		initFile := filepath.Join(rootPath, "tmp", "i18n_init.go")
-		expectedBytes, err := ioutil.ReadFile(initFile)
-		Ω(err).ShouldNot(HaveOccurred())
-		expected := strings.TrimSpace(string(expectedBytes))
+			expectedOutput := string(bytes)
 
-		expectedInitFile := filepath.Join(expectedFilesPath, "i18n_init.go")
-		actualBytes, err := ioutil.ReadFile(expectedInitFile)
-		Ω(err).ShouldNot(HaveOccurred())
-		actual := strings.TrimSpace(string(actualBytes))
+			generatedOutputFile := filepath.Join(rootPath, "tmp", "test_interpolated_strings.go")
+			bytes, err = ioutil.ReadFile(generatedOutputFile)
+			Ω(err).ShouldNot(HaveOccurred())
 
-		Ω(actual).Should(Equal(expected))
+			actualOutput := string(bytes)
+
+			Ω(actualOutput).Should(Equal(expectedOutput))
+		})
 	})
 })

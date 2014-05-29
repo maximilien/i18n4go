@@ -293,17 +293,70 @@ func (rp *rewritePackage) valueSpecTFunc(valueSpec *ast.ValueSpec) bool {
 
 func (rp *rewritePackage) callExprTFunc(callExpr *ast.CallExpr) bool {
 	callFuncIdent, ok := callExpr.Fun.(*ast.Ident)
-	if ok && callFuncIdent.Name == "T" { // yeah, not the best
+	if ok && (callFuncIdent.Name == "T") { // yeah, not the best
 		return false
 	}
 
-	for index, arg := range callExpr.Args {
-		if asLit, ok := arg.(*ast.BasicLit); ok {
-			callExpr.Args[index] = rp.wrapBasicLitWithT(asLit)
+	if len(callExpr.Args) > 1 {
+		rp.wrapMultiArgsCallExpr(callExpr)
+	} else {
+		if basicLit, ok := callExpr.Args[0].(*ast.BasicLit); ok {
+			callExpr.Args[0] = rp.wrapBasicLitWithT(basicLit)
 		}
 	}
 
 	return true
+}
+
+func (rp *rewritePackage) wrapMultiArgsCallExpr(callExpr *ast.CallExpr) {
+	if basicLit, ok := callExpr.Args[0].(*ast.BasicLit); ok {
+		if basicLit.Kind == token.STRING {
+			valueWithoutQuotes := basicLit.Value[1 : len(basicLit.Value)-1]
+			if common.IsTemplatedString(valueWithoutQuotes) {
+				templatedCallExpr := rp.wrapBasicLitWithTemplatedT(basicLit, callExpr.Args[1:])
+				callExpr.Args = make([]ast.Expr, 0)
+				callExpr.Args = append(callExpr.Args, templatedCallExpr)
+			} else {
+				rp.wrapExprArgs(callExpr.Args)
+			}
+		} else {
+			rp.wrapExprArgs(callExpr.Args)
+		}
+	}
+}
+
+func (rp *rewritePackage) wrapExprArgs(exprArgs []ast.Expr) {
+	for i, _ := range exprArgs {
+		if basicLit, ok := exprArgs[i].(*ast.BasicLit); ok {
+			exprArgs[i] = rp.wrapBasicLitWithT(basicLit)
+		}
+	}
+}
+
+func (rp *rewritePackage) wrapBasicLitWithTemplatedT(basicLit *ast.BasicLit, args []ast.Expr) ast.Expr {
+	valueWithoutQuotes := basicLit.Value[1 : len(basicLit.Value)-1]
+
+	_, ok := rp.ExtractedStrings[valueWithoutQuotes]
+	if !ok && rp.ExtractedStrings != nil {
+		return basicLit
+	}
+
+	rp.TotalStrings++
+	tIdent := &ast.Ident{Name: "T"}
+	argNames := common.GetTemplatedStringArgs(valueWithoutQuotes)
+
+	compositeExpr := []ast.Expr{}
+	for i, argName := range argNames {
+		quotedArgName := "\"" + argName + "\""
+		keyValueExpr := &ast.KeyValueExpr{Key: &ast.BasicLit{Kind: 9, Value: quotedArgName}, Value: args[i]}
+		compositeExpr = append(compositeExpr, keyValueExpr)
+	}
+
+	mapInterfaceType := &ast.InterfaceType{Interface: 142, Methods: &ast.FieldList{List: nil, Opening: 1, Closing: 2}, Incomplete: false}
+	mapType := &ast.MapType{Map: 131, Key: &ast.Ident{Name: "string"}, Value: mapInterfaceType}
+	compositeLit := &ast.CompositeLit{Type: mapType, Elts: compositeExpr}
+
+	return &ast.CallExpr{Fun: tIdent, Args: []ast.Expr{basicLit, compositeLit}}
 }
 
 func (rp *rewritePackage) wrapBasicLitWithT(basicLit *ast.BasicLit) ast.Expr {

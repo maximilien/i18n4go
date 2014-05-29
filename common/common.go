@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"regexp"
 
 	"io/ioutil"
 	"strconv"
@@ -15,6 +16,12 @@ import (
 
 	"github.com/maximilien/i18n4cf/cmds"
 )
+
+const (
+	TEMPLATED_REGEXP = `\{\{\.[[:alnum:][:punct:][:print:]]+?\}\}`
+)
+
+var templatedRegexp *regexp.Regexp
 
 func ParseStringList(stringList string, delimiter string) []string {
 	stringArray := strings.Split(stringList, delimiter)
@@ -233,4 +240,43 @@ func CreateI18nStringInfoMap(i18nStringInfos []I18nStringInfo) (map[string]I18nS
 	}
 
 	return inputMap, nil
+}
+
+func GetTemplatedStringArgs(aString string) []string {
+	re, err := getTemplatedRegexp()
+	if err != nil {
+		fmt.Errorf("gi18n: Error compiling templated string Regexp: %s", err.Error())
+		return []string{}
+	}
+
+	matches := re.FindAllStringSubmatch(aString, -1)
+	var stringMatches []string
+	for _, match := range matches {
+		stringMatch := match[0]
+		stringMatch = stringMatch[3 : len(stringMatch)-2]
+		stringMatches = append(stringMatches, stringMatch)
+	}
+
+	return stringMatches
+}
+
+func IsTemplatedString(aString string) bool {
+	re, err := getTemplatedRegexp()
+	if err != nil {
+		fmt.Errorf("gi18n: Error compiling templated string Regexp: %s", err.Error())
+		return false
+	}
+
+	return re.Match([]byte(aString))
+}
+
+// Private
+
+func getTemplatedRegexp() (*regexp.Regexp, error) {
+	var err error
+	if templatedRegexp == nil {
+		templatedRegexp, err = regexp.Compile(TEMPLATED_REGEXP)
+	}
+
+	return templatedRegexp, err
 }
