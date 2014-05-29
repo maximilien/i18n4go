@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/maximilien/i18n4cf/cmds"
@@ -13,17 +14,20 @@ import (
 type MergeStrings struct {
 	options cmds.Options
 
-	RecurseFlag    bool
+	I18nStringInfos []common.I18nStringInfo
+
+	Recurse        bool
 	SourceLanguage string
 	Directory      string
 }
 
 func NewMergeStrings(options cmds.Options) MergeStrings {
 	return MergeStrings{
-		options:        options,
-		RecurseFlag:    options.RecurseFlag,
-		SourceLanguage: options.SourceLanguageFlag,
-		Directory:      options.DirnameFlag,
+		options:         options,
+		I18nStringInfos: []common.I18nStringInfo{},
+		Recurse:         options.RecurseFlag,
+		SourceLanguage:  options.SourceLanguageFlag,
+		Directory:       options.DirnameFlag,
 	}
 }
 
@@ -66,10 +70,12 @@ func (ms *MergeStrings) combineStringInfosPerDirectory(directory string) error {
 	}
 
 	filePath := filepath.Join(directory, ms.SourceLanguage+".all.json")
-	common.SaveI18nStringInfos(ms, mapValues2Array(combinedMap), filePath)
+	ms.I18nStringInfos = mapValues2Array(combinedMap)
+	sort.Sort(ms)
+	common.SaveI18nStringInfos(ms, ms.I18nStringInfos, filePath)
 	ms.Println("gi18n: saving combined language file: " + filePath)
 
-	if ms.RecurseFlag {
+	if ms.Recurse {
 		for _, directory = range directories {
 			err := ms.combineStringInfosPerDirectory(directory)
 			if err != nil {
@@ -118,4 +124,20 @@ func mapValues2Array(combinedMap map[string]common.I18nStringInfo) (stringInfoLi
 		stringInfoList = append(stringInfoList, stringInfo)
 	}
 	return
+}
+
+// sort.Interface methods
+
+func (ms *MergeStrings) Len() int {
+	return len(ms.I18nStringInfos)
+}
+
+func (ms *MergeStrings) Less(i, j int) bool {
+	return ms.I18nStringInfos[i].ID < ms.I18nStringInfos[j].ID
+}
+
+func (ms *MergeStrings) Swap(i, j int) {
+	tmpI18nStringInfo := ms.I18nStringInfos[i]
+	ms.I18nStringInfos[i] = ms.I18nStringInfos[j]
+	ms.I18nStringInfos[j] = tmpI18nStringInfo
 }
