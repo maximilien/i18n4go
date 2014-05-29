@@ -11,25 +11,37 @@ import (
 
 var _ = Describe("create-translations -f fileName -languages \"[lang,?]+\"", func() {
 	var (
-		INPUT_FILES_PATH    = filepath.Join("f_option", "input_files")
-		EXPECTED_FILES_PATH = filepath.Join("f_option", "expected_output")
+		rootPath          string
+		fixturesPath      string
+		inputFilesPath    string
+		expectedFilesPath string
 	)
+
+	BeforeEach(func() {
+		dir, err := os.Getwd()
+		Ω(err).ShouldNot(HaveOccurred())
+		rootPath = filepath.Join(dir, "..", "..")
+
+		fixturesPath = filepath.Join("..", "..", "test_fixtures", "create_translations", "f_option")
+		inputFilesPath = filepath.Join(fixturesPath, "input_files")
+		expectedFilesPath = filepath.Join(fixturesPath, "expected_output")
+	})
 
 	Context("when valid input file is provided", func() {
 		Context("and a single language is specified", func() {
 			BeforeEach(func() {
-				session := Runi18n("-create-translations", "-v", "-f", filepath.Join(INPUT_FILES_PATH, "quota.go.en.json"), "-languages", "\"fr\"", "-o", EXPECTED_FILES_PATH)
+				session := Runi18n("-create-translations", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "-languages", "\"fr\"", "-o", expectedFilesPath)
 				Ω(session.ExitCode()).Should(Equal(0))
 			})
 
 			AfterEach(func() {
 				RemoveAllFiles(
-					GetFilePath(EXPECTED_FILES_PATH, "quota.go.fr.json"),
+					GetFilePath(expectedFilesPath, "quota.go.fr.json"),
 				)
 			})
 
 			It("creates the language file", func() {
-				fileInfo, err := os.Stat(GetFilePath(EXPECTED_FILES_PATH, "quota.go.fr.json"))
+				fileInfo, err := os.Stat(GetFilePath(expectedFilesPath, "quota.go.fr.json"))
 				Ω(err).Should(BeNil())
 				Ω(fileInfo.Name()).Should(Equal("quota.go.fr.json"))
 			})
@@ -37,23 +49,23 @@ var _ = Describe("create-translations -f fileName -languages \"[lang,?]+\"", fun
 
 		Context("and multiple languages are specified", func() {
 			BeforeEach(func() {
-				session := Runi18n("-create-translations", "-v", "-f", filepath.Join(INPUT_FILES_PATH, "quota.go.en.json"), "-languages", "\"fr,de\"", "-o", EXPECTED_FILES_PATH)
+				session := Runi18n("-create-translations", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "-languages", "\"fr,de\"", "-o", expectedFilesPath)
 				Ω(session.ExitCode()).Should(Equal(0))
 			})
 
 			AfterEach(func() {
 				RemoveAllFiles(
-					GetFilePath(EXPECTED_FILES_PATH, "quota.go.fr.json"),
-					GetFilePath(EXPECTED_FILES_PATH, "quota.go.de.json"),
+					GetFilePath(expectedFilesPath, "quota.go.fr.json"),
+					GetFilePath(expectedFilesPath, "quota.go.de.json"),
 				)
 			})
 
 			It("creates a language file for each language specified", func() {
-				fileInfo, err := os.Stat(GetFilePath(EXPECTED_FILES_PATH, "quota.go.fr.json"))
+				fileInfo, err := os.Stat(GetFilePath(expectedFilesPath, "quota.go.fr.json"))
 				Ω(err).Should(BeNil())
 				Ω(fileInfo.Name()).Should(Equal("quota.go.fr.json"))
 
-				fileInfo, err = os.Stat(GetFilePath(EXPECTED_FILES_PATH, "quota.go.de.json"))
+				fileInfo, err = os.Stat(GetFilePath(expectedFilesPath, "quota.go.de.json"))
 				Ω(err).Should(BeNil())
 				Ω(fileInfo.Name()).Should(Equal("quota.go.de.json"))
 			})
@@ -64,24 +76,24 @@ var _ = Describe("create-translations -f fileName -languages \"[lang,?]+\"", fun
 	Context("when invalid input file is provided", func() {
 		Context("and file does not exist", func() {
 			BeforeEach(func() {
-				session := Runi18n("-create-translations", "-v", "-f", filepath.Join(INPUT_FILES_PATH, "quota.go.de.json"), "-languages", "\"fr\"", "-o", EXPECTED_FILES_PATH, "-source-language", "zh_TW")
+				session := Runi18n("-create-translations", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.de.json"), "-languages", "\"fr\"", "-o", expectedFilesPath, "-source-language", "zh_TW")
 				Ω(session.ExitCode()).Should(Equal(1))
 			})
 
 			It("fails verification", func() {
-				_, err := os.Stat(GetFilePath(EXPECTED_FILES_PATH, "quota.go.fr.json"))
+				_, err := os.Stat(GetFilePath(expectedFilesPath, "quota.go.fr.json"))
 				Ω(os.IsNotExist(err)).Should(Equal(true))
 			})
 		})
 
 		Context("and file is empty", func() {
 			BeforeEach(func() {
-				session := Runi18n("-create-translations", "-v", "-f", filepath.Join(INPUT_FILES_PATH, "quota.go.ja.json"), "-languages", "\"fr\"", "-o", EXPECTED_FILES_PATH, "-source-language", "ja")
+				session := Runi18n("-create-translations", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.ja.json"), "-languages", "\"fr\"", "-o", expectedFilesPath, "-source-language", "ja")
 				Ω(session.ExitCode()).Should(Equal(1))
 			})
 
 			It("fails verification", func() {
-				_, err := os.Stat(GetFilePath(EXPECTED_FILES_PATH, "quota.go.ja.json"))
+				_, err := os.Stat(GetFilePath(expectedFilesPath, "quota.go.ja.json"))
 				Ω(os.IsNotExist(err)).Should(Equal(true))
 			})
 		})

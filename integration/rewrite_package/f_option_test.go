@@ -1,20 +1,22 @@
 package rewrite_package_test
 
 import (
-	. "github.com/maximilien/i18n4cf/integration/test_helpers"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
+
+	. "github.com/maximilien/i18n4cf/integration/test_helpers"
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 )
 
 var _ = Describe("rewrite-package -f filename", func() {
 	var (
-		rootPath            = "."
-		INPUT_FILES_PATH    = filepath.Join("f_option", "input_files")
-		EXPECTED_FILES_PATH = filepath.Join("f_option", "expected_output")
+		rootPath          string
+		fixturesPath      string
+		inputFilesPath    string
+		expectedFilesPath string
 	)
 
 	BeforeEach(func() {
@@ -22,9 +24,13 @@ var _ = Describe("rewrite-package -f filename", func() {
 		Ω(err).ShouldNot(HaveOccurred())
 		rootPath = filepath.Join(dir, "..", "..")
 
+		fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
+		inputFilesPath = filepath.Join(fixturesPath, "f_option", "input_files")
+		expectedFilesPath = filepath.Join(fixturesPath, "f_option", "expected_output")
+
 		session := Runi18n(
 			"-rewrite-package",
-			"-f", filepath.Join(INPUT_FILES_PATH, "test.go"),
+			"-f", filepath.Join(inputFilesPath, "test.go"),
 			"-o", filepath.Join(rootPath, "tmp"),
 			"-v",
 		)
@@ -33,7 +39,7 @@ var _ = Describe("rewrite-package -f filename", func() {
 	})
 
 	It("rewrites the input file with T() wrappers around strings", func() {
-		expectedOutputFile := filepath.Join(EXPECTED_FILES_PATH, "test.go")
+		expectedOutputFile := filepath.Join(expectedFilesPath, "test.go")
 		bytes, err := ioutil.ReadFile(expectedOutputFile)
 		Ω(err).ShouldNot(HaveOccurred())
 
@@ -54,7 +60,7 @@ var _ = Describe("rewrite-package -f filename", func() {
 		Ω(err).ShouldNot(HaveOccurred())
 		expected := strings.TrimSpace(string(expectedBytes))
 
-		expectedInitFile := filepath.Join(EXPECTED_FILES_PATH, "i18n_init.go")
+		expectedInitFile := filepath.Join(expectedFilesPath, "i18n_init.go")
 		actualBytes, err := ioutil.ReadFile(expectedInitFile)
 		Ω(err).ShouldNot(HaveOccurred())
 		actual := strings.TrimSpace(string(actualBytes))

@@ -1,0 +1,121 @@
+[
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/update_quota.go",
+      "value": "update-quota",
+      "offset": 2644,
+      "line": 80,
+      "column": 28
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/update_quota.go",
+      "value": "CF_NAME update-quota QUOTA [-m MEMORY] [-n NEW_NAME] [-r ROUTES] [-s SERVICE_INSTANCES] [--allow-paid-service-plans | --disallow-paid-service-plans]",
+      "offset": 906,
+      "line": 32,
+      "column": 16
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/update_quota.go",
+      "value": "Total amount of memory (e.g. 1024M, 1G, 10G)",
+      "offset": 1114,
+      "line": 34,
+      "column": 36
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/update_quota.go",
+      "value": "Can provision instances of paid service plans",
+      "offset": 1397,
+      "line": 38,
+      "column": 58
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/update_quota.go",
+      "value": "Updating quota %s as %s...",
+      "offset": 2883,
+      "line": 98,
+      "column": 13
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/update_quota.go",
+      "value": "Update an existing resource quota",
+      "offset": 854,
+      "line": 31,
+      "column": 16
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/update_quota.go",
+      "value": "m",
+      "offset": 2584,
+      "line": 77,
+      "column": 58
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/update_quota.go",
+      "value": "n",
+      "offset": 2748,
+      "line": 87,
+      "column": 25
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/update_quota.go",
+      "value": "Total number of routes",
+      "offset": 1243,
+      "line": 36,
+      "column": 33
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/update_quota.go",
+      "value": "Total number of service instances",
+      "offset": 1302,
+      "line": 37,
+      "column": 33
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/update_quota.go",
+      "value": "disallow-paid-service-plans",
+      "offset": 2157,
+      "line": 63,
+      "column": 33
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/update_quota.go",
+      "value": "Cannot provision instances of paid service plans",
+      "offset": 1507,
+      "line": 39,
+      "column": 61
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/update_quota.go",
+      "value": "Please choose either allow or disallow. Both flags are not permitted to be passed in the same command. ",
+      "offset": 2252,
+      "line": 65,
+      "column": 17
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/update_quota.go",
+      "value": "New name",
+      "offset": 1198,
+      "line": 35,
+      "column": 36
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/update_quota.go",
+      "value": "r",
+      "offset": 2862,
+      "line": 95,
+      "column": 29
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/update_quota.go",
+      "value": "s",
+      "offset": 2806,
+      "line": 91,
+      "column": 31
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/update_quota.go",
+      "value": "allow-paid-service-plans",
+      "offset": 2097,
+      "line": 62,
+      "column": 30
+   }
+]

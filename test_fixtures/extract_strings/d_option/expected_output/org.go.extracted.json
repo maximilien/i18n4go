@@ -1,0 +1,72 @@
+[
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/org.go",
+      "value": "CF_NAME org ORG",
+      "offset": 769,
+      "line": 32,
+      "column": 16
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/org.go",
+      "value": "\n%s:",
+      "offset": 1465,
+      "line": 59,
+      "column": 13
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/org.go",
+      "value": "%s (%dM memory limit, %d routes, %d services, paid services %s)",
+      "offset": 1772,
+      "line": 72,
+      "column": 26
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/org.go",
+      "value": "  domains: %s",
+      "offset": 1976,
+      "line": 75,
+      "column": 13
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/org.go",
+      "value": "  quota:   %s",
+      "offset": 2060,
+      "line": 76,
+      "column": 13
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/org.go",
+      "value": "org",
+      "offset": 715,
+      "line": 30,
+      "column": 16
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/org.go",
+      "value": "Show org info",
+      "offset": 737,
+      "line": 31,
+      "column": 16
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/org.go",
+      "value": "Incorrect Usage",
+      "offset": 979,
+      "line": 38,
+      "column": 20
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/org.go",
+      "value": "Getting info for org %s as %s...",
+      "offset": 1312,
+      "line": 54,
+      "column": 13
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/org.go",
+      "value": "  spaces:  %s",
+      "offset": 2125,
+      "line": 77,
+      "column": 13
+   }
+]

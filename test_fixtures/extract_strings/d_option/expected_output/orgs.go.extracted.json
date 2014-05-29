@@ -1,0 +1,58 @@
+[
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/orgs.go",
+      "value": "orgs",
+      "offset": 755,
+      "line": 28,
+      "column": 16
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/orgs.go",
+      "value": "o",
+      "offset": 778,
+      "line": 29,
+      "column": 16
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/orgs.go",
+      "value": "List all orgs",
+      "offset": 798,
+      "line": 30,
+      "column": 16
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/orgs.go",
+      "value": "CF_NAME orgs",
+      "offset": 830,
+      "line": 31,
+      "column": 16
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/orgs.go",
+      "value": "Getting orgs as %s...\n",
+      "offset": 1142,
+      "line": 43,
+      "column": 13
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/orgs.go",
+      "value": "name",
+      "offset": 1267,
+      "line": 46,
+      "column": 33
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/orgs.go",
+      "value": "Failed fetching orgs.\n%s",
+      "offset": 1465,
+      "line": 56,
+      "column": 17
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/orgs.go",
+      "value": "No orgs found",
+      "offset": 1541,
+      "line": 61,
+      "column": 14
+   }
+]

@@ -12,10 +12,11 @@ import (
 
 var _ = Describe("rewrite-package -d dirname -r", func() {
 	var (
-		rootPath            = ""
-		INPUT_FILES_PATH    = filepath.Join("f_option", "input_files")
-		EXPECTED_FILES_PATH = filepath.Join("f_option", "expected_output")
-		outputDir           = ""
+		outputDir         string
+		rootPath          string
+		fixturesPath      string
+		inputFilesPath    string
+		expectedFilesPath string
 	)
 
 	BeforeEach(func() {
@@ -24,20 +25,23 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 		rootPath = filepath.Join(dir, "..", "..")
 		outputDir = filepath.Join(rootPath, "tmp")
 
+		fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
+		inputFilesPath = filepath.Join(fixturesPath, "f_option", "input_files")
+		expectedFilesPath = filepath.Join(fixturesPath, "f_option", "expected_output")
+
 		session := Runi18n(
 			"-rewrite-package",
-			"-d", INPUT_FILES_PATH,
+			"-d", inputFilesPath,
 			"-o", outputDir,
 			"-r",
 			"-v",
 		)
 
 		Ω(session.ExitCode()).Should(Equal(0))
-
 	})
 
 	It("adds T() callExprs wrapping string literals", func() {
-		expectedOutputFile := filepath.Join(EXPECTED_FILES_PATH, "test.go")
+		expectedOutputFile := filepath.Join(expectedFilesPath, "test.go")
 		bytes, err := ioutil.ReadFile(expectedOutputFile)
 		Ω(err).ShouldNot(HaveOccurred())
 
@@ -52,7 +56,7 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 	})
 
 	It("recurses to files in nested dirs", func() {
-		expectedOutputFile := filepath.Join(EXPECTED_FILES_PATH, "nested_dir", "test.go")
+		expectedOutputFile := filepath.Join(expectedFilesPath, "nested_dir", "test.go")
 		bytes, err := ioutil.ReadFile(expectedOutputFile)
 		Ω(err).ShouldNot(HaveOccurred())
 
@@ -72,7 +76,7 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 		Ω(err).ShouldNot(HaveOccurred())
 		expected := strings.TrimSpace(string(expectedBytes))
 
-		expectedInitFile := filepath.Join(EXPECTED_FILES_PATH, "i18n_init.go")
+		expectedInitFile := filepath.Join(expectedFilesPath, "i18n_init.go")
 		actualBytes, err := ioutil.ReadFile(expectedInitFile)
 		Ω(err).ShouldNot(HaveOccurred())
 		actual := strings.TrimSpace(string(actualBytes))
@@ -84,7 +88,7 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 		Ω(err).ShouldNot(HaveOccurred())
 		expected = strings.TrimSpace(string(expectedBytes))
 
-		expectedInitFile = filepath.Join(EXPECTED_FILES_PATH, "nested_dir", "i18n_init.go")
+		expectedInitFile = filepath.Join(expectedFilesPath, "nested_dir", "i18n_init.go")
 		actualBytes, err = ioutil.ReadFile(expectedInitFile)
 		Ω(err).ShouldNot(HaveOccurred())
 		actual = strings.TrimSpace(string(actualBytes))

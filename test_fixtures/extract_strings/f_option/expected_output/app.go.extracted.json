@@ -1,0 +1,65 @@
+[
+   {
+      "filename": "../../test_fixtures/extract_strings/f_option/input_files/app.go",
+      "value": "Show help",
+      "offset": 1332,
+      "line": 36,
+      "column": 16
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/f_option/input_files/app.go",
+      "value": "%s help [COMMAND]",
+      "offset": 1372,
+      "line": 37,
+      "column": 28
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/f_option/input_files/app.go",
+      "value": "VERSION:",
+      "offset": 1710,
+      "line": 50,
+      "column": 59
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/f_option/input_files/app.go",
+      "value": "Jan 2, 2006 3:04PM",
+      "offset": 1873,
+      "line": 57,
+      "column": 36
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/f_option/input_files/app.go",
+      "value": "{{.Title \"NAME:\"}}\n   {{.Name}} - {{.Usage}}\n\n{{.Title \"USAGE:\"}}\n   [environment variables] {{.Name}} [global options] command [arguments...] [command options]\n\n{{.Title \"VERSION:\"}}\n   {{.Version}}\n\n{{.Title \"BUILD TIME:\"}}\n   {{.Compiled}}\n   {{range .Commands}}\n{{.SubTitle .Name}}{{range .CommandSubGroups}}\n{{range .}}   {{.Name}} {{.Description}}\n{{end}}{{end}}{{end}}\n{{.Title \"ENVIRONMENT VARIABLES\"}}\n   CF_COLOR=false                     Do not colorize output\n   CF_HOME=path/to/dir/               Override path to default config directory\n   CF_STAGING_TIMEOUT=15              Max wait time for buildpack staging, in minutes\n   CF_STARTUP_TIMEOUT=5               Max wait time for app instance startup, in minutes\n   CF_TRACE=true                      Print API request diagnostics to stdout\n   CF_TRACE=path/to/trace.log         Append API request diagnostics to a log file\n   HTTP_PROXY=proxy.example.com:8080  Enable HTTP proxying for API requests\n\n{{.Title \"GLOBAL OPTIONS\"}}\n   --version, -v                      Print the version\n   --help, -h                         Show help\n",
+      "offset": 35,
+      "line": 3,
+      "column": 23
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/f_option/input_files/app.go",
+      "value": "help",
+      "offset": 1289,
+      "line": 34,
+      "column": 16
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/f_option/input_files/app.go",
+      "value": "h",
+      "offset": 1312,
+      "line": 35,
+      "column": 16
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/f_option/input_files/app.go",
+      "value": "\n%s\n%s\n\n",
+      "offset": 1673,
+      "line": 50,
+      "column": 22
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/f_option/input_files/app.go",
+      "value": "CF_NAME",
+      "offset": 2455,
+      "line": 79,
+      "column": 48
+   }
+]

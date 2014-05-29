@@ -4,8 +4,6 @@ import (
 	"bufio"
 	"encoding/json"
 	"fmt"
-	. "github.com/onsi/ginkgo"
-	. "github.com/onsi/gomega"
 	"io"
 	"io/ioutil"
 	"os"
@@ -14,6 +12,8 @@ import (
 	"reflect"
 	"strings"
 
+	. "github.com/onsi/ginkgo"
+	. "github.com/onsi/gomega"
 	. "github.com/onsi/gomega/gexec"
 )
 
@@ -35,7 +35,7 @@ func CompareExpectedToGeneratedExtendedJson(expectedFilePath string, generatedFi
 	expectedTranslation := ReadJsonExtended(expectedFilePath)
 	generatedTranslation := ReadJsonExtended(generatedFilePath)
 
-	Ω(reflect.DeepEqual(expectedTranslation, generatedTranslation)).Should(BeTrue())
+	Ω(reflect.DeepEqual(expectedTranslation, generatedTranslation)).Should(BeTrue(), fmt.Sprintf("expected extracted json %s to exactly match %s", expectedFilePath, generatedFilePath))
 }
 
 func GetFilePath(input_dir string, fileName string) string {

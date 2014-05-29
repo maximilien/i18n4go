@@ -12,74 +12,80 @@ import (
 
 var _ = Describe("extract-strings -f fileName -o outputDir", func() {
 	var (
-		INPUT_FILES_PATH  = filepath.Join("f_option", "input_files")
-		EXPECTED_DIR_PATH = filepath.Join("f_option", "expected_output")
-		OUTPUT_PATH       string
+		rootPath          string
+		fixturesPath      string
+		inputFilesPath    string
+		expectedFilesPath string
+		outputPath        string
 	)
+
+	BeforeEach(func() {
+		dir, err := os.Getwd()
+		Ω(err).ShouldNot(HaveOccurred())
+		rootPath = filepath.Join(dir, "..", "..")
+
+		fixturesPath = filepath.Join("..", "..", "test_fixtures", "extract_strings", "f_option")
+		inputFilesPath = filepath.Join(fixturesPath, "input_files")
+		expectedFilesPath = filepath.Join(fixturesPath, "expected_output")
+	})
+
+	BeforeEach(func() {
+		var err error
+		outputPath, err = ioutil.TempDir("", "gi18n4cf")
+		Ω(err).ToNot(HaveOccurred())
+	})
+
+	AfterEach(func() {
+		os.RemoveAll(outputPath)
+	})
 
 	Context("-o outputDir --output-flat (default)", func() {
 		BeforeEach(func() {
-			var err error
-			OUTPUT_PATH, err = ioutil.TempDir("", "gi18n4cf")
-			Ω(err).ToNot(HaveOccurred())
-
-			session := Runi18n("-extract-strings", "-v", "-p", "-f", filepath.Join(INPUT_FILES_PATH, "app.go"), "-o", OUTPUT_PATH)
+			session := Runi18n("-extract-strings", "-v", "-p", "-f", filepath.Join(inputFilesPath, "app.go"), "-o", outputPath)
 			Ω(session.ExitCode()).Should(Equal(0))
-		})
-
-		AfterEach(func() {
-			os.RemoveAll(OUTPUT_PATH)
 		})
 
 		It("Walks input directory and compares each group of generated output to expected output", func() {
 
 			CompareExpectedToGeneratedTraslationJson(
-				filepath.Join(EXPECTED_DIR_PATH, "app.go.en.json"),
-				filepath.Join(OUTPUT_PATH, "app.go.en.json"),
+				filepath.Join(expectedFilesPath, "app.go.en.json"),
+				filepath.Join(outputPath, "app.go.en.json"),
 			)
 
 			CompareExpectedToGeneratedExtendedJson(
-				filepath.Join(EXPECTED_DIR_PATH, "app.go.extracted.json"),
-				filepath.Join(OUTPUT_PATH, "app.go.extracted.json"),
+				filepath.Join(expectedFilesPath, "app.go.extracted.json"),
+				filepath.Join(outputPath, "app.go.extracted.json"),
 			)
 
 			CompareExpectedToGeneratedPo(
-				filepath.Join(EXPECTED_DIR_PATH, "app.go.en.po"),
-				filepath.Join(OUTPUT_PATH, "app.go.en.po"),
+				filepath.Join(expectedFilesPath, "app.go.en.po"),
+				filepath.Join(outputPath, "app.go.en.po"),
 			)
 		})
 	})
 
 	Context("-o outputDir --output-match-package", func() {
 		BeforeEach(func() {
-			var err error
-			OUTPUT_PATH, err = ioutil.TempDir("", "gi18n4cf")
-			Ω(err).ToNot(HaveOccurred())
-
-			session := Runi18n("-extract-strings", "-v", "-p", "-f", filepath.Join(INPUT_FILES_PATH, "app.go"), "-o", OUTPUT_PATH, "-output-match-package")
+			session := Runi18n("-extract-strings", "-v", "-p", "-f", filepath.Join(inputFilesPath, "app.go"), "-o", outputPath, "-output-match-package")
 			Ω(session.ExitCode()).Should(Equal(0))
 		})
 
-		AfterEach(func() {
-			os.RemoveAll(OUTPUT_PATH)
-		})
-
 		It("Walks input directory and compares each group of generated output to expected output and package subdirectories", func() {
-			EXPECTED_DIR_PATH = filepath.Join(EXPECTED_DIR_PATH, "app")
-			OUTPUT_PATH = filepath.Join(OUTPUT_PATH, "app")
+			expectedFilesPath = filepath.Join(expectedFilesPath, "app")
+			outputPath = filepath.Join(outputPath, "app")
 			CompareExpectedToGeneratedTraslationJson(
-				filepath.Join(EXPECTED_DIR_PATH, "app.go.en.json"),
-				filepath.Join(OUTPUT_PATH, "app.go.en.json"),
+				filepath.Join(expectedFilesPath, "app.go.en.json"),
+				filepath.Join(outputPath, "app.go.en.json"),
 			)
 
 			CompareExpectedToGeneratedExtendedJson(
-				filepath.Join(EXPECTED_DIR_PATH, "app.go.extracted.json"),
-				filepath.Join(OUTPUT_PATH, "app.go.extracted.json"),
+				filepath.Join(expectedFilesPath, "app.go.extracted.json"),
+				filepath.Join(outputPath, "app.go.extracted.json"),
 			)
 
 			CompareExpectedToGeneratedPo(
-				filepath.Join(EXPECTED_DIR_PATH, "app.go.en.po"),
-				filepath.Join(OUTPUT_PATH, "app.go.en.po"),
+				filepath.Join(expectedFilesPath, "app.go.en.po"),
+				filepath.Join(outputPath, "app.go.en.po"),
 			)
 		})
 	})
