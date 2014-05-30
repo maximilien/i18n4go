@@ -313,17 +313,29 @@ func (rp *rewritePackage) wrapMultiArgsCallExpr(callExpr *ast.CallExpr) {
 		if basicLit.Kind == token.STRING {
 			valueWithoutQuotes := basicLit.Value[1 : len(basicLit.Value)-1]
 			if common.IsTemplatedString(valueWithoutQuotes) {
-				templatedCallExpr := rp.wrapBasicLitWithTemplatedT(basicLit, callExpr.Args[1:], callExpr)
-				if templatedCallExpr != callExpr {
-					callExpr.Args = make([]ast.Expr, 0)
-					callExpr.Args = append(callExpr.Args, templatedCallExpr)
-				}
+				rp.wrapCallExprWithTemplatedT(basicLit, callExpr)
+			} else if common.IsInterpolatedString(valueWithoutQuotes) {
+				rp.wrapCallExprWithInterpolatedT(basicLit, callExpr)
 			} else {
 				rp.wrapExprArgs(callExpr.Args)
 			}
 		} else {
 			rp.wrapExprArgs(callExpr.Args)
 		}
+	}
+}
+
+func (rp *rewritePackage) wrapCallExprWithInterpolatedT(basicLit *ast.BasicLit, callExpr *ast.CallExpr) {
+	templatedString := common.ConvertToTemplatedString(basicLit.Value[1 : len(basicLit.Value)-1])
+	basicLit.Value = "\"" + templatedString + "\""
+	rp.wrapCallExprWithTemplatedT(basicLit, callExpr)
+}
+
+func (rp *rewritePackage) wrapCallExprWithTemplatedT(basicLit *ast.BasicLit, callExpr *ast.CallExpr) {
+	templatedCallExpr := rp.wrapBasicLitWithTemplatedT(basicLit, callExpr.Args[1:], callExpr)
+	if templatedCallExpr != callExpr {
+		callExpr.Args = make([]ast.Expr, 0)
+		callExpr.Args = append(callExpr.Args, templatedCallExpr)
 	}
 }
 

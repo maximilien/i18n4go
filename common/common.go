@@ -281,6 +281,27 @@ func IsInterpolatedString(aString string) bool {
 	return re.Match([]byte(aString))
 }
 
+func ConvertToTemplatedString(aString string) string {
+	if !IsInterpolatedString(aString) {
+		return aString
+	}
+
+	re, err := getInterpolatedStringRegexp()
+	if err != nil {
+		fmt.Errorf("gi18n: Error compiling interpolated string Regexp: %s", err.Error())
+		return ""
+	}
+
+	matches := re.FindAllStringSubmatch(aString, -1)
+	templatedString := aString
+	for i, match := range matches {
+		argName := "{{.Arg" + strconv.Itoa(i) + "}}"
+		templatedString = strings.Replace(templatedString, match[0], argName, 1)
+	}
+
+	return templatedString
+}
+
 // Private
 
 func getTemplatedStringRegexp() (*regexp.Regexp, error) {
