@@ -19,4 +19,11 @@ func Interpolated() string {
 	fmt.Println("Hello {{.Name}} world! {{.Number}} times", name, 10)
 
 	fmt.Println("Hello {{.Name}} world!", strings.ToUpper("Hello {{.Name}} world!", strings.ToUpper(name)))
+
+	type something struct {
+	}
+
+	foo := something{}
+	strz := []string{"one", "two", "buckle my shoe"}
+	fmt.Println("Welp, that's a great {{.MyStruct}} how about a {{.Whatever}}", &foo, strz[2])
 }
