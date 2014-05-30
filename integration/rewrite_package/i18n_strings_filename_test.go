@@ -18,39 +18,79 @@ var _ = Describe("rewrite-package -i18n-strings-filename some-file", func() {
 		expectedFilesPath string
 	)
 
-	BeforeEach(func() {
-		dir, err := os.Getwd()
-		Ω(err).ShouldNot(HaveOccurred())
-		rootPath = filepath.Join(dir, "..", "..")
+	Context("input file only contains simple strings", func() {
+		BeforeEach(func() {
+			dir, err := os.Getwd()
+			Ω(err).ShouldNot(HaveOccurred())
+			rootPath = filepath.Join(dir, "..", "..")
 
-		fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
-		inputFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "input_files")
-		expectedFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "expected_output")
+			fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
+			inputFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "input_files")
+			expectedFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "expected_output")
 
-		session := Runi18n(
-			"-rewrite-package",
-			"-f", filepath.Join(inputFilesPath, "test.go"),
-			"-o", filepath.Join(rootPath, "tmp"),
-			"-i18n-strings-filename", filepath.Join(inputFilesPath, "strings.json"),
-			"-v",
-		)
+			session := Runi18n(
+				"-rewrite-package",
+				"-f", filepath.Join(inputFilesPath, "test.go"),
+				"-o", filepath.Join(rootPath, "tmp"),
+				"-i18n-strings-filename", filepath.Join(inputFilesPath, "strings.json"),
+				"-v",
+			)
 
-		Ω(session.ExitCode()).Should(Equal(0))
+			Ω(session.ExitCode()).Should(Equal(0))
+		})
+
+		It("rewrites the input file with T() wrappers around the strings specified in the -i18n-strings-filename flag", func() {
+			expectedOutputFile := filepath.Join(expectedFilesPath, "test.go")
+			bytes, err := ioutil.ReadFile(expectedOutputFile)
+			Ω(err).ShouldNot(HaveOccurred())
+
+			expectedOutput := string(bytes)
+
+			generatedOutputFile := filepath.Join(rootPath, "tmp", "test.go")
+			bytes, err = ioutil.ReadFile(generatedOutputFile)
+			Ω(err).ShouldNot(HaveOccurred())
+
+			actualOutput := string(bytes)
+
+			Ω(actualOutput).Should(Equal(expectedOutput))
+		})
 	})
 
-	It("rewrites the input file with T() wrappers around the strings specified in the -i18n-strings-filename flag", func() {
-		expectedOutputFile := filepath.Join(expectedFilesPath, "test.go")
-		bytes, err := ioutil.ReadFile(expectedOutputFile)
-		Ω(err).ShouldNot(HaveOccurred())
+	Context("input file contains some interpolated (templated) strings", func() {
+		BeforeEach(func() {
+			dir, err := os.Getwd()
+			Ω(err).ShouldNot(HaveOccurred())
+			rootPath = filepath.Join(dir, "..", "..")
 
-		expectedOutput := string(bytes)
+			fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
+			inputFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "input_files")
+			expectedFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "expected_output")
 
-		generatedOutputFile := filepath.Join(rootPath, "tmp", "test.go")
-		bytes, err = ioutil.ReadFile(generatedOutputFile)
-		Ω(err).ShouldNot(HaveOccurred())
+			session := Runi18n(
+				"-rewrite-package",
+				"-f", filepath.Join(inputFilesPath, "test_interpolated_strings.go"),
+				"-o", filepath.Join(rootPath, "tmp"),
+				"-i18n-strings-filename", filepath.Join(inputFilesPath, "test_interpolated_strings.go.en.json"),
+				"-v",
+			)
 
-		actualOutput := string(bytes)
+			Ω(session.ExitCode()).Should(Equal(0))
+		})
 
-		Ω(actualOutput).Should(Equal(expectedOutput))
+		It("rewrites the input file with T() wrappers around the strings (templated and not) specified in the -i18n-strings-filename flag", func() {
+			expectedOutputFile := filepath.Join(expectedFilesPath, "test_interpolated_strings.go")
+			bytes, err := ioutil.ReadFile(expectedOutputFile)
+			Ω(err).ShouldNot(HaveOccurred())
+
+			expectedOutput := string(bytes)
+
+			generatedOutputFile := filepath.Join(rootPath, "tmp", "test_interpolated_strings.go")
+			bytes, err = ioutil.ReadFile(generatedOutputFile)
+			Ω(err).ShouldNot(HaveOccurred())
+
+			actualOutput := string(bytes)
+
+			Ω(actualOutput).Should(Equal(expectedOutput))
+		})
 	})
 })

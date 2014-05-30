@@ -1,0 +1,18 @@
+[
+   {
+      "id": "cruel",
+      "translation": "cruel"
+   },
+   {
+      "id": "Hello {{.Name}} world!",
+      "translation": "Hello {{.Name}} world!"
+   },
+   {
+      "id": "Hello {{Not complex}} world! I am",
+      "translation": "Hello {{Not complex}} world! I am"
+   },
+   {
+      "id": "Hello {{.Name}} world! {{.Number}} times",
+      "translation": "Hello {{.Name}} world! {{.Number}} times"
+   }
+]

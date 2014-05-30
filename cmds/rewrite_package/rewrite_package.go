@@ -313,9 +313,11 @@ func (rp *rewritePackage) wrapMultiArgsCallExpr(callExpr *ast.CallExpr) {
 		if basicLit.Kind == token.STRING {
 			valueWithoutQuotes := basicLit.Value[1 : len(basicLit.Value)-1]
 			if common.IsTemplatedString(valueWithoutQuotes) {
-				templatedCallExpr := rp.wrapBasicLitWithTemplatedT(basicLit, callExpr.Args[1:])
-				callExpr.Args = make([]ast.Expr, 0)
-				callExpr.Args = append(callExpr.Args, templatedCallExpr)
+				templatedCallExpr := rp.wrapBasicLitWithTemplatedT(basicLit, callExpr.Args[1:], callExpr)
+				if templatedCallExpr != callExpr {
+					callExpr.Args = make([]ast.Expr, 0)
+					callExpr.Args = append(callExpr.Args, templatedCallExpr)
+				}
 			} else {
 				rp.wrapExprArgs(callExpr.Args)
 			}
@@ -335,12 +337,12 @@ func (rp *rewritePackage) wrapExprArgs(exprArgs []ast.Expr) {
 	}
 }
 
-func (rp *rewritePackage) wrapBasicLitWithTemplatedT(basicLit *ast.BasicLit, args []ast.Expr) ast.Expr {
+func (rp *rewritePackage) wrapBasicLitWithTemplatedT(basicLit *ast.BasicLit, args []ast.Expr, callExpr *ast.CallExpr) ast.Expr {
 	valueWithoutQuotes := basicLit.Value[1 : len(basicLit.Value)-1]
 
 	_, ok := rp.ExtractedStrings[valueWithoutQuotes]
 	if !ok && rp.ExtractedStrings != nil {
-		return basicLit
+		return callExpr
 	}
 
 	rp.TotalStrings++
