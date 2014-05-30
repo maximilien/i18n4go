@@ -302,6 +302,15 @@ func ConvertToTemplatedString(aString string) string {
 	return templatedString
 }
 
+func I18nStringInfoMapValues2Array(i18nStringInfosMap map[string]I18nStringInfo) []I18nStringInfo {
+	var i18nStringInfos []I18nStringInfo
+	for _, i18nStringInfo := range i18nStringInfosMap {
+		i18nStringInfos = append(i18nStringInfos, i18nStringInfo)
+	}
+
+	return i18nStringInfos
+}
+
 // Private
 
 func getTemplatedStringRegexp() (*regexp.Regexp, error) {

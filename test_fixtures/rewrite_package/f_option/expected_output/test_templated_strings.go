@@ -10,6 +10,7 @@ func Templated() string {
 	myName := T("evil")
 	fmt.Println(T("Hello {{.Name}} world!", map[string]interface{}{"Name": name}))
 	fmt.Println(T("Hello {{.Name}} world!, bye from {{.MyName}}", map[string]interface{}{"Name": name, "MyName": myName}))
+	fmt.Println(T("Hello {{.Name}} world!", map[string]interface{}{"Name": T("Evil")}))
 
 	//These should not have a map[string]interface{}
 	fmt.Println(T("Hello {{Not complex}} world! I am"), name)

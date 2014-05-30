@@ -10,6 +10,7 @@ func Templated() string {
 	myName := "evil"
 	fmt.Println("Hello {{.Name}} world!", name)
 	fmt.Println("Hello {{.Name}} world!, bye from {{.MyName}}", name, myName)
+	fmt.Println("Hello {{.Name}} world!", "Evil")
 
 	//These should not have a map[string]interface{}
 	fmt.Println("Hello {{Not complex}} world! I am", name)

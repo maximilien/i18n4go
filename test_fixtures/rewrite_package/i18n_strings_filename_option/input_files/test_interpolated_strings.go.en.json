@@ -1,0 +1,14 @@
+[
+   {
+      "id": "Hello %s world!",
+      "translation": "Hello %s world!"
+   },
+   {
+      "id": "Hello %d(%s) world!, bye from %s",
+      "translation": "Hello %d(%s) world!, bye from %s"
+   },
+   {
+      "id": "Evil",
+      "translation": "Evil"
+   }
+]

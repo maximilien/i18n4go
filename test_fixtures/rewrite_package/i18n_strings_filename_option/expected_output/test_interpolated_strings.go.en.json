@@ -1,0 +1,14 @@
+[
+   {
+      "id": "Hello {{.Arg0}}({{.Arg1}}) world!, bye from {{.Arg2}}",
+      "translation": "Hello {{.Arg0}}({{.Arg1}}) world!, bye from {{.Arg2}}"
+   },
+   {
+      "id": "Evil",
+      "translation": "Evil"
+   },
+   {
+      "id": "Hello {{.Arg0}} world!",
+      "translation": "Hello {{.Arg0}} world!"
+   }
+]

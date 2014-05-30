@@ -47,7 +47,8 @@ type rewritePackage struct {
 	Dirname string
 	Recurse bool
 
-	ExtractedStrings map[string]common.I18nStringInfo
+	ExtractedStrings     map[string]common.I18nStringInfo
+	SaveExtractedStrings bool
 
 	TotalStrings int
 	TotalFiles   int
@@ -58,6 +59,9 @@ func NewRewritePackage(options cmds.Options) rewritePackage {
 		Filename:            options.FilenameFlag,
 		OutputDirname:       options.OutputDirFlag,
 		I18nStringsFilename: options.I18nStringsFilenameFlag,
+
+		ExtractedStrings:     nil,
+		SaveExtractedStrings: false,
 
 		Dirname: options.DirnameFlag,
 		Recurse: options.RecurseFlag,
@@ -183,6 +187,15 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 	if err != nil {
 		rp.Println("gi18n: error saving AST file:", err.Error())
 		return err
+	}
+
+	if rp.SaveExtractedStrings {
+		i18nStringInfos := common.I18nStringInfoMapValues2Array(rp.ExtractedStrings)
+		err := common.SaveI18nStringInfos(rp, i18nStringInfos, rp.I18nStringsFilename)
+		if err != nil {
+			rp.Println("gi18n: error saving updated i18n strings file:", err.Error())
+			return err
+		}
 	}
 
 	return err
@@ -326,8 +339,21 @@ func (rp *rewritePackage) wrapMultiArgsCallExpr(callExpr *ast.CallExpr) {
 }
 
 func (rp *rewritePackage) wrapCallExprWithInterpolatedT(basicLit *ast.BasicLit, callExpr *ast.CallExpr) {
-	templatedString := common.ConvertToTemplatedString(basicLit.Value[1 : len(basicLit.Value)-1])
+	valueWithoutQuotes := basicLit.Value[1 : len(basicLit.Value)-1]
+
+	i18nStringInfo, ok := rp.ExtractedStrings[valueWithoutQuotes]
+	if !ok && rp.ExtractedStrings != nil {
+		rp.wrapExprArgs(callExpr.Args)
+		return
+	}
+
+	templatedString := common.ConvertToTemplatedString(valueWithoutQuotes)
 	basicLit.Value = "\"" + templatedString + "\""
+
+	if rp.ExtractedStrings != nil {
+		rp.updateI18nStringInfoInExtractedStrings(i18nStringInfo, templatedString)
+	}
+
 	rp.wrapCallExprWithTemplatedT(basicLit, callExpr)
 }
 
@@ -365,6 +391,8 @@ func (rp *rewritePackage) wrapBasicLitWithTemplatedT(basicLit *ast.BasicLit, arg
 	for i, argName := range argNames {
 		if callExpr, ok := args[i].(*ast.CallExpr); ok {
 			rp.callExprTFunc(callExpr)
+		} else if basicLit, ok := args[i].(*ast.BasicLit); ok {
+			args[i] = rp.wrapBasicLitWithT(basicLit)
 		}
 
 		quotedArgName := "\"" + argName + "\""
@@ -472,4 +500,16 @@ func (rp *rewritePackage) relativePathForFile(fileName string) string {
 	} else {
 		return filepath.Base(fileName)
 	}
+}
+
+func (rp *rewritePackage) updateI18nStringInfoInExtractedStrings(i18nStringInfo common.I18nStringInfo, templatedString string) {
+	oldID := i18nStringInfo.ID
+
+	i18nStringInfo.ID = templatedString
+	i18nStringInfo.Translation = templatedString
+
+	rp.ExtractedStrings[templatedString] = i18nStringInfo
+	delete(rp.ExtractedStrings, oldID)
+
+	rp.SaveExtractedStrings = true
 }
