@@ -11,12 +11,14 @@ func Interpolated() string {
 	fmt.Println("Hello {{.Name}} world!", name)
 	fmt.Println("Hello {{.Name}} world!, bye from {{.MyName}}", name, myName)
 
+	//These should not have a map[string]interface{}
 	fmt.Println("Hello {{Not complex}} world! I am", name)
 	fmt.Println("Hello {{}}", myName)
 
 	fmt.Println("Hello {{.Name}} world!", strings.ToUpper(name))
 	fmt.Println("Hello {{.Name}} world!", strings.ToUpper("Hi"))
 	fmt.Println("Hello {{.Name}} world! {{.Number}} times", name, 10)
+	fmt.Println("Hello {{.Name}} world! {{.Float}} times", name, 10.0)
 
 	fmt.Println("Hello {{.Name}} world!", strings.ToUpper("Hello {{.Name}} world!", strings.ToUpper(name)))
 

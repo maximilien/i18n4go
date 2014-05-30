@@ -11,12 +11,14 @@ func Interpolated() string {
 	fmt.Println(T("Hello {{.Name}} world!", map[string]interface{}{"Name": name}))
 	fmt.Println(T("Hello {{.Name}} world!, bye from {{.MyName}}", map[string]interface{}{"Name": name, "MyName": myName}))
 
+	//These should not have a map[string]interface{}
 	fmt.Println(T("Hello {{Not complex}} world! I am"), name)
 	fmt.Println(T("Hello {{}}"), myName)
 
 	fmt.Println(T("Hello {{.Name}} world!", map[string]interface{}{"Name": strings.ToUpper(name)}))
 	fmt.Println(T("Hello {{.Name}} world!", map[string]interface{}{"Name": strings.ToUpper(T("Hi"))}))
 	fmt.Println(T("Hello {{.Name}} world! {{.Number}} times", map[string]interface{}{"Name": name, "Number": 10}))
+	fmt.Println(T("Hello {{.Name}} world! {{.Float}} times", map[string]interface{}{"Name": name, "Float": 10.0}))
 
 	fmt.Println(T("Hello {{.Name}} world!", map[string]interface{}{"Name": strings.ToUpper(T("Hello {{.Name}} world!", map[string]interface{}{"Name": strings.ToUpper(name)}))}))
 
