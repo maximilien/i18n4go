@@ -329,6 +329,8 @@ func (rp *rewritePackage) wrapExprArgs(exprArgs []ast.Expr) {
 	for i, _ := range exprArgs {
 		if basicLit, ok := exprArgs[i].(*ast.BasicLit); ok {
 			exprArgs[i] = rp.wrapBasicLitWithT(basicLit)
+		} else if callExpr, ok := exprArgs[i].(*ast.CallExpr); ok {
+			rp.callExprTFunc(callExpr)
 		}
 	}
 }
@@ -347,6 +349,10 @@ func (rp *rewritePackage) wrapBasicLitWithTemplatedT(basicLit *ast.BasicLit, arg
 
 	compositeExpr := []ast.Expr{}
 	for i, argName := range argNames {
+		if callExpr, ok := args[i].(*ast.CallExpr); ok {
+			rp.callExprTFunc(callExpr)
+		}
+
 		quotedArgName := "\"" + argName + "\""
 		keyValueExpr := &ast.KeyValueExpr{Key: &ast.BasicLit{Kind: 9, Value: quotedArgName}, Value: args[i]}
 		compositeExpr = append(compositeExpr, keyValueExpr)
