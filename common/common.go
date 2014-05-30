@@ -18,10 +18,11 @@ import (
 )
 
 const (
-	TEMPLATED_REGEXP = `\{\{\.[[:alnum:][:punct:][:print:]]+?\}\}`
+	TEMPLATED_STRING_REGEXP    = `\{\{\.[[:alnum:][:punct:][:print:]]+?\}\}`
+	INTERPOLATED_STRING_REGEXP = `%(?:[#v]|[%EGUTXbcdefgopqstvx])`
 )
 
-var templatedRegexp *regexp.Regexp
+var templatedStringRegexp, interpolatedStringRegexp *regexp.Regexp
 
 func ParseStringList(stringList string, delimiter string) []string {
 	stringArray := strings.Split(stringList, delimiter)
@@ -243,7 +244,7 @@ func CreateI18nStringInfoMap(i18nStringInfos []I18nStringInfo) (map[string]I18nS
 }
 
 func GetTemplatedStringArgs(aString string) []string {
-	re, err := getTemplatedRegexp()
+	re, err := getTemplatedStringRegexp()
 	if err != nil {
 		fmt.Errorf("gi18n: Error compiling templated string Regexp: %s", err.Error())
 		return []string{}
@@ -261,7 +262,7 @@ func GetTemplatedStringArgs(aString string) []string {
 }
 
 func IsTemplatedString(aString string) bool {
-	re, err := getTemplatedRegexp()
+	re, err := getTemplatedStringRegexp()
 	if err != nil {
 		fmt.Errorf("gi18n: Error compiling templated string Regexp: %s", err.Error())
 		return false
@@ -270,13 +271,32 @@ func IsTemplatedString(aString string) bool {
 	return re.Match([]byte(aString))
 }
 
-// Private
-
-func getTemplatedRegexp() (*regexp.Regexp, error) {
-	var err error
-	if templatedRegexp == nil {
-		templatedRegexp, err = regexp.Compile(TEMPLATED_REGEXP)
+func IsInterpolatedString(aString string) bool {
+	re, err := getInterpolatedStringRegexp()
+	if err != nil {
+		fmt.Errorf("gi18n: Error compiling interpolated string Regexp: %s", err.Error())
+		return false
 	}
 
-	return templatedRegexp, err
+	return re.Match([]byte(aString))
+}
+
+// Private
+
+func getTemplatedStringRegexp() (*regexp.Regexp, error) {
+	var err error
+	if templatedStringRegexp == nil {
+		templatedStringRegexp, err = regexp.Compile(TEMPLATED_STRING_REGEXP)
+	}
+
+	return templatedStringRegexp, err
+}
+
+func getInterpolatedStringRegexp() (*regexp.Regexp, error) {
+	var err error
+	if interpolatedStringRegexp == nil {
+		interpolatedStringRegexp, err = regexp.Compile(INTERPOLATED_STRING_REGEXP)
+	}
+
+	return interpolatedStringRegexp, err
 }

@@ -70,7 +70,7 @@ var _ = Describe("rewrite-package -f filename", func() {
 		})
 	})
 
-	Context("strings to rewrite contain complex interpolated strings", func() {
+	Context("strings to rewrite contain complex templated strings", func() {
 		BeforeEach(func() {
 			dir, err := os.Getwd()
 			Ω(err).ShouldNot(HaveOccurred())
@@ -82,7 +82,7 @@ var _ = Describe("rewrite-package -f filename", func() {
 
 			session := Runi18n(
 				"-rewrite-package",
-				"-f", filepath.Join(inputFilesPath, "test_interpolated_strings.go"),
+				"-f", filepath.Join(inputFilesPath, "test_templated_strings.go"),
 				"-o", filepath.Join(rootPath, "tmp"),
 				"-v",
 			)
@@ -90,14 +90,14 @@ var _ = Describe("rewrite-package -f filename", func() {
 			Ω(session.ExitCode()).Should(Equal(0))
 		})
 
-		It("rewrites the input file with T() wrappers around strings", func() {
-			expectedOutputFile := filepath.Join(expectedFilesPath, "test_interpolated_strings.go")
+		It("rewrites the input file with T() wrappers around all (simple and templated) strings", func() {
+			expectedOutputFile := filepath.Join(expectedFilesPath, "test_templated_strings.go")
 			bytes, err := ioutil.ReadFile(expectedOutputFile)
 			Ω(err).ShouldNot(HaveOccurred())
 
 			expectedOutput := string(bytes)
 
-			generatedOutputFile := filepath.Join(rootPath, "tmp", "test_interpolated_strings.go")
+			generatedOutputFile := filepath.Join(rootPath, "tmp", "test_templated_strings.go")
 			bytes, err = ioutil.ReadFile(generatedOutputFile)
 			Ω(err).ShouldNot(HaveOccurred())
 

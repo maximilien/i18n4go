@@ -56,7 +56,7 @@ var _ = Describe("rewrite-package -i18n-strings-filename some-file", func() {
 		})
 	})
 
-	Context("input file contains some interpolated (templated) strings", func() {
+	Context("input file contains some templated strings", func() {
 		BeforeEach(func() {
 			dir, err := os.Getwd()
 			Ω(err).ShouldNot(HaveOccurred())
@@ -68,9 +68,9 @@ var _ = Describe("rewrite-package -i18n-strings-filename some-file", func() {
 
 			session := Runi18n(
 				"-rewrite-package",
-				"-f", filepath.Join(inputFilesPath, "test_interpolated_strings.go"),
+				"-f", filepath.Join(inputFilesPath, "test_templated_strings.go"),
 				"-o", filepath.Join(rootPath, "tmp"),
-				"-i18n-strings-filename", filepath.Join(inputFilesPath, "test_interpolated_strings.go.en.json"),
+				"-i18n-strings-filename", filepath.Join(inputFilesPath, "test_templated_strings.go.en.json"),
 				"-v",
 			)
 
@@ -78,13 +78,13 @@ var _ = Describe("rewrite-package -i18n-strings-filename some-file", func() {
 		})
 
 		It("rewrites the input file with T() wrappers around the strings (templated and not) specified in the -i18n-strings-filename flag", func() {
-			expectedOutputFile := filepath.Join(expectedFilesPath, "test_interpolated_strings.go")
+			expectedOutputFile := filepath.Join(expectedFilesPath, "test_templated_strings.go")
 			bytes, err := ioutil.ReadFile(expectedOutputFile)
 			Ω(err).ShouldNot(HaveOccurred())
 
 			expectedOutput := string(bytes)
 
-			generatedOutputFile := filepath.Join(rootPath, "tmp", "test_interpolated_strings.go")
+			generatedOutputFile := filepath.Join(rootPath, "tmp", "test_templated_strings.go")
 			bytes, err = ioutil.ReadFile(generatedOutputFile)
 			Ω(err).ShouldNot(HaveOccurred())
 

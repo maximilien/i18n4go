@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func Interpolated() string {
+func Templated() string {
 	name := T("cruel")
 	myName := "evil"
 	fmt.Println(T("Hello {{.Name}} world!", map[string]interface{}{"Name": name}))
