@@ -41,7 +41,7 @@ var _ = Describe("extract-strings -f fileName -o outputDir", func() {
 
 	Context("-o outputDir --output-flat (default)", func() {
 		BeforeEach(func() {
-			session := Runi18n("-extract-strings", "-v", "-p", "-f", filepath.Join(inputFilesPath, "app.go"), "-o", outputPath)
+			session := Runi18n("-extract-strings", "-v", "-p", "-meta", "-f", filepath.Join(inputFilesPath, "app.go"), "-o", outputPath)
 			Ω(session.ExitCode()).Should(Equal(0))
 		})
 
@@ -66,7 +66,7 @@ var _ = Describe("extract-strings -f fileName -o outputDir", func() {
 
 	Context("-o outputDir --output-match-package", func() {
 		BeforeEach(func() {
-			session := Runi18n("-extract-strings", "-v", "-p", "-f", filepath.Join(inputFilesPath, "app.go"), "-o", outputPath, "-output-match-package")
+			session := Runi18n("-extract-strings", "-v", "-p", "-meta", "-f", filepath.Join(inputFilesPath, "app.go"), "-o", outputPath, "-output-match-package")
 			Ω(session.ExitCode()).Should(Equal(0))
 		})
 

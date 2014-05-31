@@ -152,6 +152,7 @@ func init() {
 
 	flag.BoolVar(&options.VerboseFlag, "v", false, "verbose mode where lots of output is generated during execution")
 	flag.BoolVar(&options.PoFlag, "p", false, "generate standard .po file for translation")
+	flag.BoolVar(&options.MetaFlag, "meta", false, "[optional] create a *.extracted.json file with metadata such as: filename, directory, and positions of the strings in source file")
 	flag.BoolVar(&options.DryRunFlag, "dry-run", false, "prevents any output files from being created")
 
 	flag.StringVar(&options.ExcludedFilenameFlag, "e", "excluded.json", "[optional] the excluded JSON file name, all strings there will be excluded")
@@ -197,6 +198,7 @@ usage: gi18n -create-translations [-v] [-google-translate-api-key <api key>] [-s
 
   -p                        to generate standard .po files for translation
   -e                        [optional] the JSON file with strings to be excluded, defaults to excluded.json if present
+  -meta                     [optional] create a *.extracted.json file with metadata such as: filename, directory, and positions of the strings in source file
   -dry-run                  [optional] prevents any output files from being created
 
 

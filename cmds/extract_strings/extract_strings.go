@@ -182,10 +182,12 @@ func (es *extractStrings) InspectFile(filename string) error {
 		}
 	}
 
-	err = es.saveExtractedStrings(outputDirname)
-	if err != nil {
-		es.Println(err)
-		return err
+	if es.options.MetaFlag {
+		err = es.saveExtractedStrings(outputDirname)
+		if err != nil {
+			es.Println(err)
+			return err
+		}
 	}
 
 	err = common.SaveStrings(es, es.ExtractedStrings, outputDirname, es.i18nFilename)

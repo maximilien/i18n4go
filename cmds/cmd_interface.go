@@ -12,6 +12,7 @@ type Options struct {
 	VerboseFlag bool
 	DryRunFlag  bool
 	PoFlag      bool
+	MetaFlag    bool
 
 	SourceLanguageFlag        string
 	LanguagesFlag             string

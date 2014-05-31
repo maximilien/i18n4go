@@ -35,6 +35,7 @@ usage: gi18n -create-translations [-v] [-google-translate-api-key <api key>] [-s
 
   -p                        to generate standard .po files for translation
   -e                        [optional] the JSON file with strings to be excluded, defaults to excluded.json if present
+  -meta                     [optional] create a *.extracted.json file with metadata such as: filename, directory, and positions of the strings in source file
   -dry-run                  [optional] prevents any output files from being created
 
 
