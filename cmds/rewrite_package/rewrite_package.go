@@ -431,49 +431,6 @@ func (rp *rewritePackage) addInitFuncToPackage(packageName, outputDir string) er
 	return ioutil.WriteFile(filepath.Join(outputDir, "i18n_init.go"), []byte(content), 0666)
 }
 
-func (rp *rewritePackage) appendInitFunc(astFile *ast.File) error {
-	fileSet := token.NewFileSet()
-
-	file, err := common.CreateTmpFile(INIT_CODE_SNIPPET)
-	if err != nil {
-		return err
-	}
-
-	pathToFile := file.Name()
-	defer func() {
-		file.Close()
-		os.Remove(file.Name())
-	}()
-
-	astSnippet, err := parser.ParseFile(fileSet, pathToFile, nil, 0)
-	if err != nil {
-		return err
-	}
-
-	for _, x := range astSnippet.Decls[0:len(astSnippet.Decls)] {
-		ast.Inspect(x, func(node ast.Node) bool {
-			if node == nil {
-				return false
-			}
-
-			switch node.(type) {
-			case *ast.Ident:
-				node.(*ast.Ident).NamePos = 1
-			case *ast.BasicLit:
-				if node.(*ast.BasicLit).Value == `"__PACKAGE__NAME__"` {
-					packageName := "\"" + astFile.Name.Name + "\""
-					node.(*ast.BasicLit).Value = packageName
-				}
-			}
-			return true
-		})
-	}
-
-	astFile.Decls = append(astFile.Decls[:1], append(astSnippet.Decls[0:len(astSnippet.Decls)], astFile.Decls[1:]...)...)
-
-	return nil
-}
-
 func (rp *rewritePackage) saveASTFile(relativeFilePath, fileName string, astFile *ast.File, fileSet *token.FileSet) error {
 	var buffer bytes.Buffer
 	if err := format.Node(&buffer, fileSet, astFile); err != nil {
