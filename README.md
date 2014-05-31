@@ -16,29 +16,81 @@ Printing Usage
 Printing the usage help
 
 ```
-gi18n -extract-strings [-vpe] [-o <outputDir>] -f <fileName> | -d [-r] [-ignore-regexp <regex>] <dirName>
-  -h                      prints the usage
+usage: gi18n -extract-strings [-vpe] [-dry-run] [-output-flat|-output-match-package|-o <outputDir>] -f <fileName>
+   or: gi18n -extract-strings [-vpe] [-dry-run] [-output-flat|-output-match-package|-o <outputDir>] -d <dirName> [-r] [-ignore-regexp <fileNameRegexp>]
 
-  -v                      verbose
-  -p                      to generate standard .po files for translation
+usage: gi18n -merge-strings [-v] [-r] [-source-language <language>] -d <dirName>
 
-  -o                      the output directory where the translation files will be placed
-  -output-match-import    generated files are created in directory to match the import structure
-  -output-match-package   generated files are created in directory to match the package name
-  -output-flat            generated files are created in the specified output directory
+usage: gi18n -verify-strings [-v] [-source-language <language>] -f <sourceFileName> -language-files <language files>
+   or: gi18n -verify-strings [-v] [-source-language <language>] -f <sourceFileName> -languages <lang1,lang2,...>
 
-  -e                      the JSON file with strings to be excluded, defaults to excluded.json if present
+usage: gi18n -create-translations [-v] [-google-translate-api-key <api key>] [-source-language <language>] -f <fileName> -languages <lang1,lang2,...> -o <outputDir>
 
-  -f                      the go file name to extract strings
+  -h                        prints the usage
+  -v                        verbose
 
-  -r                      recursesively extract strings from all subdirectories
-  -d                      the directory containing the go files to extract strings
+  EXTRACT-STRINGS:
 
-  -ignore-regexp          a perl-style regular expression for files to ignore, e.g., ".*test.*"
+  -extract-strings          the extract strings command
+
+  -p                        to generate standard .po files for translation
+  -e                        [optional] the JSON file with strings to be excluded, defaults to excluded.json if present
+  -dry-run                  [optional] prevents any output files from being created
+
+
+  -output-flat              generated files are created in the specified output directory (default)
+  -output-match-package     generated files are created in directory to match the package name
+  -o                        the output directory where the translation files will be placed
+
+  -f                        the go file name to extract strings
+
+  -d                        the directory containing the go files to extract strings
+
+  -r                        [optional] recursesively extract strings from all subdirectories
+  -ignore-regexp            [optional] a perl-style regular expression for files to ignore, e.g., ".*test.*"
+
+  MERGE STRINGS:
+
+  -merge-strings            merges multiple <filename>.go.<language>.json files into a <language>.all.json
+
+  -r                        [optional] recursesively combine files from all subdirectories
+  -source-language          [optional] the source language of the file, typically also part of the file name, e.g., \"en_US\" (default to 'en')
+
+  -d                        the directory containing the json files to combine
+
+  VERIFY-STRINGS:
+
+  -verify-strings           the verify strings command
+
+  -source-language          [optional] the source language of the source translation file (default to 'en')
+
+  -f                        the source translation file
+
+  -language-files           a comma separated list of target files for different languages to compare, e.g., \"en, en_US, fr_FR, es\"
+                            if not specified then the languages flag is used to find target files in same directory as source
+  -languages                a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
+
+  REWRITE-PACKAGE:
+
+  -f                        the source go file to be rewritten
+  -d                        the directory containing the go files to rewrite
+  -i18n-strings-filename    a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command
+  -o                        [optional] output diretory for rewritten file. If not specified, the original file will be overwritten
+
+  CREATE-TRANSLATIONS:
+
+  -create-translations      the create translations command
+
+  -google-translate-api-key [optional] your public Google Translate API key which is used to generate translations (charge is applicable)
+  -source-language          [optional] the source language of the file, typically also part of the file name, e.g., \"en_US\"
+
+  -f                        the source translation file
+  -languages                a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
+  -o                        the output directory where the newly created translation files will be placed
 ```
 
-Extracting Strings
-==================
+EXTRACT-STRINGS
+===============
 
 Extracting strings from go files
 
@@ -91,6 +143,24 @@ msgid "%s help [COMMAND]"
 msgstr "%s help [COMMAND]"
 ...
 ```
+MERGE STRINGS
+=============
+
+TODO
+
+VERIFY STRINGS
+==============
+
+TODO
+
+REWRITE PACKAGE
+===============
+
+TODO
+
+CREATE TRANSLATIONS
+===================
+
 
 Specifying `excluded.json` File
 ===============================

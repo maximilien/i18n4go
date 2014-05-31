@@ -178,15 +178,15 @@ func init() {
 
 func usage() {
 	usageString := `
-usage: gi18n -extract-string [-vpe] [-dry-run] [-output-flat|-output-match-package|-o <outputDir>] -f <fileName>
-   or: gi18n -extract-string [-vpe] [-dry-run] [-output-flat|-output-match-package|-o <outputDir>] [-r] [-ignore-regexp <regex>] -d <dirName>
+usage: gi18n -extract-strings [-vpe] [-dry-run] [-output-flat|-output-match-package|-o <outputDir>] -f <fileName>
+   or: gi18n -extract-strings [-vpe] [-dry-run] [-output-flat|-output-match-package|-o <outputDir>] -d <dirName> [-r] [-ignore-regexp <fileNameRegexp>]
 
-usage: gi18n -verify-string [-v] [-source-language <language>] -f <fileName> -language-files <language files>
-   or: gi18n -verify-string [-v] [-source-language <language>] -f <fileName> -languages <lang1,lang2,...>
+usage: gi18n -merge-strings [-v] [-r] [-source-language <language>] -d <dirName>
+
+usage: gi18n -verify-strings [-v] [-source-language <language>] -f <sourceFileName> -language-files <language files>
+   or: gi18n -verify-strings [-v] [-source-language <language>] -f <sourceFileName> -languages <lang1,lang2,...>
 
 usage: gi18n -create-translations [-v] [-google-translate-api-key <api key>] [-source-language <language>] -f <fileName> -languages <lang1,lang2,...> -o <outputDir>
-
-usage: gi18n -merge-strings [-v] [-r] [-source-language <language>] -d <directory>
 
   -h                        prints the usage
   -v                        verbose
@@ -211,14 +211,16 @@ usage: gi18n -merge-strings [-v] [-r] [-source-language <language>] -d <director
   -r                        [optional] recursesively extract strings from all subdirectories
   -ignore-regexp            [optional] a perl-style regular expression for files to ignore, e.g., ".*test.*"
 
-  REWRITE-PACKAGE-FOR-I18N
+  MERGE STRINGS:
 
-  -f                        the source go file to be rewritten
-  -d                        the directory containing the go files to rewrite
-  -i18n-strings-filename    a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command
-  -o                        [optional] output diretory for rewritten file. If not specified, the original file will be overwritten
+  -merge-strings            merges multiple <filename>.go.<language>.json files into a <language>.all.json
 
-  VERIFY-TRANSLATIONS:
+  -r                        [optional] recursesively combine files from all subdirectories
+  -source-language          [optional] the source language of the file, typically also part of the file name, e.g., \"en_US\" (default to 'en')
+
+  -d                        the directory containing the json files to combine
+
+  VERIFY-STRINGS:
 
   -verify-strings           the verify strings command
 
@@ -230,6 +232,12 @@ usage: gi18n -merge-strings [-v] [-r] [-source-language <language>] -d <director
                             if not specified then the languages flag is used to find target files in same directory as source
   -languages                a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
 
+  REWRITE-PACKAGE:
+
+  -f                        the source go file to be rewritten
+  -d                        the directory containing the go files to rewrite
+  -i18n-strings-filename    a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command
+  -o                        [optional] output diretory for rewritten file. If not specified, the original file will be overwritten
 
   CREATE-TRANSLATIONS:
 
@@ -241,16 +249,6 @@ usage: gi18n -merge-strings [-v] [-r] [-source-language <language>] -d <director
   -f                        the source translation file
   -languages                a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
   -o                        the output directory where the newly created translation files will be placed
-
-  MERGE STRINGS:
-
-  -merge-strings            merges multiple <filename>.go.<language>.json files into a <language>.all.json
-
-  -r                        [optional] recursesively combine files from all subdirectories
-  -source-language          [optional] the source language of the file, typically also part of the file name, e.g., \"en_US\" (default to 'en')
-
-  -d                        the directory containing the json files to combine
-
 `
 	fmt.Println(usageString)
 }
