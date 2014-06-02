@@ -1,0 +1,18 @@
+[
+   {
+      "id": "cruel",
+      "translation": "cruel"
+   },
+   {
+      "id": "Hello %s world!",
+      "translation": "Hello %s world!"
+   },
+   {
+      "id": "Bye from %s",
+      "translation": "Bye from %s"
+   },
+   {
+      "id": "Evil",
+      "translation": "Evil"
+   }
+]

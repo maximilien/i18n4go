@@ -43,6 +43,7 @@ type rewritePackage struct {
 	Filename            string
 	OutputDirname       string
 	I18nStringsFilename string
+	I18nStringsDirname  string
 
 	Dirname string
 	Recurse bool
@@ -59,6 +60,7 @@ func NewRewritePackage(options cmds.Options) rewritePackage {
 		Filename:            options.FilenameFlag,
 		OutputDirname:       options.OutputDirFlag,
 		I18nStringsFilename: options.I18nStringsFilenameFlag,
+		I18nStringsDirname:  options.I18nStringsDirnameFlag,
 
 		ExtractedStrings:     nil,
 		SaveExtractedStrings: false,
@@ -91,11 +93,10 @@ func (rp *rewritePackage) Printf(msg string, a ...interface{}) (int, error) {
 func (rp *rewritePackage) Run() error {
 	var err error
 
-	if err = rp.loadStringsToBeTranslated(); err != nil {
-		return err
-	}
-
 	if rp.options.FilenameFlag != "" {
+		if err = rp.loadStringsToBeTranslated(rp.I18nStringsFilename); err != nil {
+			return err
+		}
 		err = rp.processFilename(rp.options.FilenameFlag)
 	} else {
 		err = rp.processDir(rp.options.DirnameFlag, rp.options.RecurseFlag)
@@ -107,9 +108,9 @@ func (rp *rewritePackage) Run() error {
 	return err
 }
 
-func (rp *rewritePackage) loadStringsToBeTranslated() error {
-	if rp.I18nStringsFilename != "" {
-		stringList, err := common.LoadI18nStringInfos(rp.I18nStringsFilename)
+func (rp *rewritePackage) loadStringsToBeTranslated(fileName string) error {
+	if fileName != "" {
+		stringList, err := common.LoadI18nStringInfos(fileName)
 		if err != nil {
 			return err
 		}
@@ -136,6 +137,16 @@ func (rp *rewritePackage) processDir(dirName string, recursive bool) error {
 				continue
 			}
 		} else if filepath.Base(fileInfo.Name()) != "i18n_init.go" {
+			i18nFilename := rp.I18nStringsFilename
+			if rp.I18nStringsDirname != "" {
+				i18nFilename = filepath.Base(fileInfo.Name()) + "." + rp.options.SourceLanguageFlag + ".json"
+			}
+
+			rp.I18nStringsFilename = filepath.Join(rp.I18nStringsDirname, i18nFilename)
+			rp.Printf("gi18n: loading JSON strings from file: %s\n", rp.I18nStringsFilename)
+			if err := rp.loadStringsToBeTranslated(rp.I18nStringsFilename); err != nil {
+				return err
+			}
 			err := rp.processFilename(filepath.Join(dirName, fileInfo.Name()))
 			if err != nil {
 				rp.Println(err)
@@ -396,6 +407,7 @@ func (rp *rewritePackage) wrapBasicLitWithTemplatedT(basicLit *ast.BasicLit, arg
 		}
 
 		quotedArgName := "\"" + argName + "\""
+		basicLit.ValuePos = 0
 		keyValueExpr := &ast.KeyValueExpr{Key: &ast.BasicLit{Kind: 9, Value: quotedArgName}, Value: args[i]}
 		compositeExpr = append(compositeExpr, keyValueExpr)
 	}

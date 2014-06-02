@@ -142,3 +142,23 @@ func ReadJsonExtended(fileName string) map[string]map[string]string {
 
 	return myMap
 }
+
+func CopyFile(srcFile, destFile string) {
+	content, err := ioutil.ReadFile(srcFile)
+	Ω(err).ShouldNot(HaveOccurred())
+	err = ioutil.WriteFile(destFile, content, 0644)
+	Ω(err).ShouldNot(HaveOccurred())
+}
+
+func CompareExpectedOutputToGeneratedOutput(expectedOutputFile, generatedOutputFile string) {
+	bytes, err := ioutil.ReadFile(expectedOutputFile)
+	Ω(err).ShouldNot(HaveOccurred())
+
+	expectedOutput := string(bytes)
+
+	bytes, err = ioutil.ReadFile(generatedOutputFile)
+	Ω(err).ShouldNot(HaveOccurred())
+
+	actualOutput := string(bytes)
+	Ω(actualOutput).Should(Equal(expectedOutput))
+}

@@ -34,6 +34,7 @@ type Options struct {
 	LanguageFilesFlag string
 
 	I18nStringsFilenameFlag string
+	I18nStringsDirnameFlag  string
 }
 
 type CommandInterface interface {

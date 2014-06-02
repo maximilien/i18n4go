@@ -100,7 +100,8 @@ func verifyStringsCmd() {
 }
 
 func rewritePackageCmd() {
-	if options.HelpFlag || (options.FilenameFlag == "" && options.DirnameFlag == "") {
+	if options.HelpFlag || (options.FilenameFlag == "" && options.DirnameFlag == "" &&
+		(options.I18nStringsFilenameFlag == "" || options.I18nStringsDirnameFlag == "")) {
 		usage()
 		return
 	}
@@ -173,6 +174,7 @@ func init() {
 	flag.StringVar(&options.LanguageFilesFlag, "language-files", "", `[optional] a comma separated list of target files for different languages to compare,  e.g., \"en, en_US, fr_FR, es\"	                                                                  if not specified then the languages flag is used to find target files in same directory as source`)
 
 	flag.StringVar(&options.I18nStringsFilenameFlag, "i18n-strings-filename", "", "a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command")
+	flag.StringVar(&options.I18nStringsDirnameFlag, "i18n-strings-dirname", "", "a directory with the extracted JSON files, using -output-match-package with -extract-strings this directory should match the input files package name")
 
 	flag.Parse()
 }
@@ -239,6 +241,7 @@ usage: gi18n -create-translations [-v] [-google-translate-api-key <api key>] [-s
   -f                        the source go file to be rewritten
   -d                        the directory containing the go files to rewrite
   -i18n-strings-filename    a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command
+  -i18n-strings-dirname     a directory with the extracted JSON files, using -output-match-package with -extract-strings this directory should match the input files package name"
   -o                        [optional] output diretory for rewritten file. If not specified, the original file will be overwritten
 
   CREATE-TRANSLATIONS:

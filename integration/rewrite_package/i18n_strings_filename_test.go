@@ -104,11 +104,7 @@ var _ = Describe("rewrite-package -i18n-strings-filename some-file", func() {
 			inputFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "input_files")
 			expectedFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "expected_output")
 
-			originalJsonData, err := ioutil.ReadFile(filepath.Join(inputFilesPath, "original.test_interpolated_strings.go.en.json"))
-			Ω(err).ShouldNot(HaveOccurred())
-
-			err = ioutil.WriteFile(filepath.Join(inputFilesPath, "test_interpolated_strings.go.en.json"), originalJsonData, 0666)
-			Ω(err).ShouldNot(HaveOccurred())
+			CopyFile(filepath.Join(inputFilesPath, "original.test_interpolated_strings.go.en.json"), filepath.Join(inputFilesPath, "test_interpolated_strings.go.en.json"))
 
 			session := Runi18n(
 				"-rewrite-package",
@@ -119,6 +115,10 @@ var _ = Describe("rewrite-package -i18n-strings-filename some-file", func() {
 			)
 
 			Ω(session.ExitCode()).Should(Equal(0))
+		})
+
+		AfterEach(func() {
+			CopyFile(filepath.Join(inputFilesPath, "original.test_interpolated_strings.go.en.json"), filepath.Join(inputFilesPath, "test_interpolated_strings.go.en.json"))
 		})
 
 		It("converts interpolated strings to templated and rewrites the input file with T() wrappers around the strings (templated and not) specified in the -i18n-strings-filename flag", func() {
