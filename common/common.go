@@ -113,7 +113,13 @@ func SaveStrings(cmd cmds.CommandInterface, stringInfos map[string]StringInfo, o
 		cmd.Println("Saving extracted i18n strings to file:", fileName)
 	}
 
-	CreateOutputDirsIfNeeded(outputDirname)
+	if !cmd.Options().DryRunFlag {
+		err := CreateOutputDirsIfNeeded(outputDirname)
+		if err != nil {
+			cmd.Println(err)
+			return err
+		}
+	}
 
 	i18nStringInfos := make([]I18nStringInfo, len(stringInfos))
 	i := 0
@@ -148,7 +154,12 @@ func SaveStringsInPo(cmd cmds.CommandInterface, stringInfos map[string]StringInf
 	}
 
 	if !cmd.Options().DryRunFlag && len(stringInfos) != 0 {
-		CreateOutputDirsIfNeeded(outputDirname)
+		err := CreateOutputDirsIfNeeded(outputDirname)
+		if err != nil {
+			cmd.Println(err)
+			return err
+		}
+
 		file, err := os.Create(filepath.Join(outputDirname, fileName[strings.LastIndex(fileName, string(os.PathSeparator))+1:len(fileName)]))
 		defer file.Close()
 		if err != nil {

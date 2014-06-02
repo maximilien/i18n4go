@@ -296,7 +296,13 @@ func (es *extractStrings) saveExtractedStrings(outputDirname string) error {
 		es.Println("Saving extracted strings to file:", es.Filename)
 	}
 
-	common.CreateOutputDirsIfNeeded(outputDirname)
+	if !es.options.DryRunFlag {
+		err := common.CreateOutputDirsIfNeeded(outputDirname)
+		if err != nil {
+			es.Println(err)
+			return err
+		}
+	}
 
 	stringInfos := make([]common.StringInfo, 0)
 	for _, stringInfo := range es.ExtractedStrings {
