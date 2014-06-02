@@ -443,7 +443,7 @@ func (es *extractStrings) filter(aString string) bool {
 		}
 	}
 
-	if es.FilteredStrings[aString] != "" {
+	if _, ok := es.FilteredStrings[aString]; ok {
 		return true
 	}
 
