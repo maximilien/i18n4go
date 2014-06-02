@@ -15,6 +15,7 @@ import (
 	"github.com/maximilien/i18n4cf/common"
 
 	"path/filepath"
+	"strconv"
 	"strings"
 )
 
@@ -152,6 +153,10 @@ func (rp *rewritePackage) processDir(dirName string, recursive bool) error {
 				rp.Println(err)
 				return err
 			}
+
+			rp.ExtractedStrings = nil
+			rp.I18nStringsFilename = ""
+			rp.SaveExtractedStrings = false
 		}
 	}
 
@@ -338,7 +343,7 @@ func (rp *rewritePackage) callExprTFunc(callExpr *ast.CallExpr) bool {
 func (rp *rewritePackage) wrapMultiArgsCallExpr(callExpr *ast.CallExpr) {
 	if basicLit, ok := callExpr.Args[0].(*ast.BasicLit); ok {
 		if basicLit.Kind == token.STRING {
-			valueWithoutQuotes := basicLit.Value[1 : len(basicLit.Value)-1]
+			valueWithoutQuotes, _ := strconv.Unquote(basicLit.Value) //basicLit.Value[1 : len(basicLit.Value)-1]
 			if common.IsTemplatedString(valueWithoutQuotes) {
 				rp.wrapCallExprWithTemplatedT(basicLit, callExpr)
 			} else if common.IsInterpolatedString(valueWithoutQuotes) {
@@ -353,7 +358,7 @@ func (rp *rewritePackage) wrapMultiArgsCallExpr(callExpr *ast.CallExpr) {
 }
 
 func (rp *rewritePackage) wrapCallExprWithInterpolatedT(basicLit *ast.BasicLit, callExpr *ast.CallExpr) {
-	valueWithoutQuotes := basicLit.Value[1 : len(basicLit.Value)-1]
+	valueWithoutQuotes, _ := strconv.Unquote(basicLit.Value)
 
 	i18nStringInfo, ok := rp.ExtractedStrings[valueWithoutQuotes]
 	if !ok && rp.ExtractedStrings != nil {
@@ -362,7 +367,7 @@ func (rp *rewritePackage) wrapCallExprWithInterpolatedT(basicLit *ast.BasicLit, 
 	}
 
 	templatedString := common.ConvertToTemplatedString(valueWithoutQuotes)
-	basicLit.Value = "\"" + templatedString + "\""
+	basicLit.Value = strconv.Quote(templatedString)
 
 	if rp.ExtractedStrings != nil {
 		rp.updateI18nStringInfoInExtractedStrings(i18nStringInfo, templatedString)
@@ -390,7 +395,7 @@ func (rp *rewritePackage) wrapExprArgs(exprArgs []ast.Expr) {
 }
 
 func (rp *rewritePackage) wrapBasicLitWithTemplatedT(basicLit *ast.BasicLit, args []ast.Expr, callExpr *ast.CallExpr) ast.Expr {
-	valueWithoutQuotes := basicLit.Value[1 : len(basicLit.Value)-1]
+	valueWithoutQuotes, _ := strconv.Unquote(basicLit.Value) //basicLit.Value[1 : len(basicLit.Value)-1]
 
 	_, ok := rp.ExtractedStrings[valueWithoutQuotes]
 	if !ok && rp.ExtractedStrings != nil {
@@ -427,7 +432,7 @@ func (rp *rewritePackage) wrapBasicLitWithT(basicLit *ast.BasicLit) ast.Expr {
 		return basicLit
 	}
 
-	valueWithoutQuotes := basicLit.Value[1 : len(basicLit.Value)-1]
+	valueWithoutQuotes, _ := strconv.Unquote(basicLit.Value) //basicLit.Value[1 : len(basicLit.Value)-1]
 	_, ok := rp.ExtractedStrings[valueWithoutQuotes]
 	if !ok && rp.ExtractedStrings != nil {
 		return basicLit

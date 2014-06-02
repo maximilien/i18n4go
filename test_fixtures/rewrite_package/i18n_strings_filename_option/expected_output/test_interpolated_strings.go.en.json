@@ -10,5 +10,13 @@
    {
       "id": "Hello {{.Arg0}} world!",
       "translation": "Hello {{.Arg0}} world!"
+   },
+   {
+      "id": "Bye {{.Arg0}} world!\n",
+      "translation": "Bye {{.Arg0}} world!\n"
+   },
+   {
+      "id": "Hello again:\t {{.Arg0}} world!\n",
+      "translation": "Hello again:\t {{.Arg0}} world!\n"
    }
 ]
