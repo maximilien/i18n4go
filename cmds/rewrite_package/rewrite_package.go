@@ -321,12 +321,15 @@ func (rp *rewritePackage) callExprTFunc(callExpr *ast.CallExpr) bool {
 		return false
 	}
 
-	if len(callExpr.Args) > 1 {
-		rp.wrapMultiArgsCallExpr(callExpr)
-	} else {
+	switch len(callExpr.Args) {
+	case 0:
+		return false
+	case 1:
 		if basicLit, ok := callExpr.Args[0].(*ast.BasicLit); ok {
 			callExpr.Args[0] = rp.wrapBasicLitWithT(basicLit)
 		}
+	default:
+		rp.wrapMultiArgsCallExpr(callExpr)
 	}
 
 	return true

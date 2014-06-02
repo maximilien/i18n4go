@@ -10,7 +10,13 @@ type t struct {
 	myString string
 }
 
+func myPrint() {
+	println("isn't that grand")
+}
+
 func Something() string {
+	myPrint() // a trivial case
+
 	someString := "hello"
 	var anotherString string = "world"
 	println(someString, anotherString)
