@@ -2,6 +2,7 @@ language: go
 go:
   - 1.2
 before_install:
+- go get code.google.com/p/go.tools/cmd/vet
 - go get github.com/onsi/ginkgo/...
 - go get github.com/onsi/gomega/...
 script: bin/test
