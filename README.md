@@ -173,7 +173,40 @@ must match the language portion of the files in the directory, e.g., app.go.en.j
 
 ## verify-strings
 
-TODO
+Verifies that combined language files have exactly the same keys.
+
+For instance, in the example in `merge-strings` we created a combined language file called `./tmp/cli/i18n/app/en.all.json` and if we also
+had a `./tmp/cli/i18n/app/fr.all.json` for French and that file had missing strings then running the `verify-strings` would generate a
+`tmp/cli/i18n/app/fr.all.json.missing.diff.json`, as in the following:
+
+```
+$ gi18n -v -verify-strings -f tmp/cli/i18n/app/en.all.json -languages "fr"
+targetFilenames: [tmp/cli/i18n/app/fr.all.json]
+gi18n: ERROR input file does not match target file: tmp/cli/i18n/app/fr.all.json
+gi18n: generated diff file: tmp/cli/i18n/app/fr.all.json.missing.diff.json
+gi18n: Error verifying target filename:  tmp/cli/i18n/app/fr.all.json
+gi18n: Could not verify strings for input filename, err: gi18n: target file is missing i18n strings with IDs: --,'%v',-
+```
+
+Similarly, `verify-strings` will make sure that no additonal strings are added. So if we had an additional German `de.all.json` file that included additional strings
+running `verify-strings` would include a `tmp/cli/i18n/app/de.all.json.extra.diff.json`.
+
+```
+$ gi18n -v -verify-strings -f tmp/cli/i18n/app/en.all.json -languages "fr,de"
+
+targetFilenames: [tmp/cli/i18n/app/fr.all.json tmp/cli/i18n/app/de.all.json]
+gi18n: ERROR input file does not match target file: tmp/cli/i18n/app/fr.all.json
+gi18n: generated diff file: tmp/cli/i18n/app/fr.all.json.missing.diff.json
+gi18n: Error verifying target filename:  tmp/cli/i18n/app/fr.all.json
+gi18n: WARNING target file has extra key with ID:  advanced
+gi18n: WARNING target file has extra key with ID:  apps
+gi18n: WARNING target file contains total of extra keys: 2
+gi18n: generated diff file: tmp/cli/i18n/app/de.all.json.extra.diff.json
+gi18n: Error verifying target filename:  tmp/cli/i18n/app/de.all.json
+gi18n: Could not verify strings for input filename, err: gi18n: target file has extra i18n strings with IDs: advanced,apps
+```
+
+Finally, if a combined language file contains both extra and missing keys then `verify-strings` will generate two diff files: `missing` and `extra`.
 
 ## rewrite-package
 
