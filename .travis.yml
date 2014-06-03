@@ -1,0 +1,10 @@
+language: go
+go:
+  - 1.2
+before_install:
+- go get github.com/onsi/ginkgo/...
+- go get github.com/onsi/gomega/...
+script: bin/test
+branches:
+  only:
+  - master
