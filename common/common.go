@@ -109,10 +109,6 @@ func CreateOutputDirsIfNeeded(outputDirname string) error {
 }
 
 func SaveStrings(cmd cmds.CommandInterface, stringInfos map[string]StringInfo, outputDirname string, fileName string) error {
-	if len(stringInfos) != 0 {
-		cmd.Println("Saving extracted i18n strings to file:", fileName)
-	}
-
 	if !cmd.Options().DryRunFlag {
 		err := CreateOutputDirsIfNeeded(outputDirname)
 		if err != nil {
@@ -134,8 +130,13 @@ func SaveStrings(cmd cmds.CommandInterface, stringInfos map[string]StringInfo, o
 		return err
 	}
 
+	outputFilename := filepath.Join(outputDirname, fileName[strings.LastIndex(fileName, string(os.PathSeparator))+1:len(fileName)])
+	if len(stringInfos) != 0 {
+		cmd.Println("Saving extracted i18n strings to file:", outputFilename)
+	}
+
 	if !cmd.Options().DryRunFlag && len(i18nStringInfos) != 0 {
-		file, err := os.Create(filepath.Join(outputDirname, fileName[strings.LastIndex(fileName, string(os.PathSeparator))+1:len(fileName)]))
+		file, err := os.Create(outputFilename)
 		defer file.Close()
 		if err != nil {
 			cmd.Println(err)

@@ -18,6 +18,10 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 		inputFilesPath    string
 		expectedFilesPath string
 	)
+	AfterEach(func() {
+		err := os.RemoveAll(outputDir)
+		Ω(err).ShouldNot(HaveOccurred())
+	})
 
 	Context("rewrite all templated and interpolated strings", func() {
 		BeforeEach(func() {
@@ -43,11 +47,6 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 			)
 
 			Ω(session.ExitCode()).Should(Equal(0))
-		})
-
-		AfterEach(func() {
-			err := os.RemoveAll(outputDir)
-			Ω(err).ShouldNot(HaveOccurred())
 		})
 
 		It("adds T() callExprs wrapping string literals", func() {
@@ -140,11 +139,6 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 			Ω(session.ExitCode()).Should(Equal(0))
 		})
 
-		AfterEach(func() {
-			err := os.RemoveAll(outputDir)
-			Ω(err).ShouldNot(HaveOccurred())
-		})
-
 		It("adds T() callExprs wrapping string literals", func() {
 			expectedOutputFile := filepath.Join(expectedFilesPath, "test.go")
 			generatedOutputFile := filepath.Join(outputDir, "test.go")
@@ -179,11 +173,6 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 			)
 
 			Ω(session.ExitCode()).Should(Equal(0))
-		})
-
-		AfterEach(func() {
-			err := os.RemoveAll(outputDir)
-			Ω(err).ShouldNot(HaveOccurred())
 		})
 
 		It("adds T() callExprs wrapping string literals for all sources in the directory", func() {

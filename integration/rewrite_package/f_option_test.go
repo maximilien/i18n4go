@@ -13,17 +13,26 @@ import (
 
 var _ = Describe("rewrite-package -f filename", func() {
 	var (
+		outputDir         string
 		rootPath          string
 		fixturesPath      string
 		inputFilesPath    string
 		expectedFilesPath string
 	)
 
+	AfterEach(func() {
+		err := os.RemoveAll(outputDir)
+		Ω(err).ShouldNot(HaveOccurred())
+	})
+
 	Context("all strings to rewrite are simple strings", func() {
 		BeforeEach(func() {
 			dir, err := os.Getwd()
 			Ω(err).ShouldNot(HaveOccurred())
 			rootPath = filepath.Join(dir, "..", "..")
+
+			outputDir, err = ioutil.TempDir(rootPath, "gi18n_integration")
+			Ω(err).ShouldNot(HaveOccurred())
 
 			fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
 			inputFilesPath = filepath.Join(fixturesPath, "f_option", "input_files")
@@ -32,7 +41,7 @@ var _ = Describe("rewrite-package -f filename", func() {
 			session := Runi18n(
 				"-rewrite-package",
 				"-f", filepath.Join(inputFilesPath, "test.go"),
-				"-o", filepath.Join(rootPath, "tmp"),
+				"-o", outputDir,
 				"-v",
 			)
 
@@ -46,7 +55,7 @@ var _ = Describe("rewrite-package -f filename", func() {
 
 			expectedOutput := string(bytes)
 
-			generatedOutputFile := filepath.Join(rootPath, "tmp", "test.go")
+			generatedOutputFile := filepath.Join(outputDir, "test.go")
 			bytes, err = ioutil.ReadFile(generatedOutputFile)
 			Ω(err).ShouldNot(HaveOccurred())
 
@@ -56,7 +65,7 @@ var _ = Describe("rewrite-package -f filename", func() {
 		})
 
 		It("adds T func declaration and i18n init() func", func() {
-			initFile := filepath.Join(rootPath, "tmp", "i18n_init.go")
+			initFile := filepath.Join(outputDir, "i18n_init.go")
 			expectedBytes, err := ioutil.ReadFile(initFile)
 			Ω(err).ShouldNot(HaveOccurred())
 			expected := strings.TrimSpace(string(expectedBytes))
@@ -76,6 +85,9 @@ var _ = Describe("rewrite-package -f filename", func() {
 			Ω(err).ShouldNot(HaveOccurred())
 			rootPath = filepath.Join(dir, "..", "..")
 
+			outputDir, err = ioutil.TempDir(rootPath, "gi18n_integration")
+			Ω(err).ShouldNot(HaveOccurred())
+
 			fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
 			inputFilesPath = filepath.Join(fixturesPath, "f_option", "input_files")
 			expectedFilesPath = filepath.Join(fixturesPath, "f_option", "expected_output")
@@ -83,7 +95,7 @@ var _ = Describe("rewrite-package -f filename", func() {
 			session := Runi18n(
 				"-rewrite-package",
 				"-f", filepath.Join(inputFilesPath, "test_templated_strings.go"),
-				"-o", filepath.Join(rootPath, "tmp"),
+				"-o", filepath.Join(outputDir),
 				"-v",
 			)
 
@@ -97,7 +109,7 @@ var _ = Describe("rewrite-package -f filename", func() {
 
 			expectedOutput := string(bytes)
 
-			generatedOutputFile := filepath.Join(rootPath, "tmp", "test_templated_strings.go")
+			generatedOutputFile := filepath.Join(outputDir, "test_templated_strings.go")
 			bytes, err = ioutil.ReadFile(generatedOutputFile)
 			Ω(err).ShouldNot(HaveOccurred())
 
@@ -113,6 +125,9 @@ var _ = Describe("rewrite-package -f filename", func() {
 			Ω(err).ShouldNot(HaveOccurred())
 			rootPath = filepath.Join(dir, "..", "..")
 
+			outputDir, err = ioutil.TempDir(rootPath, "gi18n_integration")
+			Ω(err).ShouldNot(HaveOccurred())
+
 			fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
 			inputFilesPath = filepath.Join(fixturesPath, "f_option", "input_files")
 			expectedFilesPath = filepath.Join(fixturesPath, "f_option", "expected_output")
@@ -120,7 +135,7 @@ var _ = Describe("rewrite-package -f filename", func() {
 			session := Runi18n(
 				"-rewrite-package",
 				"-f", filepath.Join(inputFilesPath, "test_interpolated_strings.go"),
-				"-o", filepath.Join(rootPath, "tmp"),
+				"-o", filepath.Join(outputDir),
 				"-v",
 			)
 
@@ -134,7 +149,7 @@ var _ = Describe("rewrite-package -f filename", func() {
 
 			expectedOutput := string(bytes)
 
-			generatedOutputFile := filepath.Join(rootPath, "tmp", "test_interpolated_strings.go")
+			generatedOutputFile := filepath.Join(outputDir, "test_interpolated_strings.go")
 			bytes, err = ioutil.ReadFile(generatedOutputFile)
 			Ω(err).ShouldNot(HaveOccurred())
 
