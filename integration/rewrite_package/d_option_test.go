@@ -37,6 +37,7 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 				"-rewrite-package",
 				"-d", inputFilesPath,
 				"-o", outputDir,
+				"-ignore-regexp", "^[.]\\w+.go$", //Ignoring .*.go files, otherwise it defaults to ignoring *test*.go
 				"-r",
 				"-v",
 			)
@@ -131,6 +132,7 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 				"-rewrite-package",
 				"-d", inputFilesPath,
 				"-o", outputDir,
+				"-ignore-regexp", "^[.]\\w+.go$", //Ignoring .*.go files, otherwise it defaults to ignoring *test*.go
 				"-i18n-strings-filename", filepath.Join(expectedFilesPath, "doption", "test.go.en.json"),
 				"-v",
 			)
@@ -171,6 +173,7 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 				"-rewrite-package",
 				"-d", inputFilesPath,
 				"-o", outputDir,
+				"-ignore-regexp", "^[.]\\w+.go$", //Ignoring .*.go files, otherwise it defaults to ignoring *test*.go
 				"-i18n-strings-dirname", filepath.Join(expectedFilesPath, "doption"),
 				"-v",
 			)

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"os"
+	"regexp"
 
 	"go/ast"
 	"go/format"
@@ -54,9 +55,20 @@ type rewritePackage struct {
 
 	TotalStrings int
 	TotalFiles   int
+
+	IgnoreRegexp *regexp.Regexp
 }
 
 func NewRewritePackage(options cmds.Options) rewritePackage {
+	var compiledRegexp *regexp.Regexp
+	if options.IgnoreRegexpFlag != "" {
+		compiledReg, err := regexp.Compile(options.IgnoreRegexpFlag)
+		if err != nil {
+			fmt.Println("WARNING compiling ignore-regexp:", err)
+		}
+		compiledRegexp = compiledReg
+	}
+
 	return rewritePackage{options: options,
 		Filename:            options.FilenameFlag,
 		OutputDirname:       options.OutputDirFlag,
@@ -66,8 +78,9 @@ func NewRewritePackage(options cmds.Options) rewritePackage {
 		ExtractedStrings:     nil,
 		SaveExtractedStrings: false,
 
-		Dirname: options.DirnameFlag,
-		Recurse: options.RecurseFlag,
+		Dirname:      options.DirnameFlag,
+		Recurse:      options.RecurseFlag,
+		IgnoreRegexp: compiledRegexp,
 	}
 }
 
@@ -137,7 +150,7 @@ func (rp *rewritePackage) processDir(dirName string, recursive bool) error {
 			} else {
 				continue
 			}
-		} else if filepath.Base(fileInfo.Name()) != "i18n_init.go" {
+		} else if rp.ignoreFile(filepath.Base(fileInfo.Name())) {
 			i18nFilename := rp.I18nStringsFilename
 			if rp.I18nStringsDirname != "" {
 				i18nFilename = filepath.Base(fileInfo.Name()) + "." + rp.options.SourceLanguageFlag + ".json"
@@ -146,7 +159,9 @@ func (rp *rewritePackage) processDir(dirName string, recursive bool) error {
 			rp.I18nStringsFilename = filepath.Join(rp.I18nStringsDirname, i18nFilename)
 			rp.Printf("gi18n: loading JSON strings from file: %s\n", rp.I18nStringsFilename)
 			if err := rp.loadStringsToBeTranslated(rp.I18nStringsFilename); err != nil {
-				return err
+				rp.Println("gi18n: WARNING could not find JSON file:", rp.I18nStringsFilename)
+				rp.resetProcessing()
+				continue
 			}
 			err := rp.processFilename(filepath.Join(dirName, fileInfo.Name()))
 			if err != nil {
@@ -154,13 +169,24 @@ func (rp *rewritePackage) processDir(dirName string, recursive bool) error {
 				return err
 			}
 
-			rp.ExtractedStrings = nil
-			rp.I18nStringsFilename = ""
-			rp.SaveExtractedStrings = false
+			rp.resetProcessing()
 		}
 	}
 
 	return nil
+}
+
+func (rp *rewritePackage) resetProcessing() {
+	rp.ExtractedStrings = nil
+	rp.I18nStringsFilename = ""
+	rp.SaveExtractedStrings = false
+}
+
+func (rp *rewritePackage) ignoreFile(fileName string) bool {
+	return fileName != "i18n_init.go" &&
+		!strings.HasPrefix(fileName, ".") &&
+		strings.HasSuffix(fileName, ".go") &&
+		rp.IgnoreRegexp != nil && !rp.IgnoreRegexp.MatchString(fileName)
 }
 
 func (rp *rewritePackage) processFilename(fileName string) error {
