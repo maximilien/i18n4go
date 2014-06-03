@@ -212,6 +212,7 @@ had a `./tmp/cli/i18n/app/fr.all.json` for French and that file had missing stri
 
 ```
 $ gi18n -v -verify-strings -f tmp/cli/i18n/app/en.all.json -languages "fr"
+
 targetFilenames: [tmp/cli/i18n/app/fr.all.json]
 gi18n: ERROR input file does not match target file: tmp/cli/i18n/app/fr.all.json
 gi18n: generated diff file: tmp/cli/i18n/app/fr.all.json.missing.diff.json
@@ -241,7 +242,52 @@ Finally, if a combined language file contains both extra and missing keys then `
 
 # Specifying `excluded.json` File
 
-TODO
+The exclude.json file can be used to manage which strings should not be extract with the `extracting-strings` command. In the `excluded.json` file,
+you can specifie string literals to ignore as well as classes of strings using a Perl-style regular expression. We have provided an example file
+[exclude](https://github.com/maximilien/i18n4cf/blob/master/example/excluded.json) to demonstrate the string and regexp cases.
+
+1. String literals are defined within the `excludedStrings` array. Any strings in your source files that exactly matches one of these will not be extracted
+to the generated files from extracted strings.
+
+```
+}
+  "excludedStrings" : [
+     "",
+    " ",
+    "\n",
+    "help",
+    ...
+  ] ...
+}
+
+As an example run, generate an extracted string files useing the command:
+
+```
+$ gi18n -extract-strings -p -d ./tmp/cli/cf/app/ -o ./tmp/cli/i18n -output-match-package -ignore-regexp ".*test.*" -e ./example/excluded.json
+```
+
+If we inspect the `./tmp/cli/i18n/app/app.go.en.json` file there should not be an entry for `"id": "help"`, but you should still see an entry for `"id": "show help"`
+
+2. Regular expressions can be defined using the same JSON annotation as string literals with the tag "excludedRegexps".
+
+```
+{
+...
+"excludedRegexps" : [
+   "^\\w$",
+   "^json:"
+ ]
+}
+```
+
+As an example for regular expressions, let us consider the `^json:`. This expression will remove any string containg `json:` which would be useful when parsing the
+`./tmp/cli/cf/api/resources/events.go` file such as: `ExitDescription string `json:"exit_description"`. After running the command:
+
+```
+$ gi18n -extract-strings -v -d ./tmp/cli/cf/api/resources -o ./tmp/cli/i18n -output-match-package -ignore-regexp ".*test.*" -e ./example/excluded.json
+```
+
+We can inspect the `./tmp/cli/i18n/resources/events.go.en.json` file and see that there are no strings with the expression `json:`.
 
 Stable Release
 ==============
