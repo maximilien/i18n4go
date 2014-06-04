@@ -31,11 +31,7 @@ import (
 var T goi18n.TranslateFunc
 
 func init() {
-	var err error
-	T, err = i18n.Init("__PACKAGE__NAME__", i18n.GetResourcesPath())
-	if err != nil {
-		panic(err)
-	}
+	T = i18n.Init("__PACKAGE__NAME__", i18n.GetResourcesPath())
 }`
 )
 
