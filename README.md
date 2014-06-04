@@ -164,9 +164,70 @@ The general usage for `-rewrite-package` command is:
 
   -f                        the source go file to be rewritten
   -d                        the directory containing the go files to rewrite
-  -i18n-strings-filename    a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command
+  -i18n-strings-filename    [option a] a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command
+  -i18n-strings-dirname     [option b] a directory with the extracted JSON files, using -output-match-package with -extract-strings this directory should match the input files package name
   -o                        [optional] output diretory for rewritten file. If not specified, the original file will be overwritten
 ```
+
+The command `-rewrite-package` will modify the go source files such that every string identified in the JSON translation files are wrapped with the `T()` function. There are two cases:
+
+1. running it on one source file
+
+```
+$ gi18n -rewrite-package -v -f tmp/cli/cf/app/help.go -i18n-strings-dirname tmp/cli/i18n/app/ -o tmp/cli/cf/app/
+
+gi18n: rewriting strings for source file: tmp/cli/cf/app/help.go
+gi18n: adding init func to package: app  to output dir: tmp/cli/cf/app
+gi18n: inserting T() calls for strings that need to be translated
+saving file to path tmp/cli/cf/app/help.go
+
+Total files parsed: 1
+Total extracted strings: 17
+Total time: 9.986963ms
+```
+
+2. running it on a directory
+
+```
+$ gi18n -rewrite-package -v -d tmp/cli/cf/app/ -i18n-strings-dirname tmp/cli/i18n/app/ -o tmp/cli/cf/app/
+
+gi18n: rewriting strings in dir tmp/cli/cf/app/, recursive: false
+
+gi18n: loading JSON strings from file: tmp/cli/i18n/app/app.go.en.json
+gi18n: rewriting strings for source file: tmp/cli/cf/app/app.go
+gi18n: adding init func to package: app  to output dir: tmp/cli/cf/app
+gi18n: inserting T() calls for strings that need to be translated
+saving file to path tmp/cli/cf/app/app.go
+gi18n: loading JSON strings from file: tmp/cli/i18n/app/flag_helper.go.en.json
+gi18n: rewriting strings for source file: tmp/cli/cf/app/flag_helper.go
+gi18n: adding init func to package: app  to output dir: tmp/cli/cf/app
+gi18n: inserting T() calls for strings that need to be translated
+saving file to path tmp/cli/cf/app/flag_helper.go
+gi18n: loading JSON strings from file: tmp/cli/i18n/app/help.go.en.json
+gi18n: rewriting strings for source file: tmp/cli/cf/app/help.go
+gi18n: adding init func to package: app  to output dir: tmp/cli/cf/app
+gi18n: inserting T() calls for strings that need to be translated
+saving file to path tmp/cli/cf/app/help.go
+
+Total files parsed: 3
+Total extracted strings: 21
+Total time: 16.648105ms
+```
+
+In both cases above the `-i18n-strings-dirname` specifies the directory containing the `<source.go>.en.json` file with the strings to process.
+However, this can be replaced with `-i18n-strings-filename` and specify one JSON file (e.g., `en.all.json`) which contains all the strings.
+
+---------
+
+The result in each case is that the source files are rewritten with the wrapped `T()` function but also dealing with converting interpolated strings into Go-style templated strings. For instance:
+
+The following interpolated string: `"%s help [COMMAND]"` is templated to: `"{{.Arg0}} help [COMMAND]"` and rewritten automaticall as:
+
+```
+T("{{.Arg0}} help [COMMAND]", map[string]interface{}{"Arg0": cf.Name()})
+```
+
+So in essence the strings in the JSON files that where interpolated become templated, that is new IDs for the default language.
 
 ## create-translations
 
