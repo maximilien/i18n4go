@@ -159,7 +159,7 @@ func (rp *rewritePackage) processDir(dirName string, recursive bool) error {
 			rp.I18nStringsFilename = filepath.Join(rp.I18nStringsDirname, i18nFilename)
 			rp.Printf("gi18n: loading JSON strings from file: %s\n", rp.I18nStringsFilename)
 			if err := rp.loadStringsToBeTranslated(rp.I18nStringsFilename); err != nil {
-				rp.Println("gi18n: WARNING could not find JSON file:", rp.I18nStringsFilename)
+				rp.Println("gi18n: WARNING could not find JSON file:", rp.I18nStringsFilename, err.Error())
 				rp.resetProcessing()
 				continue
 			}
@@ -169,7 +169,9 @@ func (rp *rewritePackage) processDir(dirName string, recursive bool) error {
 				return err
 			}
 
-			rp.resetProcessing()
+			if rp.I18nStringsDirname != "" {
+				rp.resetProcessing()
+			}
 		}
 	}
 

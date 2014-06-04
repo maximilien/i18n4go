@@ -146,6 +146,41 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 		})
 	})
 
+	Context("rewrite only templated and interpolated strings from -i18n-strings-filename with multiple files", func() {
+		BeforeEach(func() {
+			dir, err := os.Getwd()
+			Ω(err).ShouldNot(HaveOccurred())
+
+			rootPath = filepath.Join(dir, "..", "..")
+
+			outputDir, err = ioutil.TempDir(rootPath, "gi18n_integration")
+			Ω(err).ShouldNot(HaveOccurred())
+
+			fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
+			inputFilesPath = filepath.Join(fixturesPath, "d_option", "input_files")
+			expectedFilesPath = filepath.Join(fixturesPath, "d_option", "expected_output")
+
+			CopyFile(filepath.Join(expectedFilesPath, "doption", "_en.all.json"), filepath.Join(expectedFilesPath, "doption", "en.all.json"))
+
+			session := Runi18n(
+				"-rewrite-package",
+				"-d", inputFilesPath,
+				"-o", outputDir,
+				"-ignore-regexp", "^[.]\\w+.go$", //Ignoring .*.go files, otherwise it defaults to ignoring *test*.go
+				"-i18n-strings-filename", filepath.Join(expectedFilesPath, "doption", "en.all.json"),
+				"-v",
+			)
+
+			Ω(session.ExitCode()).Should(Equal(0))
+		})
+
+		It("not adds T() callExprs wrapping string literals to test3.go since none are in JSON", func() {
+			expectedOutputFile := filepath.Join(expectedFilesPath, "test3.go")
+			generatedOutputFile := filepath.Join(outputDir, "test3.go")
+			CompareExpectedOutputToGeneratedOutput(expectedOutputFile, generatedOutputFile)
+		})
+	})
+
 	Context("rewrite only templated and interpolated strings from -i18n-strings-dirname", func() {
 		BeforeEach(func() {
 			dir, err := os.Getwd()
