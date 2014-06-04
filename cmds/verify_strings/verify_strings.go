@@ -111,9 +111,13 @@ func (vs *verifyStrings) verify(inputFilename string, targetFilename string) err
 		return err
 	}
 
-	var targetExtraStringInfos []common.I18nStringInfo
+	var targetExtraStringInfos, targetInvalidStringInfos []common.I18nStringInfo
 	for _, stringInfo := range targetI18nStringInfos {
 		if _, ok := inputMap[stringInfo.ID]; ok {
+			if common.IsTemplatedString(stringInfo.ID) && vs.isTemplatedStringTranslationInvalid(stringInfo) {
+				vs.Println("gi18n: WARNING target file has invalid templated translations with key ID: ", stringInfo.ID)
+				targetInvalidStringInfos = append(targetInvalidStringInfos, stringInfo)
+			}
 			delete(inputMap, stringInfo.ID)
 		} else {
 			vs.Println("gi18n: WARNING target file has extra key with ID: ", stringInfo.ID)
@@ -134,6 +138,18 @@ func (vs *verifyStrings) verify(inputFilename string, targetFilename string) err
 		verficationError = fmt.Errorf("gi18n: target file has extra i18n strings with IDs: %s", strings.Join(keysForI18nStringInfos(targetExtraStringInfos), ","))
 	}
 
+	if len(targetInvalidStringInfos) > 0 {
+		vs.Println("gi18n: WARNING target file contains total of invalid translations:", len(targetInvalidStringInfos))
+
+		diffFilename, err := vs.generateInvalidTranslationDiffFile(targetInvalidStringInfos, targetFilename)
+		if err != nil {
+			vs.Println("gi18n: ERROR could not create the diff file:", err)
+			return err
+		}
+		vs.Println("gi18n: generated diff file:", diffFilename)
+		verficationError = fmt.Errorf("gi18n: target file has invalid i18n strings with IDs: %s", strings.Join(keysForI18nStringInfos(targetInvalidStringInfos), ","))
+	}
+
 	if len(inputMap) > 0 {
 		vs.Println("gi18n: ERROR input file does not match target file:", targetFilename)
 
@@ -147,6 +163,33 @@ func (vs *verifyStrings) verify(inputFilename string, targetFilename string) err
 	}
 
 	return verficationError
+}
+
+func (vs *verifyStrings) isTemplatedStringTranslationInvalid(stringInfo common.I18nStringInfo) bool {
+	if !common.IsTemplatedString(stringInfo.ID) || !common.IsTemplatedString(stringInfo.Translation) {
+		return false
+	}
+
+	translationArgs := common.GetTemplatedStringArgs(stringInfo.Translation)
+	argsMap := make(map[string]string)
+	for _, translationArg := range translationArgs {
+		argsMap[translationArg] = translationArg
+	}
+
+	var missingArgs []string
+	idArgs := common.GetTemplatedStringArgs(stringInfo.ID)
+	for _, idArg := range idArgs {
+		if _, ok := argsMap[idArg]; !ok {
+			missingArgs = append(missingArgs, idArg)
+		}
+	}
+
+	if len(missingArgs) > 0 {
+		vs.Println("gi18n: templated string is invalid, missing args in translation:", strings.Join(missingArgs, ","))
+		return true
+	}
+
+	return false
 }
 
 func keysForI18nStringInfos(in18nStringInfos []common.I18nStringInfo) []string {
@@ -205,4 +248,21 @@ func (vs *verifyStrings) generateExtraKeysDiffFile(extraStringInfos []common.I18
 	}
 
 	return diffFilename, common.SaveI18nStringInfos(vs, extraStringInfos, diffFilename)
+}
+
+func (vs *verifyStrings) generateInvalidTranslationDiffFile(invalidStringInfos []common.I18nStringInfo, fileName string) (string, error) {
+	name, pathName, err := common.CheckFile(fileName)
+	if err != nil {
+		return "", err
+	}
+
+	diffFilename := name + ".invalid.diff.json"
+	if vs.OutputDirname != "" {
+		common.CreateOutputDirsIfNeeded(vs.OutputDirname)
+		diffFilename = filepath.Join(vs.OutputDirname, diffFilename)
+	} else {
+		diffFilename = filepath.Join(pathName, diffFilename)
+	}
+
+	return diffFilename, common.SaveI18nStringInfos(vs, invalidStringInfos, diffFilename)
 }

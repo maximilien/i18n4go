@@ -82,6 +82,7 @@ var _ = Describe("verify-strings -f fileName -languages \"[lang,?]+\"", func() {
 						Ω(fileInfo.Name()).Should(Equal("quota.go.de.json.missing.diff.json"))
 					})
 				})
+
 				Context("with missing and extra keys", func() {
 					BeforeEach(func() {
 						session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "-languages", "\"af\"", "-o", expectedFilesPath, "-source-language", "en")
@@ -103,6 +104,25 @@ var _ = Describe("verify-strings -f fileName -languages \"[lang,?]+\"", func() {
 						fileInfo, err = os.Stat(GetFilePath(expectedFilesPath, "quota.go.af.json.extra.diff.json"))
 						Ω(err).Should(BeNil())
 						Ω(fileInfo.Name()).Should(Equal("quota.go.af.json.extra.diff.json"))
+					})
+				})
+
+				Context("with templated keys whose translation does not contain same arguments", func() {
+					BeforeEach(func() {
+						session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "-languages", "\"es\"", "-o", expectedFilesPath, "-source-language", "en")
+						Ω(session.ExitCode()).Should(Equal(1))
+					})
+
+					AfterEach(func() {
+						RemoveAllFiles(
+							GetFilePath(expectedFilesPath, "quota.go.es.json.invalid.diff.json"),
+						)
+					})
+
+					It("generates invalid diff file", func() {
+						fileInfo, err := os.Stat(GetFilePath(expectedFilesPath, "quota.go.es.json.invalid.diff.json"))
+						Ω(err).Should(BeNil())
+						Ω(fileInfo.Name()).Should(Equal("quota.go.es.json.invalid.diff.json"))
 					})
 				})
 			})
