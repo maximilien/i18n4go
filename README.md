@@ -78,7 +78,7 @@ Total time: 3.962ms
 
 The output for the command above are three files, of which two are important for translation:
 
-1. `./tmp/cli/i18n/app/app.go.en.json`
+a. `./tmp/cli/i18n/app/app.go.en.json`
 
 This file is the JSON formatted translation file for English. Some of its content is as follows:
 
@@ -171,7 +171,7 @@ The general usage for `-rewrite-package` command is:
 
 The command `-rewrite-package` will modify the go source files such that every string identified in the JSON translation files are wrapped with the `T()` function. There are two cases:
 
-1. running it on one source file
+a. running it on one source file
 
 ```
 $ gi18n -rewrite-package -v -f tmp/cli/cf/app/help.go -i18n-strings-dirname tmp/cli/i18n/app/ -o tmp/cli/cf/app/
@@ -186,7 +186,7 @@ Total extracted strings: 17
 Total time: 9.986963ms
 ```
 
-2. running it on a directory
+b. running it on a directory
 
 ```
 $ gi18n -rewrite-package -v -d tmp/cli/cf/app/ -i18n-strings-dirname tmp/cli/i18n/app/ -o tmp/cli/cf/app/
@@ -333,7 +333,9 @@ The exclude.json file can be used to manage which strings should not be extract 
 you can specifie string literals to ignore as well as classes of strings using a Perl-style regular expression. We have provided an example file
 [exclude](https://github.com/maximilien/i18n4cf/blob/master/example/excluded.json) to demonstrate the string and regexp cases.
 
-1. String literals are defined within the `excludedStrings` array. Any strings in your source files that exactly matches one of these will not be extracted
+### string literals
+
+String literals are defined within the `excludedStrings` array. Any strings in your source files that exactly matches one of these will not be extracted
 to the generated files from extracted strings.
 
 ```
@@ -356,7 +358,9 @@ $ gi18n -extract-strings -p -d ./tmp/cli/cf/app/ -o ./tmp/cli/i18n -output-match
 
 If we inspect the `./tmp/cli/i18n/app/app.go.en.json` file there should not be an entry for `"id": "help"`, but you should still see an entry for `"id": "show help"`
 
-2. Regular expressions can be defined using the same JSON annotation as string literals with the tag "excludedRegexps".
+### regular expressions 
+
+Regular expressions can be defined using the same JSON annotation as string literals with the tag `"excludedRegexps"`.
 
 ```
 {
