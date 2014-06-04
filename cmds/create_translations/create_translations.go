@@ -87,7 +87,7 @@ func (ct *createTranslations) Run() error {
 			if err != nil {
 				return fmt.Errorf("gi18n: could not create translation file for language: %s with Google Translate", language)
 			}
-			ct.Println(fmt.Printf("gi18n: created translation file %s with Google Translate", destFilename))
+			ct.Println("gi18n: created translation file with Google Translate:", destFilename)
 		} else {
 			destFilename, err := ct.createTranslationFile(ct.Filename, language)
 			if err != nil {

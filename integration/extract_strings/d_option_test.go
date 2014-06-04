@@ -41,7 +41,8 @@ var _ = Describe("extract-strings -d dirName", func() {
 
 	Context("When gi18n4cf is run with the -d flag", func() {
 		BeforeEach(func() {
-			session := Runi18n("-extract-strings", "-v", "-p", "-meta", "-d", inputFilesPath, "-o", outputPath)
+			session := Runi18n("-extract-strings", "-v", "-p", "-meta", "-d", inputFilesPath, "-o", outputPath, "-ignore-regexp", "^[.]\\w+.go$")
+
 			Ω(session.ExitCode()).Should(Equal(0))
 		})
 
@@ -75,7 +76,7 @@ var _ = Describe("extract-strings -d dirName", func() {
 		BeforeEach(func() {
 			inputFilesPath = filepath.Join(inputFilesPath, "..")
 
-			session := Runi18n("-extract-strings", "-v", "-p", "-meta", "-d", inputFilesPath, "-o", outputPath, "-r")
+			session := Runi18n("-extract-strings", "-v", "-p", "-meta", "-d", inputFilesPath, "-o", outputPath, "-r", "-ignore-regexp", "^[.]\\w+.go$")
 			Ω(session.ExitCode()).Should(Equal(0))
 		})
 

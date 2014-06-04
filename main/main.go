@@ -166,7 +166,7 @@ func init() {
 	flag.StringVar(&options.DirnameFlag, "d", "", "the dir name for which all .go files will have their strings extracted")
 	flag.BoolVar(&options.RecurseFlag, "r", false, "recursively extract strings from all files in the same directory as filename or dirName")
 
-	flag.StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", "", "a perl-style regular expression for files to ignore, e.g., \".*test.*\"")
+	flag.StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", ".*test.*", "a perl-style regular expression for files to ignore, e.g., \".*test.*\"")
 
 	flag.BoolVar(&options.VerifyStringsCmdFlag, "verify-strings", false, "the verify strings command")
 	flag.BoolVar(&options.MergeStringsCmdFlag, "merge-strings", false, "the merge strings command")
