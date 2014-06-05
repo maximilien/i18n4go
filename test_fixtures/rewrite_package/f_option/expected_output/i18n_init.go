@@ -1,6 +1,8 @@
 package input_files
 
 import (
+	"path/filepath"
+
 	"github.com/cloudfoundry/cli/cf/i18n"
 	goi18n "github.com/nicksnyder/go-i18n/i18n"
 )
@@ -8,5 +10,5 @@ import (
 var T goi18n.TranslateFunc
 
 func init() {
-	T = i18n.Init("test_fixtures/rewrite_package/f_option/input_files", i18n.GetResourcesPath())
+	T = i18n.Init(filepath.Join("test_fixtures", "rewrite_package", "f_option", "input_files"), i18n.GetResourcesPath())
 }

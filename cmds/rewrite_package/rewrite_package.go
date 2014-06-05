@@ -25,6 +25,8 @@ const (
 	INIT_CODE_SNIPPET = `package __PACKAGE__NAME__
 
 import (
+	"path/filepath"
+
 	"github.com/cloudfoundry/cli/cf/i18n"
 	goi18n "github.com/nicksnyder/go-i18n/i18n"
 )
@@ -32,7 +34,7 @@ import (
 var T goi18n.TranslateFunc
 
 func init() {
-	T = i18n.Init("__FULL_IMPORT_PATH__", i18n.GetResourcesPath())
+	T = i18n.Init(__FULL_IMPORT_PATH__, i18n.GetResourcesPath())
 }`
 )
 
@@ -512,7 +514,14 @@ func (rp *rewritePackage) addInitFuncToPackage(packageName, outputDir, importPat
 
 	common.CreateOutputDirsIfNeeded(outputDir)
 	content := strings.Replace(INIT_CODE_SNIPPET, "__PACKAGE__NAME__", packageName, -1)
-	content = strings.Replace(content, "__FULL_IMPORT_PATH__", importPath, -1)
+
+	pieces := strings.Split(importPath, "/")
+	for index, str := range pieces {
+		pieces[index] = `"` + str + `"`
+	}
+
+	joinedImportPath := "filepath.Join(" + strings.Join(pieces, ", ") + ")"
+	content = strings.Replace(content, "__FULL_IMPORT_PATH__", joinedImportPath, -1)
 	return ioutil.WriteFile(filepath.Join(outputDir, "i18n_init.go"), []byte(content), 0666)
 }
 
