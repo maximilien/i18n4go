@@ -8,5 +8,5 @@ import (
 var T goi18n.TranslateFunc
 
 func init() {
-	T = i18n.Init("nested_dir", i18n.GetResourcesPath())
+	T = i18n.Init("test_fixtures/rewrite_package/f_option/input_files/nested_dir", i18n.GetResourcesPath())
 }

@@ -42,6 +42,7 @@ var _ = Describe("rewrite-package -f filename", func() {
 				"-rewrite-package",
 				"-f", filepath.Join(inputFilesPath, "test.go"),
 				"-o", outputDir,
+				"-root-path", rootPath,
 				"-v",
 			)
 

@@ -42,6 +42,7 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 				"-d", inputFilesPath,
 				"-o", outputDir,
 				"-ignore-regexp", "^[.]\\w+.go$", //Ignoring .*.go files, otherwise it defaults to ignoring *test*.go
+				"-root-path", rootPath,
 				"-r",
 				"-v",
 			)

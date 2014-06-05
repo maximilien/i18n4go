@@ -175,6 +175,7 @@ func init() {
 
 	flag.StringVar(&options.I18nStringsFilenameFlag, "i18n-strings-filename", "", "a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command")
 	flag.StringVar(&options.I18nStringsDirnameFlag, "i18n-strings-dirname", "", "a directory with the extracted JSON files, using -output-match-package with -extract-strings this directory should match the input files package name")
+	flag.StringVar(&options.RootPathFlag, "root-path", "", "the root path to the Go source files whose packages are being rewritten, defaults to working directory, if not specified")
 
 	flag.Parse()
 }
@@ -241,7 +242,8 @@ usage: gi18n -create-translations [-v] [-google-translate-api-key <api key>] [-s
   -f                        the source go file to be rewritten
   -d                        the directory containing the go files to rewrite
   -i18n-strings-filename    a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command
-  -i18n-strings-dirname     a directory with the extracted JSON files, using -output-match-package with -extract-strings this directory should match the input files package name"
+  -i18n-strings-dirname     a directory with the extracted JSON files, using -output-match-package with -extract-strings this directory should match the input files package name
+  -root-path                the root path to the Go source files whose packages are being rewritten, defaults to working directory, if not specified
   -o                        [optional] output diretory for rewritten file. If not specified, the original file will be overwritten
 
   CREATE-TRANSLATIONS:

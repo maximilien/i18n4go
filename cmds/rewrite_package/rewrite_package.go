@@ -7,6 +7,7 @@ import (
 	"regexp"
 
 	"go/ast"
+	"go/build"
 	"go/format"
 	"go/parser"
 	"go/token"
@@ -31,7 +32,7 @@ import (
 var T goi18n.TranslateFunc
 
 func init() {
-	T = i18n.Init("__PACKAGE__NAME__", i18n.GetResourcesPath())
+	T = i18n.Init("__FULL_IMPORT_PATH__", i18n.GetResourcesPath())
 }`
 )
 
@@ -42,6 +43,7 @@ type rewritePackage struct {
 	OutputDirname       string
 	I18nStringsFilename string
 	I18nStringsDirname  string
+	RootPath            string
 
 	Dirname string
 	Recurse bool
@@ -70,6 +72,7 @@ func NewRewritePackage(options cmds.Options) rewritePackage {
 		OutputDirname:       options.OutputDirFlag,
 		I18nStringsFilename: options.I18nStringsFilenameFlag,
 		I18nStringsDirname:  options.I18nStringsDirnameFlag,
+		RootPath:            options.RootPathFlag,
 
 		ExtractedStrings:     nil,
 		SaveExtractedStrings: false,
@@ -209,8 +212,14 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 		return nil
 	}
 
+	importPath, err := rp.determineImportPath(absFilePath)
+	if err != nil {
+		rp.Println("gi18n: error determining the import path:", err.Error())
+		return err
+	}
+
 	outputDir := filepath.Join(rp.OutputDirname, filepath.Dir(rp.relativePathForFile(fileName)))
-	err = rp.addInitFuncToPackage(astFile.Name.Name, outputDir)
+	err = rp.addInitFuncToPackage(astFile.Name.Name, outputDir, importPath)
 	if err != nil {
 		rp.Println("gi18n: error adding init() func to package:", err.Error())
 		return err
@@ -239,6 +248,37 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 	}
 
 	return err
+}
+
+func (rp *rewritePackage) determineImportPath(filePath string) (string, error) {
+	dirName := filepath.Dir(filePath)
+	if rp.options.RootPathFlag == "" {
+		rp.Println("gi18n: using the PWD as the rootPath:", os.Getenv("PWD"))
+		rp.RootPath = os.Getenv("PWD")
+	}
+	rp.Println("gi18n: determining import path using root path:", rp.RootPath)
+	pkg, err := build.Default.ImportDir(rp.RootPath, build.ImportMode(1))
+	if err != nil {
+		rp.Println("gi18n: error getting root path import:", err.Error)
+		return "", err
+	}
+	rp.Println("gi18n: got a root pkg with import path:", pkg.ImportPath)
+
+	otherPkg, err := build.Default.ImportDir(dirName, build.ImportMode(0))
+	if err != nil {
+		rp.Println("gi18n: error getting root path import:", err.Error)
+		return "", err
+	}
+	rp.Println("gi18n: got a pkg with import:", otherPkg.ImportPath)
+
+	importPath := otherPkg.ImportPath
+	importPath = strings.Replace(importPath, pkg.ImportPath, "", 1)
+	if strings.HasPrefix(importPath, "/") {
+		importPath = strings.TrimLeft(importPath, "/")
+	}
+	rp.Println("gi18n: using import path as:", importPath)
+
+	return importPath, nil
 }
 
 func (rp *rewritePackage) insertTFuncCall(astFile *ast.File) error {
@@ -467,11 +507,12 @@ func (rp *rewritePackage) wrapBasicLitWithT(basicLit *ast.BasicLit) ast.Expr {
 	return &ast.CallExpr{Fun: tIdent, Args: []ast.Expr{basicLit}}
 }
 
-func (rp *rewritePackage) addInitFuncToPackage(packageName, outputDir string) error {
+func (rp *rewritePackage) addInitFuncToPackage(packageName, outputDir, importPath string) error {
 	rp.Println("gi18n: adding init func to package:", packageName, " to output dir:", outputDir)
 
 	common.CreateOutputDirsIfNeeded(outputDir)
 	content := strings.Replace(INIT_CODE_SNIPPET, "__PACKAGE__NAME__", packageName, -1)
+	content = strings.Replace(content, "__FULL_IMPORT_PATH__", importPath, -1)
 	return ioutil.WriteFile(filepath.Join(outputDir, "i18n_init.go"), []byte(content), 0666)
 }
 

@@ -35,6 +35,8 @@ type Options struct {
 
 	I18nStringsFilenameFlag string
 	I18nStringsDirnameFlag  string
+
+	RootPathFlag string
 }
 
 type CommandInterface interface {
