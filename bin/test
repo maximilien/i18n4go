@@ -26,5 +26,5 @@
   go test ./integration/... -parallel 4 $@
 
   echo -e "\n Vetting packages for potential issues..."
-  go tool vet cmds common main
+  go tool vet cmds common gi18n
 )
