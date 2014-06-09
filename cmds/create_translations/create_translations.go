@@ -108,6 +108,12 @@ func (ct *createTranslations) createTranslationFileWithGoogleTranslate(language 
 		return "", err
 	}
 
+	err = common.CreateOutputDirsIfNeeded(ct.OutputDirname)
+	if err != nil {
+		ct.Println(err)
+		return "", fmt.Errorf("gi18n: could not create output directory: %s", ct.OutputDirname)
+	}
+
 	destFilename := filepath.Join(ct.OutputDirname, strings.Replace(fileName, ct.options.SourceLanguageFlag, language, -1))
 
 	i18nStringInfos, err := common.LoadI18nStringInfos(ct.Filename)
