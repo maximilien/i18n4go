@@ -188,25 +188,25 @@ func init() {
 
 func usage() {
 	usageString := `
-usage: gi18n extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -f <fileName>
-   or: gi18n extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -d <dirName> [-r] [--ignore-regexp <fileNameRegexp>]
+usage: gi18n -c extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -f <fileName>
+   or: gi18n -c extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -d <dirName> [-r] [--ignore-regexp <fileNameRegexp>]
 
-usage: gi18n rewrite-package [-v] [-r] -d <dirName> [--i18n-strings-filename <fileName> | --i18n-strings-dirname <dirName>]
-   or: gi18n rewrite-package [-v] [-r] -f <fileName> --i18n-strings-filename <fileName>
+usage: gi18n -c rewrite-package [-v] [-r] -d <dirName> [--i18n-strings-filename <fileName> | --i18n-strings-dirname <dirName>]
+   or: gi18n -c rewrite-package [-v] [-r] -f <fileName> --i18n-strings-filename <fileName>
 
-usage: gi18n create-translations [-v] [--google-translate-api-key <api key>] [--source-language <language>] -f <fileName> --languages <lang1,lang2,...> -o <outputDir>
+usage: gi18n -c create-translations [-v] [--google-translate-api-key <api key>] [--source-language <language>] -f <fileName> --languages <lang1,lang2,...> -o <outputDir>
 
-usage: gi18n merge-strings [-v] [-r] [--source-language <language>] -d <dirName>
+usage: gi18n -c merge-strings [-v] [-r] [--source-language <language>] -d <dirName>
 
-usage: gi18n verify-strings [-v] [--source-language <language>] -f <sourceFileName> --language-files <language files>
-   or: gi18n verify-strings [-v] [--source-language <language>] -f <sourceFileName> --languages <lang1,lang2,...>
+usage: gi18n -c verify-strings [-v] [--source-language <language>] -f <sourceFileName> --language-files <language files>
+   or: gi18n -c verify-strings [-v] [--source-language <language>] -f <sourceFileName> --languages <lang1,lang2,...>
 
   -h | --help                prints the usage
   -v                         verbose
 
   EXTRACT-STRINGS:
 
-  extract-strings            the extract strings command
+  -c extract-strings         the extract strings command
 
   --po                       to generate standard .po files for translation
   -e                         [optional] the JSON file with strings to be excluded, defaults to excluded.json if present
@@ -227,6 +227,7 @@ usage: gi18n verify-strings [-v] [--source-language <language>] -f <sourceFileNa
 
   REWRITE-PACKAGE:
 
+  -c rewrite-package         the rewrite package command
   -f                         the source go file to be rewritten
   -d                         the directory containing the go files to rewrite
   --i18n-strings-filename    a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command
@@ -236,7 +237,7 @@ usage: gi18n verify-strings [-v] [--source-language <language>] -f <sourceFileNa
 
   MERGE STRINGS:
 
-  merge-strings              merges multiple <filename>.go.<language>.json files into a <language>.all.json
+  -c merge-strings           the merges strings command which merges multiple <filename>.go.<language>.json files into a <language>.all.json
 
   -r                         [optional] recursesively combine files from all subdirectories
   --source-language          [optional] the source language of the file, typically also part of the file name, e.g., "en_US" (default to 'en')
@@ -245,7 +246,7 @@ usage: gi18n verify-strings [-v] [--source-language <language>] -f <sourceFileNa
 
   CREATE-TRANSLATIONS:
 
-  create-translations        the create translations command
+  -c create-translations     the create translations command
 
   --google-translate-api-key [optional] your public Google Translate API key which is used to generate translations (charge is applicable)
   --source-language          [optional] the source language of the file, typically also part of the file name, e.g., \"en_US\"
@@ -256,7 +257,7 @@ usage: gi18n verify-strings [-v] [--source-language <language>] -f <sourceFileNa
 
   VERIFY-STRINGS:
 
-  verify-strings             the verify strings command
+  -c verify-strings          the verify strings command
 
   --source-language          [optional] the source language of the source translation file (default to 'en')
 
