@@ -2,36 +2,36 @@
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/rename_org.go",
       "value": "rename-org",
-      "offset": 806,
-      "line": 30,
+      "offset": 538,
+      "line": 22,
       "column": 16
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/rename_org.go",
       "value": "Rename an org",
-      "offset": 835,
-      "line": 31,
+      "offset": 567,
+      "line": 23,
       "column": 16
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/rename_org.go",
       "value": "CF_NAME rename-org ORG NEW_ORG",
-      "offset": 867,
-      "line": 32,
+      "offset": 599,
+      "line": 24,
       "column": 16
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/rename_org.go",
       "value": "Incorrect Usage",
-      "offset": 1094,
-      "line": 38,
+      "offset": 826,
+      "line": 30,
       "column": 20
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/rename_org.go",
       "value": "Renaming org %s to %s as %s...",
-      "offset": 1452,
-      "line": 54,
+      "offset": 1184,
+      "line": 46,
       "column": 13
    }
 ]

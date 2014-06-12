@@ -2,71 +2,71 @@
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/quota.go",
       "value": "quota",
-      "offset": 773,
-      "line": 30,
+      "offset": 463,
+      "line": 21,
       "column": 16
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/quota.go",
-      "value": "CF_NAME quota QUOTA",
-      "offset": 797,
-      "line": 31,
+      "value": "Show quota info",
+      "offset": 525,
+      "line": 23,
       "column": 16
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/quota.go",
       "value": "Getting quota %s info as %s...",
-      "offset": 1263,
-      "line": 48,
+      "offset": 953,
+      "line": 39,
       "column": 13
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/quota.go",
-      "value": "Memory",
-      "offset": 1521,
-      "line": 58,
-      "column": 21
-   },
-   {
-      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/quota.go",
       "value": "Routes",
-      "offset": 1614,
-      "line": 59,
+      "offset": 1304,
+      "line": 50,
       "column": 21
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/quota.go",
       "value": "Services",
-      "offset": 1683,
-      "line": 60,
+      "offset": 1373,
+      "line": 51,
       "column": 21
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/quota.go",
-      "value": "Show quota info",
-      "offset": 835,
-      "line": 32,
+      "value": "Paid service plans",
+      "offset": 1446,
+      "line": 52,
+      "column": 21
+   },
+   {
+      "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/quota.go",
+      "value": "CF_NAME quota QUOTA",
+      "offset": 487,
+      "line": 22,
       "column": 16
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/quota.go",
       "value": "quotas",
-      "offset": 1063,
-      "line": 38,
+      "offset": 753,
+      "line": 29,
       "column": 33
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/quota.go",
-      "value": "%d",
-      "offset": 1707,
-      "line": 60,
-      "column": 45
+      "value": "Memory",
+      "offset": 1211,
+      "line": 49,
+      "column": 21
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/quota/quota.go",
-      "value": "Paid service plans",
-      "offset": 1756,
-      "line": 61,
-      "column": 21
+      "value": "%d",
+      "offset": 1397,
+      "line": 51,
+      "column": 45
    }
 ]

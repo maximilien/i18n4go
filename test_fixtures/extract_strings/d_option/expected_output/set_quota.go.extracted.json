@@ -2,50 +2,50 @@
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/set_quota.go",
       "value": "set-quota",
-      "offset": 793,
-      "line": 30,
+      "offset": 525,
+      "line": 22,
       "column": 16
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/set_quota.go",
       "value": "Assign a quota to an org",
-      "offset": 821,
-      "line": 31,
+      "offset": 553,
+      "line": 23,
       "column": 16
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/set_quota.go",
       "value": "CF_NAME set-quota ORG QUOTA\n\n",
-      "offset": 858,
-      "line": 32,
+      "offset": 590,
+      "line": 24,
       "column": 10
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/set_quota.go",
       "value": "TIP:\n",
-      "offset": 897,
-      "line": 33,
+      "offset": 629,
+      "line": 25,
       "column": 4
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/set_quota.go",
       "value": "   View allowable quotas with 'CF_NAME quotas'",
-      "offset": 911,
-      "line": 34,
+      "offset": 643,
+      "line": 26,
       "column": 4
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/set_quota.go",
       "value": "Incorrect Usage",
-      "offset": 1153,
-      "line": 40,
+      "offset": 885,
+      "line": 32,
       "column": 20
    },
    {
       "filename": "../../test_fixtures/extract_strings/d_option/input_files/org/set_quota.go",
       "value": "Setting quota %s to org %s as %s...",
-      "offset": 1633,
-      "line": 64,
+      "offset": 1365,
+      "line": 56,
       "column": 13
    }
 ]
