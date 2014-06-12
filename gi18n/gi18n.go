@@ -194,12 +194,12 @@ usage: gi18n extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-pa
 usage: gi18n rewrite-package [-v] [-r] -d <dirName> [--i18n-strings-filename <fileName> | --i18n-strings-dirname <dirName>]
    or: gi18n rewrite-package [-v] [-r] -f <fileName> --i18n-strings-filename <fileName>
 
+usage: gi18n create-translations [-v] [--google-translate-api-key <api key>] [--source-language <language>] -f <fileName> --languages <lang1,lang2,...> -o <outputDir>
+
 usage: gi18n merge-strings [-v] [-r] [--source-language <language>] -d <dirName>
 
 usage: gi18n verify-strings [-v] [--source-language <language>] -f <sourceFileName> --language-files <language files>
    or: gi18n verify-strings [-v] [--source-language <language>] -f <sourceFileName> --languages <lang1,lang2,...>
-
-usage: gi18n create-translations [-v] [--google-translate-api-key <api key>] [--source-language <language>] -f <fileName> --languages <lang1,lang2,...> -o <outputDir>
 
   -h | --help                prints the usage
   -v                         verbose
@@ -225,6 +225,15 @@ usage: gi18n create-translations [-v] [--google-translate-api-key <api key>] [--
   -r                         [optional] recursesively extract strings from all subdirectories
   --ignore-regexp            [optional] a perl-style regular expression for files to ignore, e.g., ".*test.*"
 
+  REWRITE-PACKAGE:
+
+  -f                         the source go file to be rewritten
+  -d                         the directory containing the go files to rewrite
+  --i18n-strings-filename    a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command
+  --i18n-strings-dirname     a directory with the extracted JSON files, using -output-match-package with -extract-strings this directory should match the input files package name
+  --root-path                the root path to the Go source files whose packages are being rewritten, defaults to working directory, if not specified
+  -o                         [optional] output diretory for rewritten file. If not specified, the original file will be overwritten
+
   MERGE STRINGS:
 
   merge-strings              merges multiple <filename>.go.<language>.json files into a <language>.all.json
@@ -233,6 +242,17 @@ usage: gi18n create-translations [-v] [--google-translate-api-key <api key>] [--
   --source-language          [optional] the source language of the file, typically also part of the file name, e.g., "en_US" (default to 'en')
 
   -d                         the directory containing the json files to combine
+
+  CREATE-TRANSLATIONS:
+
+  create-translations        the create translations command
+
+  --google-translate-api-key [optional] your public Google Translate API key which is used to generate translations (charge is applicable)
+  --source-language          [optional] the source language of the file, typically also part of the file name, e.g., \"en_US\"
+
+  -f                         the source translation file
+  --languages                a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
+  -o                         the output directory where the newly created translation files will be placed
 
   VERIFY-STRINGS:
 
@@ -245,26 +265,6 @@ usage: gi18n create-translations [-v] [--google-translate-api-key <api key>] [--
   --language-files           a comma separated list of target files for different languages to compare, e.g., "en, en_US, fr_FR, es"
                              if not specified then the languages flag is used to find target files in same directory as source
   --languages                a comma separated list of valid languages with optional territory, e.g., "en, en_US, fr_FR, es"
-
-  REWRITE-PACKAGE:
-
-  -f                         the source go file to be rewritten
-  -d                         the directory containing the go files to rewrite
-  --i18n-strings-filename    a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command
-  --i18n-strings-dirname     a directory with the extracted JSON files, using -output-match-package with -extract-strings this directory should match the input files package name
-  --root-path                the root path to the Go source files whose packages are being rewritten, defaults to working directory, if not specified
-  -o                         [optional] output diretory for rewritten file. If not specified, the original file will be overwritten
-
-  CREATE-TRANSLATIONS:
-
-  create-translations        the create translations command
-
-  --google-translate-api-key [optional] your public Google Translate API key which is used to generate translations (charge is applicable)
-  --source-language          [optional] the source language of the file, typically also part of the file name, e.g., \"en_US\"
-
-  -f                         the source translation file
-  --languages                a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
-  -o                         the output directory where the newly created translation files will be placed
 `
 	fmt.Println(usageString)
 }
