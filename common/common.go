@@ -41,7 +41,7 @@ func CreateTmpFile(content string) (*os.File, error) {
 		return nil, err
 	}
 
-	ioutil.WriteFile(tmpFile.Name(), []byte(content), 666)
+	ioutil.WriteFile(tmpFile.Name(), []byte(content), 0666)
 
 	return tmpFile, nil
 }
@@ -100,7 +100,7 @@ func FindFilePath(filename string) (string, error) {
 func CreateOutputDirsIfNeeded(outputDirname string) error {
 	_, err := os.Stat(outputDirname)
 	if os.IsNotExist(err) {
-		err = os.MkdirAll(outputDirname, 0777)
+		err = os.MkdirAll(outputDirname, 0755)
 		if err != nil {
 			return err
 		}
@@ -209,7 +209,7 @@ func SaveI18nStringInfos(cmd cmds.CommandInterface, i18nStringInfos []I18nString
 	}
 
 	if !cmd.Options().DryRunFlag && len(i18nStringInfos) != 0 {
-		err := ioutil.WriteFile(fileName, jsonData, 0700)
+		err := ioutil.WriteFile(fileName, jsonData, 0644)
 		if err != nil {
 			cmd.Println(err)
 			return err
