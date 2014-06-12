@@ -16,18 +16,21 @@ Once installed, you can use it to issue some of the typical i18n tooling process
 Printing the usage help
 
 ```
-usage: gi18n -extract-strings [-vpe] [-dry-run] [-output-flat|-output-match-package|-o <outputDir>] -f <fileName>
-   or: gi18n -extract-strings [-vpe] [-dry-run] [-output-flat|-output-match-package|-o <outputDir>] -d <dirName> [-r] [-ignore-regexp <fileNameRegexp>]
+usage: gi18n extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -f <fileName>
+   or: gi18n extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -d <dirName> [-r] [--ignore-regexp <fileNameRegexp>]
 
-usage: gi18n -merge-strings [-v] [-r] [-source-language <language>] -d <dirName>
+usage: gi18n rewrite-package [-v] [-r] -d <dirName> [--i18n-strings-filename <fileName> | --i18n-strings-dirname <dirName>]
+   or: gi18n rewrite-package [-v] [-r] -f <fileName> --i18n-strings-filename <fileName>
 
-usage: gi18n -verify-strings [-v] [-source-language <language>] -f <sourceFileName> -language-files <language files>
-   or: gi18n -verify-strings [-v] [-source-language <language>] -f <sourceFileName> -languages <lang1,lang2,...>
+usage: gi18n merge-strings [-v] [-r] [--source-language <language>] -d <dirName>
 
-usage: gi18n -create-translations [-v] [-google-translate-api-key <api key>] [-source-language <language>] -f <fileName> -languages <lang1,lang2,...> -o <outputDir>
+usage: gi18n verify-strings [-v] [--source-language <language>] -f <sourceFileName> --language-files <language files>
+   or: gi18n verify-strings [-v] [--source-language <language>] -f <sourceFileName> --languages <lang1,lang2,...>
 
-  -h                        prints the usage
-  -v                        verbose
+usage: gi18n create-translations [-v] [--google-translate-api-key <api key>] [--source-language <language>] -f <fileName> --languages <lang1,lang2,...> -o <outputDir>
+
+  -h | --help                prints the usage
+  -v                         verbose
 ...
 ```
 
@@ -39,24 +42,24 @@ The general usage for `-extract-strings` command is:
   ...
   EXTRACT-STRINGS:
 
-  -extract-strings          the extract strings command
+  extract-strings            the extract strings command
 
-  -p                        to generate standard .po files for translation
-  -e                        [optional] the JSON file with strings to be excluded, defaults to excluded.json if present
-  -meta                     [optional] create a *.extracted.json file with metadata such as: filename, directory, and positions of the strings in source file
-  -dry-run                  [optional] prevents any output files from being created
+  --po                       to generate standard .po files for translation
+  -e                         [optional] the JSON file with strings to be excluded, defaults to excluded.json if present
+  --meta                     [optional] create a *.extracted.json file with metadata such as: filename, directory, and positions of the strings in source file
+  --dry-run                  [optional] prevents any output files from being created
 
 
-  -output-flat              generated files are created in the specified output directory (default)
-  -output-match-package     generated files are created in directory to match the package name
-  -o                        the output directory where the translation files will be placed
+  --output-flat              generated files are created in the specified output directory (default)
+  --output-match-package     generated files are created in directory to match the package name
+  -o                         the output directory where the translation files will be placed
 
-  -f                        the go file name to extract strings
+  -f                         the go file name to extract strings
 
-  -d                        the directory containing the go files to extract strings
+  -d                         the directory containing the go files to extract strings
 
-  -r                        [optional] recursesively extract strings from all subdirectories
-  -ignore-regexp            [optional] a perl-style regular expression for files to ignore, e.g., ".*test.*"
+  -r                         [optional] recursesively extract strings from all subdirectories
+  --ignore-regexp            [optional] a perl-style regular expression for files to ignore, e.g., ".*test.*"
 
 ```
 
@@ -130,12 +133,12 @@ The general usage for `-merge-strings` command is:
   ...
   MERGE STRINGS:
 
-  -merge-strings            merges multiple <filename>.go.<language>.json files into a <language>.all.json
+  merge-strings              merges multiple <filename>.go.<language>.json files into a <language>.all.json
 
-  -r                        [optional] recursesively combine files from all subdirectories
-  -source-language          [optional] the source language of the file, typically also part of the file name, e.g., \"en_US\" (default to 'en')
+  -r                         [optional] recursesively combine files from all subdirectories
+  --source-language          [optional] the source language of the file, typically also part of the file name, e.g., "en_US" (default to 'en')
 
-  -d                        the directory containing the json files to combine
+  -d                         the directory containing the json files to combine
 ```
 
 The command `-merge-strings` combines strings in multiple `*.go.[lang].json` files generated by `Extract Strings` into one file. Using the same example source as above.
@@ -162,11 +165,23 @@ The general usage for `-rewrite-package` command is:
   ...
   REWRITE-PACKAGE:
 
-  -f                        the source go file to be rewritten
-  -d                        the directory containing the go files to rewrite
-  -i18n-strings-filename    [option a] a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command
-  -i18n-strings-dirname     [option b] a directory with the extracted JSON files, using -output-match-package with -extract-strings this directory should match the input files package name
-  -o                        [optional] output diretory for rewritten file. If not specified, the original file will be overwritten
+  -f                         the source go file to be rewritten
+  -d                         the directory containing the go files to rewrite
+  --i18n-strings-filename    a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command
+  --i18n-strings-dirname     a directory with the extracted JSON files, using -output-match-package with -extract-strings this directory should match the input files package name
+  --root-path                the root path to the Go source files whose packages are being rewritten, defaults to working directory, if not specified
+  -o                         [optional] output diretory for rewritten file. If not specified, the original file will be overwritten
+
+  CREATE-TRANSLATIONS:
+
+  create-translations        the create translations command
+
+  --google-translate-api-key [optional] your public Google Translate API key which is used to generate translations (charge is applicable)
+  --source-language          [optional] the source language of the file, typically also part of the file name, e.g., \"en_US\"
+
+  -f                         the source translation file
+  --languages                a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
+  -o                         the output directory where the newly created translation files will be placed
 ```
 
 The command `-rewrite-package` will modify the go source files such that every string identified in the JSON translation files are wrapped with the `T()` function. There are two cases:
@@ -237,14 +252,14 @@ The general usage for `-create-translations` command is:
   ...
   CREATE-TRANSLATIONS:
 
-  -create-translations      the create translations command
+  create-translations        the create translations command
 
-  -google-translate-api-key [optional] your public Google Translate API key which is used to generate translations (charge is applicable)
-  -source-language          [optional] the source language of the file, typically also part of the file name, e.g., \"en_US\"
+  --google-translate-api-key [optional] your public Google Translate API key which is used to generate translations (charge is applicable)
+  --source-language          [optional] the source language of the file, typically also part of the file name, e.g., \"en_US\"
 
-  -f                        the source translation file
-  -languages                a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
-  -o                        the output directory where the newly created translation files will be placed
+  -f                         the source translation file
+  --languages                a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
+  -o                         the output directory where the newly created translation files will be placed
 ```
 
 The command `-create-translations` generates copies of the `-source-language` file, one per language specified in the `-languages` flag (seperated by comma).
@@ -280,15 +295,15 @@ The general usage for `-verify-strings` command is:
   ...
   VERIFY-STRINGS:
 
-  -verify-strings           the verify strings command
+  verify-strings             the verify strings command
 
-  -source-language          [optional] the source language of the source translation file (default to 'en')
+  --source-language          [optional] the source language of the source translation file (default to 'en')
 
-  -f                        the source translation file
+  -f                         the source translation file
 
-  -language-files           a comma separated list of target files for different languages to compare, e.g., \"en, en_US, fr_FR, es\"
-                            if not specified then the languages flag is used to find target files in same directory as source
-  -languages                a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"
+  --language-files           a comma separated list of target files for different languages to compare, e.g., "en, en_US, fr_FR, es"
+                             if not specified then the languages flag is used to find target files in same directory as source
+  --languages                a comma separated list of valid languages with optional territory, e.g., "en, en_US, fr_FR, es"
 ```
 
 The command `-verify-strings` assures that combined language files have exactly the same keys.
