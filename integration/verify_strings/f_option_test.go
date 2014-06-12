@@ -9,7 +9,7 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var _ = Describe("verify-strings -f fileName -languages \"[lang,?]+\"", func() {
+var _ = Describe("verify-strings -f fileName --languages \"[lang,?]+\"", func() {
 	var (
 		inputFilesPath    string
 		expectedFilesPath string
@@ -22,10 +22,10 @@ var _ = Describe("verify-strings -f fileName -languages \"[lang,?]+\"", func() {
 	})
 
 	Context("valid input file provided", func() {
-		Context("using -source-language", func() {
+		Context("using --source-language", func() {
 			Context("passes verifications", func() {
 				BeforeEach(func() {
-					session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "-languages", "\"fr,zh_CN\"", "-o", expectedFilesPath, "-source-language", "en")
+					session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"fr,zh_CN\"", "-o", expectedFilesPath, "--source-language", "en")
 					Ω(session.ExitCode()).Should(Equal(0))
 				})
 
@@ -39,10 +39,10 @@ var _ = Describe("verify-strings -f fileName -languages \"[lang,?]+\"", func() {
 			})
 		})
 
-		Context("not using -source-language", func() {
+		Context("not using --source-language", func() {
 			Context("passes verifications", func() {
 				BeforeEach(func() {
-					session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "-languages", "\"fr,zh_CN\"", "-o", expectedFilesPath)
+					session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"fr,zh_CN\"", "-o", expectedFilesPath)
 					Ω(session.ExitCode()).Should(Equal(0))
 				})
 
@@ -66,7 +66,7 @@ var _ = Describe("verify-strings -f fileName -languages \"[lang,?]+\"", func() {
 			Context("with one language file", func() {
 				Context("with missing keys", func() {
 					BeforeEach(func() {
-						session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "-languages", "\"de\"", "-o", expectedFilesPath, "-source-language", "en")
+						session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"de\"", "-o", expectedFilesPath, "--source-language", "en")
 						Ω(session.ExitCode()).Should(Equal(1))
 					})
 
@@ -85,7 +85,7 @@ var _ = Describe("verify-strings -f fileName -languages \"[lang,?]+\"", func() {
 
 				Context("with missing and extra keys", func() {
 					BeforeEach(func() {
-						session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "-languages", "\"af\"", "-o", expectedFilesPath, "-source-language", "en")
+						session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"af\"", "-o", expectedFilesPath, "--source-language", "en")
 						Ω(session.ExitCode()).Should(Equal(1))
 					})
 
@@ -109,7 +109,7 @@ var _ = Describe("verify-strings -f fileName -languages \"[lang,?]+\"", func() {
 
 				Context("with templated keys whose translation does not contain same arguments", func() {
 					BeforeEach(func() {
-						session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "-languages", "\"es\"", "-o", expectedFilesPath, "-source-language", "en")
+						session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"es\"", "-o", expectedFilesPath, "--source-language", "en")
 						Ω(session.ExitCode()).Should(Equal(1))
 					})
 
@@ -129,7 +129,7 @@ var _ = Describe("verify-strings -f fileName -languages \"[lang,?]+\"", func() {
 
 			Context("with multiple language files", func() {
 				BeforeEach(func() {
-					session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "-languages", "\"de,it\"", "-o", expectedFilesPath, "-source-language", "en")
+					session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"de,it\"", "-o", expectedFilesPath, "--source-language", "en")
 					Ω(session.ExitCode()).Should(Equal(1))
 				})
 
@@ -154,7 +154,7 @@ var _ = Describe("verify-strings -f fileName -languages \"[lang,?]+\"", func() {
 
 		Context("with language file", func() {
 			BeforeEach(func() {
-				session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "-languages", "\"ja\"", "-o", expectedFilesPath)
+				session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"ja\"", "-o", expectedFilesPath)
 				Ω(session.ExitCode()).Should(Equal(1))
 			})
 
@@ -173,7 +173,7 @@ var _ = Describe("verify-strings -f fileName -languages \"[lang,?]+\"", func() {
 
 		Context("with multiple language file", func() {
 			BeforeEach(func() {
-				session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "-languages", "\"ja,cs\"", "-o", expectedFilesPath)
+				session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"ja,cs\"", "-o", expectedFilesPath)
 				Ω(session.ExitCode()).Should(Equal(1))
 			})
 
@@ -197,7 +197,7 @@ var _ = Describe("verify-strings -f fileName -languages \"[lang,?]+\"", func() {
 
 		Context("when missing a language file", func() {
 			BeforeEach(func() {
-				session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "-languages", "\"ja,ht\"", "-o", expectedFilesPath)
+				session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"ja,ht\"", "-o", expectedFilesPath)
 				Ω(session.ExitCode()).Should(Equal(1))
 			})
 
@@ -218,7 +218,7 @@ var _ = Describe("verify-strings -f fileName -languages \"[lang,?]+\"", func() {
 	Context("invalid input file provided", func() {
 		Context("does not exist", func() {
 			BeforeEach(func() {
-				session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.ht.json"), "-languages", "\"fr\"", "-o", expectedFilesPath, "-source-language", "en")
+				session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.ht.json"), "--languages", "\"fr\"", "-o", expectedFilesPath, "--source-language", "en")
 				Ω(session.ExitCode()).Should(Equal(1))
 			})
 
@@ -230,7 +230,7 @@ var _ = Describe("verify-strings -f fileName -languages \"[lang,?]+\"", func() {
 
 		Context("does not have any keys", func() {
 			BeforeEach(func() {
-				session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.vi.json"), "-languages", "\"fr\"", "-o", expectedFilesPath, "-source-language", "en")
+				session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.vi.json"), "--languages", "\"fr\"", "-o", expectedFilesPath, "--source-language", "en")
 				Ω(session.ExitCode()).Should(Equal(1))
 			})
 

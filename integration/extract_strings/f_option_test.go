@@ -30,7 +30,7 @@ var _ = Describe("extract-strings -f fileName", func() {
 
 	Context("compare generated and expected file", func() {
 		BeforeEach(func() {
-			session := Runi18n("-extract-strings", "-v", "-p", "-meta", "-f", filepath.Join(inputFilesPath, "app.go"))
+			session := Runi18n("-c", "extract-strings", "-v", "--po", "--meta", "-f", filepath.Join(inputFilesPath, "app.go"))
 			Ω(session.ExitCode()).Should(Equal(0))
 		})
 
@@ -74,7 +74,7 @@ var _ = Describe("extract-strings -f fileName", func() {
 			OUTPUT_PATH, err = ioutil.TempDir("", "gi18n4cf")
 			Ω(err).ShouldNot(HaveOccurred())
 
-			session := Runi18n("-extract-strings", "-f", filepath.Join(inputFilesPath, "no_strings.go"), "-o", OUTPUT_PATH)
+			session := Runi18n("-c", "extract-strings", "-f", filepath.Join(inputFilesPath, "no_strings.go"), "-o", OUTPUT_PATH)
 			Ω(session.ExitCode()).Should(Equal(0))
 		})
 

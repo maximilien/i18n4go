@@ -38,11 +38,11 @@ var _ = Describe("rewrite-package -f filename", func() {
 			inputFilesPath = filepath.Join(fixturesPath, "f_option", "input_files")
 			expectedFilesPath = filepath.Join(fixturesPath, "f_option", "expected_output")
 
-			session := Runi18n(
-				"-rewrite-package",
+			session := Runi18n("-c",
+				"rewrite-package",
 				"-f", filepath.Join(inputFilesPath, "test.go"),
 				"-o", outputDir,
-				"-root-path", rootPath,
+				"--root-path", rootPath,
 				"-v",
 			)
 
@@ -93,8 +93,8 @@ var _ = Describe("rewrite-package -f filename", func() {
 			inputFilesPath = filepath.Join(fixturesPath, "f_option", "input_files")
 			expectedFilesPath = filepath.Join(fixturesPath, "f_option", "expected_output")
 
-			session := Runi18n(
-				"-rewrite-package",
+			session := Runi18n("-c",
+				"rewrite-package",
 				"-f", filepath.Join(inputFilesPath, "test_templated_strings.go"),
 				"-o", filepath.Join(outputDir),
 				"-v",
@@ -133,8 +133,8 @@ var _ = Describe("rewrite-package -f filename", func() {
 			inputFilesPath = filepath.Join(fixturesPath, "f_option", "input_files")
 			expectedFilesPath = filepath.Join(fixturesPath, "f_option", "expected_output")
 
-			session := Runi18n(
-				"-rewrite-package",
+			session := Runi18n("-c",
+				"rewrite-package",
 				"-f", filepath.Join(inputFilesPath, "test_interpolated_strings.go"),
 				"-o", filepath.Join(outputDir),
 				"-v",

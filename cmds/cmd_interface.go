@@ -1,13 +1,10 @@
 package cmds
 
 type Options struct {
-	HelpFlag bool
+	CommandFlag string
 
-	ExtractStringsCmdFlag     bool
-	CreateTranslationsCmdFlag bool
-	VerifyStringsCmdFlag      bool
-	RewritePackageCmdFlag     bool
-	MergeStringsCmdFlag       bool
+	HelpFlag     bool
+	LongHelpFlag bool
 
 	VerboseFlag bool
 	DryRunFlag  bool

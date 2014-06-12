@@ -37,12 +37,12 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 			inputFilesPath = filepath.Join(fixturesPath, "f_option", "input_files")
 			expectedFilesPath = filepath.Join(fixturesPath, "f_option", "expected_output")
 
-			session := Runi18n(
-				"-rewrite-package",
+			session := Runi18n("-c",
+				"rewrite-package",
 				"-d", inputFilesPath,
 				"-o", outputDir,
-				"-ignore-regexp", "^[.]\\w+.go$", //Ignoring .*.go files, otherwise it defaults to ignoring *test*.go
-				"-root-path", rootPath,
+				"--ignore-regexp", "^[.]\\w+.go$", //Ignoring .*.go files, otherwise it defaults to ignoring *test*.go
+				"--root-path", rootPath,
 				"-r",
 				"-v",
 			)
@@ -112,7 +112,7 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 		})
 	})
 
-	Context("rewrite only templated and interpolated strings from -i18n-strings-filename", func() {
+	Context("rewrite only templated and interpolated strings from --i18n-strings-filename", func() {
 		BeforeEach(func() {
 			dir, err := os.Getwd()
 			Ω(err).ShouldNot(HaveOccurred())
@@ -128,12 +128,12 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 
 			CopyFile(filepath.Join(expectedFilesPath, "doption", "_test.go.en.json"), filepath.Join(expectedFilesPath, "doption", "test.go.en.json"))
 
-			session := Runi18n(
-				"-rewrite-package",
+			session := Runi18n("-c",
+				"rewrite-package",
 				"-d", inputFilesPath,
 				"-o", outputDir,
-				"-ignore-regexp", "^[.]\\w+.go$", //Ignoring .*.go files, otherwise it defaults to ignoring *test*.go
-				"-i18n-strings-filename", filepath.Join(expectedFilesPath, "doption", "test.go.en.json"),
+				"--ignore-regexp", "^[.]\\w+.go$", //Ignoring .*.go files, otherwise it defaults to ignoring *test*.go
+				"--i18n-strings-filename", filepath.Join(expectedFilesPath, "doption", "test.go.en.json"),
 				"-v",
 			)
 
@@ -147,7 +147,7 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 		})
 	})
 
-	Context("rewrite only templated and interpolated strings from -i18n-strings-filename with multiple files", func() {
+	Context("rewrite only templated and interpolated strings from --i18n-strings-filename with multiple files", func() {
 		BeforeEach(func() {
 			dir, err := os.Getwd()
 			Ω(err).ShouldNot(HaveOccurred())
@@ -163,12 +163,12 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 
 			CopyFile(filepath.Join(expectedFilesPath, "doption", "_en.all.json"), filepath.Join(expectedFilesPath, "doption", "en.all.json"))
 
-			session := Runi18n(
-				"-rewrite-package",
+			session := Runi18n("-c",
+				"rewrite-package",
 				"-d", inputFilesPath,
 				"-o", outputDir,
-				"-ignore-regexp", "^[.]\\w+.go$", //Ignoring .*.go files, otherwise it defaults to ignoring *test*.go
-				"-i18n-strings-filename", filepath.Join(expectedFilesPath, "doption", "en.all.json"),
+				"--ignore-regexp", "^[.]\\w+.go$", //Ignoring .*.go files, otherwise it defaults to ignoring *test*.go
+				"--i18n-strings-filename", filepath.Join(expectedFilesPath, "doption", "en.all.json"),
 				"-v",
 			)
 
@@ -182,7 +182,7 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 		})
 	})
 
-	Context("rewrite only templated and interpolated strings from -i18n-strings-dirname", func() {
+	Context("rewrite only templated and interpolated strings from --i18n-strings-dirname", func() {
 		BeforeEach(func() {
 			dir, err := os.Getwd()
 			Ω(err).ShouldNot(HaveOccurred())
@@ -199,12 +199,12 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 			CopyFile(filepath.Join(expectedFilesPath, "doption", "_test.go.en.json"), filepath.Join(expectedFilesPath, "doption", "test.go.en.json"))
 			CopyFile(filepath.Join(expectedFilesPath, "doption", "_test2.go.en.json"), filepath.Join(expectedFilesPath, "doption", "test2.go.en.json"))
 
-			session := Runi18n(
-				"-rewrite-package",
+			session := Runi18n("-c",
+				"rewrite-package",
 				"-d", inputFilesPath,
 				"-o", outputDir,
-				"-ignore-regexp", "^[.]\\w+.go$", //Ignoring .*.go files, otherwise it defaults to ignoring *test*.go
-				"-i18n-strings-dirname", filepath.Join(expectedFilesPath, "doption"),
+				"--ignore-regexp", "^[.]\\w+.go$", //Ignoring .*.go files, otherwise it defaults to ignoring *test*.go
+				"--i18n-strings-dirname", filepath.Join(expectedFilesPath, "doption"),
 				"-v",
 			)
 

@@ -32,7 +32,7 @@ var _ = Describe("verify-strings -f fileName", func() {
 
 	Context("checks for duplicate keys", func() {
 		It("should error", func() {
-			session := Runi18n("-verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "-languages", "\"fr\"", "-o", expectedFilesPath, "-source-language", "en")
+			session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"fr\"", "-o", expectedFilesPath, "--source-language", "en")
 			Ω(session.ExitCode()).Should(Equal(1))
 			Ω(session).Should(gbytes.Say("Duplicated key found: Show quota info"))
 		})

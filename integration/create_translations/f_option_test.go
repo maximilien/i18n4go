@@ -9,7 +9,7 @@ import (
 	"os"
 )
 
-var _ = Describe("create-translations -f fileName -languages \"[lang,?]+\"", func() {
+var _ = Describe("create-translations -f fileName --languages \"[lang,?]+\"", func() {
 	var (
 		rootPath          string
 		fixturesPath      string
@@ -30,7 +30,7 @@ var _ = Describe("create-translations -f fileName -languages \"[lang,?]+\"", fun
 	Context("when valid input file is provided", func() {
 		Context("and a single language is specified", func() {
 			BeforeEach(func() {
-				session := Runi18n("-create-translations", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "-languages", "\"fr\"", "-o", expectedFilesPath)
+				session := Runi18n("-c", "create-translations", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"fr\"", "-o", expectedFilesPath)
 				Ω(session.ExitCode()).Should(Equal(0))
 			})
 
@@ -49,7 +49,7 @@ var _ = Describe("create-translations -f fileName -languages \"[lang,?]+\"", fun
 
 		Context("and multiple languages are specified", func() {
 			BeforeEach(func() {
-				session := Runi18n("-create-translations", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "-languages", "\"fr,de\"", "-o", expectedFilesPath)
+				session := Runi18n("-c", "create-translations", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"fr,de\"", "-o", expectedFilesPath)
 				Ω(session.ExitCode()).Should(Equal(0))
 			})
 
@@ -76,7 +76,7 @@ var _ = Describe("create-translations -f fileName -languages \"[lang,?]+\"", fun
 	Context("when invalid input file is provided", func() {
 		Context("and file does not exist", func() {
 			BeforeEach(func() {
-				session := Runi18n("-create-translations", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.de.json"), "-languages", "\"fr\"", "-o", expectedFilesPath, "-source-language", "zh_TW")
+				session := Runi18n("-c", "create-translations", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.de.json"), "--languages", "\"fr\"", "-o", expectedFilesPath, "--source-language", "zh_TW")
 				Ω(session.ExitCode()).Should(Equal(1))
 			})
 
@@ -88,7 +88,7 @@ var _ = Describe("create-translations -f fileName -languages \"[lang,?]+\"", fun
 
 		Context("and file is empty", func() {
 			BeforeEach(func() {
-				session := Runi18n("-create-translations", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.ja.json"), "-languages", "\"fr\"", "-o", expectedFilesPath, "-source-language", "ja")
+				session := Runi18n("-c", "create-translations", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.ja.json"), "--languages", "\"fr\"", "-o", expectedFilesPath, "--source-language", "ja")
 				Ω(session.ExitCode()).Should(Equal(1))
 			})
 

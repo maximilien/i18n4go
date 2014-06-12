@@ -31,7 +31,7 @@ var _ = Describe("merge-strings -d dirName -r", func() {
 
 	Context("can combine multiple language files per directory", func() {
 		BeforeEach(func() {
-			session := Runi18n("-merge-strings", "-v", "-r", "-d", filepath.Join(inputFilesPath), "-source-language", "en")
+			session := Runi18n("-c", "merge-strings", "-v", "-r", "-d", filepath.Join(inputFilesPath), "--source-language", "en")
 			Ω(session.ExitCode()).Should(Equal(0))
 		})
 
