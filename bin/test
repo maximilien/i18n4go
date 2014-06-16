@@ -14,8 +14,6 @@
   trap printStatus EXIT
   export GOPATH=$(godep path):$GOPATH
 
-  rm -Rf $(dirname $0)/../tmp/*
-
   echo -e "\n Cleaning build artifacts..."
   go clean
 

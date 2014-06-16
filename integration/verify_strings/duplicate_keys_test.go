@@ -12,7 +12,6 @@ import (
 
 var _ = Describe("verify-strings -f fileName", func() {
 	var (
-		outputDir         string
 		rootPath          string
 		fixturesPath      string
 		inputFilesPath    string
@@ -23,7 +22,8 @@ var _ = Describe("verify-strings -f fileName", func() {
 		dir, err := os.Getwd()
 		Ω(err).ShouldNot(HaveOccurred())
 		rootPath = filepath.Join(dir, "..", "..")
-		outputDir = filepath.Join(rootPath, "tmp")
+
+		Ω(err).ToNot(HaveOccurred())
 
 		fixturesPath = filepath.Join("..", "..", "test_fixtures", "verify_strings")
 		inputFilesPath = filepath.Join(fixturesPath, "duplicate_keys", "input_files")

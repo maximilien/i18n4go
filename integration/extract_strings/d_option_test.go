@@ -13,7 +13,6 @@ import (
 
 var _ = Describe("extract-strings -d dirName", func() {
 	var (
-		outputDir         string
 		rootPath          string
 		fixturesPath      string
 		inputFilesPath    string
@@ -21,15 +20,10 @@ var _ = Describe("extract-strings -d dirName", func() {
 		outputPath        string
 	)
 
-	AfterEach(func() {
-		os.RemoveAll(outputPath)
-	})
-
 	BeforeEach(func() {
 		dir, err := os.Getwd()
 		Ω(err).ShouldNot(HaveOccurred())
 		rootPath = filepath.Join(dir, "..", "..")
-		outputDir = filepath.Join(rootPath, "tmp")
 
 		outputPath, err = ioutil.TempDir("", "gi18n4cf")
 		Ω(err).ToNot(HaveOccurred())
@@ -37,6 +31,10 @@ var _ = Describe("extract-strings -d dirName", func() {
 		fixturesPath = filepath.Join("..", "..", "test_fixtures", "extract_strings")
 		inputFilesPath = filepath.Join(fixturesPath, "d_option", "input_files", "quota")
 		expectedFilesPath = filepath.Join(fixturesPath, "d_option", "expected_output")
+	})
+
+	AfterEach(func() {
+		os.RemoveAll(outputPath)
 	})
 
 	Context("When gi18n4cf is run with the -d flag", func() {
