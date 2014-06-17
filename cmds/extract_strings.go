@@ -315,6 +315,7 @@ func (es *extractStrings) saveExtractedStrings(outputDirname string) error {
 		es.Println(err)
 		return err
 	}
+	jsonData = common.UnescapeHTML(jsonData)
 
 	if !es.options.DryRunFlag && len(stringInfos) != 0 {
 		file, err := os.Create(filepath.Join(outputDirname, es.Filename[strings.LastIndex(es.Filename, string(os.PathSeparator))+1:len(es.Filename)]))

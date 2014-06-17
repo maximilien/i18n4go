@@ -64,6 +64,26 @@ var _ = Describe("extract-strings -f fileName", func() {
 		})
 	})
 
+	Context("GitHub issue #4: extracting some character as ascii code, e.g., > as \u003e", func() {
+		BeforeEach(func() {
+			session := Runi18n("-c", "extract-strings", "-v", "-f", filepath.Join(inputFilesPath, "issue4.go"))
+			Ω(session.ExitCode()).Should(Equal(0))
+		})
+
+		AfterEach(func() {
+			RemoveAllFiles(
+				GetFilePath(inputFilesPath, "issue4.go.en.json"),
+			)
+		})
+
+		It("issue4.go.en.json", func() {
+			CompareExpectedToGeneratedTraslationJson(
+				GetFilePath(expectedFilesPath, "issue4.go.en.json"),
+				GetFilePath(inputFilesPath, "issue4.go.en.json"),
+			)
+		})
+	})
+
 	Context("when the file specified has no strings at all", func() {
 		var (
 			OUTPUT_PATH string

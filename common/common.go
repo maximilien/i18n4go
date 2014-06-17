@@ -1,6 +1,7 @@
 package common
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"os"
@@ -106,6 +107,13 @@ func CreateOutputDirsIfNeeded(outputDirname string) error {
 	return nil
 }
 
+func UnescapeHTML(byteArray []byte) []byte {
+	byteArray = bytes.Replace(byteArray, []byte("\\u003c"), []byte("<"), -1)
+	byteArray = bytes.Replace(byteArray, []byte("\\u003e"), []byte(">"), -1)
+	byteArray = bytes.Replace(byteArray, []byte("\\u0026"), []byte("&"), -1)
+	return byteArray
+}
+
 func SaveStrings(printer PrinterInterface, options Options, stringInfos map[string]StringInfo, outputDirname string, fileName string) error {
 	if !options.DryRunFlag {
 		err := CreateOutputDirsIfNeeded(outputDirname)
@@ -127,6 +135,7 @@ func SaveStrings(printer PrinterInterface, options Options, stringInfos map[stri
 		printer.Println(err)
 		return err
 	}
+	jsonData = UnescapeHTML(jsonData)
 
 	outputFilename := filepath.Join(outputDirname, fileName[strings.LastIndex(fileName, string(os.PathSeparator))+1:len(fileName)])
 	if len(stringInfos) != 0 {
@@ -205,6 +214,7 @@ func SaveI18nStringInfos(printer PrinterInterface, options Options, i18nStringIn
 		printer.Println(err)
 		return err
 	}
+	jsonData = UnescapeHTML(jsonData)
 
 	if !options.DryRunFlag && len(i18nStringInfos) != 0 {
 		err := ioutil.WriteFile(fileName, jsonData, 0644)

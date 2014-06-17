@@ -1,0 +1,14 @@
+[
+   {
+      "id": "Unsure how hard this is to fix, but I noticed that > would be translated to its unicode/ascii value.",
+      "translation": "Unsure how hard this is to fix, but I noticed that > would be translated to its unicode/ascii value."
+   },
+   {
+      "id": "I am assuming this means <> would not be correctly extracted as well.",
+      "translation": "I am assuming this means <> would not be correctly extracted as well."
+   },
+   {
+      "id": "GitHub: issue #4",
+      "translation": "GitHub: issue #4"
+   }
+]
