@@ -44,5 +44,7 @@ func Something() string {
 		fmt.Printf(filepath.Clean(os.Getenv("SOMETHING")))
 	}
 
+	fmt.Println("hello" + "world")
+
 	return "enqueuedequeueenqueuebananapants"
 }

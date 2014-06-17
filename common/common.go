@@ -255,6 +255,16 @@ func CreateI18nStringInfoMap(i18nStringInfos []I18nStringInfo) (map[string]I18nS
 	return inputMap, nil
 }
 
+func CopyI18nStringInfoMap(i18nStringInfoMap map[string]I18nStringInfo) map[string]I18nStringInfo {
+	copyMap := make(map[string]I18nStringInfo, len(i18nStringInfoMap))
+
+	for key, value := range i18nStringInfoMap {
+		copyMap[key] = value
+	}
+
+	return copyMap
+}
+
 func GetTemplatedStringArgs(aString string) []string {
 	re, err := getTemplatedStringRegexp()
 	if err != nil {

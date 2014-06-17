@@ -29,4 +29,6 @@ func Templated() string {
 	foo := something{}
 	strz := []string{"one", "two", "buckle my shoe"}
 	fmt.Println("Welp, that's a great {{.MyStruct}} how about a {{.Whatever}}", &foo, strz[2])
+
+	println("Hello {{.Name}} world!", name)
 }

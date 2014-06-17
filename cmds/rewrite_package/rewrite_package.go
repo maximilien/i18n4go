@@ -50,8 +50,9 @@ type rewritePackage struct {
 	Dirname string
 	Recurse bool
 
-	ExtractedStrings     map[string]common.I18nStringInfo
-	SaveExtractedStrings bool
+	ExtractedStrings        map[string]common.I18nStringInfo
+	UpdatedExtractedStrings map[string]common.I18nStringInfo
+	SaveExtractedStrings    bool
 
 	TotalStrings int
 	TotalFiles   int
@@ -76,8 +77,9 @@ func NewRewritePackage(options cmds.Options) rewritePackage {
 		I18nStringsDirname:  options.I18nStringsDirnameFlag,
 		RootPath:            options.RootPathFlag,
 
-		ExtractedStrings:     nil,
-		SaveExtractedStrings: false,
+		ExtractedStrings:        nil,
+		UpdatedExtractedStrings: nil,
+		SaveExtractedStrings:    false,
 
 		Dirname:      options.DirnameFlag,
 		Recurse:      options.RecurseFlag,
@@ -134,6 +136,8 @@ func (rp *rewritePackage) loadStringsToBeTranslated(fileName string) error {
 		if err != nil {
 			return err
 		}
+
+		rp.UpdatedExtractedStrings = common.CopyI18nStringInfoMap(rp.ExtractedStrings)
 	}
 
 	return nil
@@ -181,6 +185,7 @@ func (rp *rewritePackage) processDir(dirName string, recursive bool) error {
 
 func (rp *rewritePackage) resetProcessing() {
 	rp.ExtractedStrings = nil
+	rp.UpdatedExtractedStrings = nil
 	rp.I18nStringsFilename = ""
 	rp.SaveExtractedStrings = false
 }
@@ -245,7 +250,7 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 	}
 
 	if rp.SaveExtractedStrings {
-		i18nStringInfos := common.I18nStringInfoMapValues2Array(rp.ExtractedStrings)
+		i18nStringInfos := common.I18nStringInfoMapValues2Array(rp.UpdatedExtractedStrings)
 		err := common.SaveI18nStringInfos(rp, i18nStringInfos, rp.I18nStringsFilename)
 		if err != nil {
 			rp.Println("gi18n: error saving updated i18n strings file:", err.Error())
@@ -440,7 +445,7 @@ func (rp *rewritePackage) wrapCallExprWithInterpolatedT(basicLit *ast.BasicLit, 
 	basicLit.Value = strconv.Quote(templatedString)
 
 	if rp.ExtractedStrings != nil {
-		rp.updateI18nStringInfoInExtractedStrings(i18nStringInfo, templatedString)
+		rp.updateExtractedStrings(i18nStringInfo, templatedString)
 	}
 
 	rp.wrapCallExprWithTemplatedT(basicLit, callExpr)
@@ -557,14 +562,15 @@ func (rp *rewritePackage) relativePathForFile(fileName string) string {
 	}
 }
 
-func (rp *rewritePackage) updateI18nStringInfoInExtractedStrings(i18nStringInfo common.I18nStringInfo, templatedString string) {
+func (rp *rewritePackage) updateExtractedStrings(i18nStringInfo common.I18nStringInfo, templatedString string) {
 	oldID := i18nStringInfo.ID
 
 	i18nStringInfo.ID = templatedString
 	i18nStringInfo.Translation = templatedString
 
 	rp.ExtractedStrings[templatedString] = i18nStringInfo
-	delete(rp.ExtractedStrings, oldID)
+	rp.UpdatedExtractedStrings[templatedString] = i18nStringInfo
+	delete(rp.UpdatedExtractedStrings, oldID)
 
 	rp.SaveExtractedStrings = true
 }
