@@ -220,6 +220,10 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 		return err
 	}
 
+	if rp.OutputDirname == "" {
+		rp.OutputDirname = filepath.Dir(fileName)
+	}
+
 	outputDir := filepath.Join(rp.OutputDirname, filepath.Dir(rp.relativePathForFile(fileName)))
 	err = rp.addInitFuncToPackage(astFile.Name.Name, outputDir, importPath)
 	if err != nil {
