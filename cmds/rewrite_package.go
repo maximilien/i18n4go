@@ -1,4 +1,4 @@
-package rewrite_package
+package cmds
 
 import (
 	"bytes"
@@ -13,7 +13,6 @@ import (
 	"go/token"
 	"io/ioutil"
 
-	"github.com/maximilien/i18n4cf/cmds"
 	"github.com/maximilien/i18n4cf/common"
 
 	"path/filepath"
@@ -39,7 +38,7 @@ func init() {
 )
 
 type rewritePackage struct {
-	options cmds.Options
+	options common.Options
 
 	Filename            string
 	OutputDirname       string
@@ -60,7 +59,7 @@ type rewritePackage struct {
 	IgnoreRegexp *regexp.Regexp
 }
 
-func NewRewritePackage(options cmds.Options) rewritePackage {
+func NewRewritePackage(options common.Options) rewritePackage {
 	var compiledRegexp *regexp.Regexp
 	if options.IgnoreRegexpFlag != "" {
 		compiledReg, err := regexp.Compile(options.IgnoreRegexpFlag)
@@ -87,7 +86,7 @@ func NewRewritePackage(options cmds.Options) rewritePackage {
 	}
 }
 
-func (rp *rewritePackage) Options() cmds.Options {
+func (rp *rewritePackage) Options() common.Options {
 	return rp.options
 }
 
@@ -251,7 +250,7 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 
 	if rp.SaveExtractedStrings {
 		i18nStringInfos := common.I18nStringInfoMapValues2Array(rp.UpdatedExtractedStrings)
-		err := common.SaveI18nStringInfos(rp, i18nStringInfos, rp.I18nStringsFilename)
+		err := common.SaveI18nStringInfos(rp, rp.Options(), i18nStringInfos, rp.I18nStringsFilename)
 		if err != nil {
 			rp.Println("gi18n: error saving updated i18n strings file:", err.Error())
 			return err

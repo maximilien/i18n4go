@@ -1,4 +1,4 @@
-package merge_strings
+package cmds
 
 import (
 	"fmt"
@@ -7,12 +7,11 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/maximilien/i18n4cf/cmds"
 	"github.com/maximilien/i18n4cf/common"
 )
 
 type MergeStrings struct {
-	options cmds.Options
+	options common.Options
 
 	I18nStringInfos []common.I18nStringInfo
 
@@ -21,7 +20,7 @@ type MergeStrings struct {
 	Directory      string
 }
 
-func NewMergeStrings(options cmds.Options) MergeStrings {
+func NewMergeStrings(options common.Options) MergeStrings {
 	return MergeStrings{
 		options:         options,
 		I18nStringInfos: []common.I18nStringInfo{},
@@ -31,7 +30,7 @@ func NewMergeStrings(options cmds.Options) MergeStrings {
 	}
 }
 
-func (ms *MergeStrings) Options() cmds.Options {
+func (ms *MergeStrings) Options() common.Options {
 	return ms.options
 }
 
@@ -72,7 +71,7 @@ func (ms *MergeStrings) combineStringInfosPerDirectory(directory string) error {
 	filePath := filepath.Join(directory, ms.SourceLanguage+".all.json")
 	ms.I18nStringInfos = common.I18nStringInfoMapValues2Array(combinedMap)
 	sort.Sort(ms)
-	common.SaveI18nStringInfos(ms, ms.I18nStringInfos, filePath)
+	common.SaveI18nStringInfos(ms, ms.Options(), ms.I18nStringInfos, filePath)
 	ms.Println("gi18n: saving combined language file: " + filePath)
 
 	if ms.Recurse {

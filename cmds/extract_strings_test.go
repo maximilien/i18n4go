@@ -1,4 +1,4 @@
-package extract_strings
+package cmds
 
 import (
 	. "github.com/onsi/ginkgo"

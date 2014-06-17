@@ -13,8 +13,6 @@ import (
 	"path/filepath"
 
 	"encoding/json"
-
-	"github.com/maximilien/i18n4cf/cmds"
 )
 
 const (
@@ -108,11 +106,11 @@ func CreateOutputDirsIfNeeded(outputDirname string) error {
 	return nil
 }
 
-func SaveStrings(cmd cmds.CommandInterface, stringInfos map[string]StringInfo, outputDirname string, fileName string) error {
-	if !cmd.Options().DryRunFlag {
+func SaveStrings(printer PrinterInterface, options Options, stringInfos map[string]StringInfo, outputDirname string, fileName string) error {
+	if !options.DryRunFlag {
 		err := CreateOutputDirsIfNeeded(outputDirname)
 		if err != nil {
-			cmd.Println(err)
+			printer.Println(err)
 			return err
 		}
 	}
@@ -126,20 +124,20 @@ func SaveStrings(cmd cmds.CommandInterface, stringInfos map[string]StringInfo, o
 
 	jsonData, err := json.MarshalIndent(i18nStringInfos, "", "   ")
 	if err != nil {
-		cmd.Println(err)
+		printer.Println(err)
 		return err
 	}
 
 	outputFilename := filepath.Join(outputDirname, fileName[strings.LastIndex(fileName, string(os.PathSeparator))+1:len(fileName)])
 	if len(stringInfos) != 0 {
-		cmd.Println("Saving extracted i18n strings to file:", outputFilename)
+		printer.Println("Saving extracted i18n strings to file:", outputFilename)
 	}
 
-	if !cmd.Options().DryRunFlag && len(i18nStringInfos) != 0 {
+	if !options.DryRunFlag && len(i18nStringInfos) != 0 {
 		file, err := os.Create(outputFilename)
 		defer file.Close()
 		if err != nil {
-			cmd.Println(err)
+			printer.Println(err)
 			return err
 		}
 
@@ -149,22 +147,22 @@ func SaveStrings(cmd cmds.CommandInterface, stringInfos map[string]StringInfo, o
 	return nil
 }
 
-func SaveStringsInPo(cmd cmds.CommandInterface, stringInfos map[string]StringInfo, outputDirname string, fileName string) error {
+func SaveStringsInPo(printer PrinterInterface, options Options, stringInfos map[string]StringInfo, outputDirname string, fileName string) error {
 	if len(stringInfos) != 0 {
-		cmd.Println("Creating and saving i18n strings to .po file:", fileName)
+		printer.Println("Creating and saving i18n strings to .po file:", fileName)
 	}
 
-	if !cmd.Options().DryRunFlag && len(stringInfos) != 0 {
+	if !options.DryRunFlag && len(stringInfos) != 0 {
 		err := CreateOutputDirsIfNeeded(outputDirname)
 		if err != nil {
-			cmd.Println(err)
+			printer.Println(err)
 			return err
 		}
 
 		file, err := os.Create(filepath.Join(outputDirname, fileName[strings.LastIndex(fileName, string(os.PathSeparator))+1:len(fileName)]))
 		defer file.Close()
 		if err != nil {
-			cmd.Println(err)
+			printer.Println(err)
 			return err
 		}
 
@@ -181,14 +179,14 @@ func SaveStringsInPo(cmd cmds.CommandInterface, stringInfos map[string]StringInf
 	return nil
 }
 
-func SaveI18nStringsInPo(cmd cmds.CommandInterface, i18nStrings []I18nStringInfo, fileName string) error {
-	cmd.Println("gi18n: creating and saving i18n strings to .po file:", fileName)
+func SaveI18nStringsInPo(printer PrinterInterface, options Options, i18nStrings []I18nStringInfo, fileName string) error {
+	printer.Println("gi18n: creating and saving i18n strings to .po file:", fileName)
 
-	if !cmd.Options().DryRunFlag && len(i18nStrings) != 0 {
+	if !options.DryRunFlag && len(i18nStrings) != 0 {
 		file, err := os.Create(fileName)
 		defer file.Close()
 		if err != nil {
-			cmd.Println(err)
+			printer.Println(err)
 			return err
 		}
 
@@ -201,17 +199,17 @@ func SaveI18nStringsInPo(cmd cmds.CommandInterface, i18nStrings []I18nStringInfo
 	return nil
 }
 
-func SaveI18nStringInfos(cmd cmds.CommandInterface, i18nStringInfos []I18nStringInfo, fileName string) error {
+func SaveI18nStringInfos(printer PrinterInterface, options Options, i18nStringInfos []I18nStringInfo, fileName string) error {
 	jsonData, err := json.MarshalIndent(i18nStringInfos, "", "   ")
 	if err != nil {
-		cmd.Println(err)
+		printer.Println(err)
 		return err
 	}
 
-	if !cmd.Options().DryRunFlag && len(i18nStringInfos) != 0 {
+	if !options.DryRunFlag && len(i18nStringInfos) != 0 {
 		err := ioutil.WriteFile(fileName, jsonData, 0644)
 		if err != nil {
-			cmd.Println(err)
+			printer.Println(err)
 			return err
 		}
 	}

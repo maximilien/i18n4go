@@ -9,16 +9,11 @@ import (
 
 	"runtime/debug"
 
-	"github.com/maximilien/i18n4cf/cmds/create_translations"
-	"github.com/maximilien/i18n4cf/cmds/extract_strings"
-	"github.com/maximilien/i18n4cf/cmds/merge_strings"
-	"github.com/maximilien/i18n4cf/cmds/rewrite_package"
-	"github.com/maximilien/i18n4cf/cmds/verify_strings"
-
 	"github.com/maximilien/i18n4cf/cmds"
+	"github.com/maximilien/i18n4cf/common"
 )
 
-var options cmds.Options
+var options common.Options
 
 func main() {
 	defer handlePanic()
@@ -50,7 +45,7 @@ func extractStringsCmd() {
 		return
 	}
 
-	cmd := extract_strings.NewExtractStrings(options)
+	cmd := cmds.NewExtractStrings(options)
 
 	startTime := time.Now()
 
@@ -70,7 +65,7 @@ func createTranslationsCmd() {
 		return
 	}
 
-	cmd := create_translations.NewCreateTranslations(options)
+	cmd := cmds.NewCreateTranslations(options)
 
 	startTime := time.Now()
 
@@ -90,7 +85,7 @@ func verifyStringsCmd() {
 		return
 	}
 
-	cmd := verify_strings.NewVerifyStrings(options)
+	cmd := cmds.NewVerifyStrings(options)
 
 	startTime := time.Now()
 
@@ -111,7 +106,7 @@ func rewritePackageCmd() {
 		return
 	}
 
-	cmd := rewrite_package.NewRewritePackage(options)
+	cmd := cmds.NewRewritePackage(options)
 
 	startTime := time.Now()
 
@@ -131,7 +126,7 @@ func mergeStringsCmd() {
 		return
 	}
 
-	mergeStrings := merge_strings.NewMergeStrings(options)
+	mergeStrings := cmds.NewMergeStrings(options)
 
 	startTime := time.Now()
 

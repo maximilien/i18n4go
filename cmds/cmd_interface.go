@@ -1,44 +1,11 @@
 package cmds
 
-type Options struct {
-	CommandFlag string
-
-	HelpFlag     bool
-	LongHelpFlag bool
-
-	VerboseFlag bool
-	DryRunFlag  bool
-	PoFlag      bool
-	MetaFlag    bool
-
-	SourceLanguageFlag        string
-	LanguagesFlag             string
-	GoogleTranslateApiKeyFlag string
-
-	OutputDirFlag          string
-	OutputMatchImportFlag  bool
-	OutputMatchPackageFlag bool
-	OutputFlatFlag         bool
-
-	ExcludedFilenameFlag string
-	FilenameFlag         string
-	DirnameFlag          string
-
-	RecurseFlag bool
-
-	IgnoreRegexpFlag string
-
-	LanguageFilesFlag string
-
-	I18nStringsFilenameFlag string
-	I18nStringsDirnameFlag  string
-
-	RootPathFlag string
-}
+import (
+	"github.com/maximilien/i18n4cf/common"
+)
 
 type CommandInterface interface {
-	Println(a ...interface{}) (int, error)
-	Printf(msg string, a ...interface{}) (int, error)
-	Options() Options
+	common.PrinterInterface
+	Options() common.Options
 	Run() error
 }

@@ -1,4 +1,4 @@
-package create_translations
+package cmds
 
 import (
 	"fmt"
@@ -11,12 +11,11 @@ import (
 	"net/url"
 	"path/filepath"
 
-	"github.com/maximilien/i18n4cf/cmds"
 	"github.com/maximilien/i18n4cf/common"
 )
 
 type createTranslations struct {
-	options cmds.Options
+	options common.Options
 
 	Filename       string
 	OutputDirname  string
@@ -43,7 +42,7 @@ type GoogleTranslateTranslation struct {
 	DetectedSourceLanguage string `json:"detectedSourceLanguage"`
 }
 
-func NewCreateTranslations(options cmds.Options) createTranslations {
+func NewCreateTranslations(options common.Options) createTranslations {
 	languages := common.ParseStringList(options.LanguagesFlag, ",")
 
 	return createTranslations{options: options,
@@ -55,7 +54,7 @@ func NewCreateTranslations(options cmds.Options) createTranslations {
 		TotalFiles:     0}
 }
 
-func (ct *createTranslations) Options() cmds.Options {
+func (ct *createTranslations) Options() common.Options {
 	return ct.options
 }
 
@@ -137,7 +136,7 @@ func (ct *createTranslations) createTranslationFileWithGoogleTranslate(language 
 		}
 	}
 
-	err = common.SaveI18nStringInfos(ct, modifiedI18nStringInfos, destFilename)
+	err = common.SaveI18nStringInfos(ct, ct.Options(), modifiedI18nStringInfos, destFilename)
 	if err != nil {
 		ct.Println(err)
 		return "", fmt.Errorf("gi18n: could not save Google Translate i18n strings to file: %s", destFilename)
@@ -145,7 +144,7 @@ func (ct *createTranslations) createTranslationFileWithGoogleTranslate(language 
 
 	if ct.options.PoFlag {
 		poFilename := destFilename[:len(destFilename)-len(".json")] + ".po"
-		err = common.SaveI18nStringsInPo(ct, modifiedI18nStringInfos, poFilename)
+		err = common.SaveI18nStringsInPo(ct, ct.Options(), modifiedI18nStringInfos, poFilename)
 		if err != nil {
 			ct.Println(err)
 			return "", fmt.Errorf("gi18n: could not save PO file: %s", poFilename)

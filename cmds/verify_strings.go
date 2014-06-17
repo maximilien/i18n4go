@@ -1,16 +1,15 @@
-package verify_strings
+package cmds
 
 import (
 	"fmt"
 	"path/filepath"
 	"strings"
 
-	"github.com/maximilien/i18n4cf/cmds"
 	"github.com/maximilien/i18n4cf/common"
 )
 
 type verifyStrings struct {
-	options cmds.Options
+	options common.Options
 
 	InputFilename string
 	OutputDirname string
@@ -20,7 +19,7 @@ type verifyStrings struct {
 	Languages         []string
 }
 
-func NewVerifyStrings(options cmds.Options) verifyStrings {
+func NewVerifyStrings(options common.Options) verifyStrings {
 	languageFilenames := common.ParseStringList(options.LanguageFilesFlag, ",")
 	languages := common.ParseStringList(options.LanguagesFlag, ",")
 
@@ -33,7 +32,7 @@ func NewVerifyStrings(options cmds.Options) verifyStrings {
 	}
 }
 
-func (vs *verifyStrings) Options() cmds.Options {
+func (vs *verifyStrings) Options() common.Options {
 	return vs.options
 }
 
@@ -230,7 +229,7 @@ func (vs *verifyStrings) generateMissingKeysDiffFile(missingStringInfos []common
 		diffFilename = filepath.Join(pathName, diffFilename)
 	}
 
-	return diffFilename, common.SaveI18nStringInfos(vs, missingStringInfos, diffFilename)
+	return diffFilename, common.SaveI18nStringInfos(vs, vs.Options(), missingStringInfos, diffFilename)
 }
 
 func (vs *verifyStrings) generateExtraKeysDiffFile(extraStringInfos []common.I18nStringInfo, fileName string) (string, error) {
@@ -247,7 +246,7 @@ func (vs *verifyStrings) generateExtraKeysDiffFile(extraStringInfos []common.I18
 		diffFilename = filepath.Join(pathName, diffFilename)
 	}
 
-	return diffFilename, common.SaveI18nStringInfos(vs, extraStringInfos, diffFilename)
+	return diffFilename, common.SaveI18nStringInfos(vs, vs.Options(), extraStringInfos, diffFilename)
 }
 
 func (vs *verifyStrings) generateInvalidTranslationDiffFile(invalidStringInfos []common.I18nStringInfo, fileName string) (string, error) {
@@ -264,5 +263,5 @@ func (vs *verifyStrings) generateInvalidTranslationDiffFile(invalidStringInfos [
 		diffFilename = filepath.Join(pathName, diffFilename)
 	}
 
-	return diffFilename, common.SaveI18nStringInfos(vs, invalidStringInfos, diffFilename)
+	return diffFilename, common.SaveI18nStringInfos(vs, vs.Options(), invalidStringInfos, diffFilename)
 }

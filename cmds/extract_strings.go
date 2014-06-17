@@ -1,4 +1,4 @@
-package extract_strings
+package cmds
 
 import (
 	"fmt"
@@ -17,12 +17,11 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
-	"github.com/maximilien/i18n4cf/cmds"
 	"github.com/maximilien/i18n4cf/common"
 )
 
 type extractStrings struct {
-	options cmds.Options
+	options common.Options
 
 	i18nFilename string
 	poFilename   string
@@ -41,7 +40,7 @@ type extractStrings struct {
 	IgnoreRegexp *regexp.Regexp
 }
 
-func NewExtractStrings(options cmds.Options) extractStrings {
+func NewExtractStrings(options common.Options) extractStrings {
 	var compiledRegexp *regexp.Regexp
 	if options.IgnoreRegexpFlag != "" {
 		compiledReg, err := regexp.Compile(options.IgnoreRegexpFlag)
@@ -63,7 +62,7 @@ func NewExtractStrings(options cmds.Options) extractStrings {
 		IgnoreRegexp:     compiledRegexp}
 }
 
-func (es *extractStrings) Options() cmds.Options {
+func (es *extractStrings) Options() common.Options {
 	return es.options
 }
 
@@ -190,14 +189,14 @@ func (es *extractStrings) InspectFile(filename string) error {
 		}
 	}
 
-	err = common.SaveStrings(es, es.ExtractedStrings, outputDirname, es.i18nFilename)
+	err = common.SaveStrings(es, es.Options(), es.ExtractedStrings, outputDirname, es.i18nFilename)
 	if err != nil {
 		es.Println(err)
 		return err
 	}
 
 	if es.options.PoFlag {
-		err = common.SaveStringsInPo(es, es.ExtractedStrings, outputDirname, es.poFilename)
+		err = common.SaveStringsInPo(es, es.Options(), es.ExtractedStrings, outputDirname, es.poFilename)
 		if err != nil {
 			es.Println(err)
 			return err
