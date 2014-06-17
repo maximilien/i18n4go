@@ -482,6 +482,7 @@ func (rp *rewritePackage) wrapBasicLitWithTemplatedT(basicLit *ast.BasicLit, arg
 	argNames := common.GetTemplatedStringArgs(valueWithoutQuotes)
 
 	compositeExpr := []ast.Expr{}
+	processedArgsMap := make(map[string]bool)
 	for i, argName := range argNames {
 		if callExpr, ok := args[i].(*ast.CallExpr); ok {
 			rp.callExprTFunc(callExpr)
@@ -489,10 +490,13 @@ func (rp *rewritePackage) wrapBasicLitWithTemplatedT(basicLit *ast.BasicLit, arg
 			args[i] = rp.wrapBasicLitWithT(basicLit)
 		}
 
-		quotedArgName := "\"" + argName + "\""
-		basicLit.ValuePos = 0
-		keyValueExpr := &ast.KeyValueExpr{Key: &ast.BasicLit{Kind: 9, Value: quotedArgName}, Value: args[i]}
-		compositeExpr = append(compositeExpr, keyValueExpr)
+		if processedArgsMap[argName] != true {
+			quotedArgName := "\"" + argName + "\""
+			basicLit.ValuePos = 0
+			keyValueExpr := &ast.KeyValueExpr{Key: &ast.BasicLit{Kind: 9, Value: quotedArgName}, Value: args[i]}
+			processedArgsMap[argName] = true
+			compositeExpr = append(compositeExpr, keyValueExpr)
+		}
 	}
 
 	mapInterfaceType := &ast.InterfaceType{Interface: 142, Methods: &ast.FieldList{List: nil, Opening: 1, Closing: 2}, Incomplete: false}

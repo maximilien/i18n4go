@@ -14,4 +14,5 @@ func Interpolated() string {
 	fmt.Println("Hello %d(%s) world!, bye from %s", 10, name, "Evil")
 
 	println("Hello %s world!", name)
+	println("Hello %s world! %s", name, name)
 }

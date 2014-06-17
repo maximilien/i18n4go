@@ -31,4 +31,5 @@ func Templated() string {
 	fmt.Println(T("Welp, that's a great {{.MyStruct}} how about a {{.Whatever}}", map[string]interface{}{"MyStruct": &foo, "Whatever": strz[2]}))
 
 	println(T("Hello {{.Name}} world!", map[string]interface{}{"Name": name}))
+	println(T("Hello {{.Name}} world! {{.Name}}", map[string]interface{}{"Name": name}))
 }

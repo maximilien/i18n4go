@@ -31,4 +31,5 @@ func Templated() string {
 	fmt.Println("Welp, that's a great {{.MyStruct}} how about a {{.Whatever}}", &foo, strz[2])
 
 	println("Hello {{.Name}} world!", name)
+	println("Hello {{.Name}} world! {{.Name}}", name, name)
 }
