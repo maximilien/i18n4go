@@ -415,18 +415,22 @@ func (rp *rewritePackage) callExprTFunc(callExpr *ast.CallExpr) bool {
 }
 
 func (rp *rewritePackage) wrapMultiArgsCallExpr(callExpr *ast.CallExpr) {
-	if basicLit, ok := callExpr.Args[0].(*ast.BasicLit); ok {
-		if basicLit.Kind == token.STRING {
-			valueWithoutQuotes, _ := strconv.Unquote(basicLit.Value) //basicLit.Value[1 : len(basicLit.Value)-1]
-			if common.IsTemplatedString(valueWithoutQuotes) {
-				rp.wrapCallExprWithTemplatedT(basicLit, callExpr)
-			} else if common.IsInterpolatedString(valueWithoutQuotes) {
-				rp.wrapCallExprWithInterpolatedT(basicLit, callExpr)
+	for i, arg := range callExpr.Args {
+		if basicLit, ok := arg.(*ast.BasicLit); ok {
+			if basicLit.Kind == token.STRING {
+				valueWithoutQuotes, _ := strconv.Unquote(basicLit.Value) //basicLit.Value[1 : len(basicLit.Value)-1]
+
+				if common.IsTemplatedString(valueWithoutQuotes) {
+					rp.wrapCallExprWithTemplatedT(basicLit, callExpr)
+				} else if common.IsInterpolatedString(valueWithoutQuotes) {
+					rp.wrapCallExprWithInterpolatedT(basicLit, callExpr)
+				} else {
+					rp.wrapExprArgs(callExpr.Args[i:])
+				}
+
 			} else {
 				rp.wrapExprArgs(callExpr.Args)
 			}
-		} else {
-			rp.wrapExprArgs(callExpr.Args)
 		}
 	}
 }

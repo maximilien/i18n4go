@@ -128,6 +128,47 @@ var _ = Describe("rewrite-package -f filename", func() {
 		})
 	})
 
+	Context("Github issue#13: rewrites simple strings that are parameters to function call but not the first", func() {
+		BeforeEach(func() {
+			dir, err := os.Getwd()
+			Ω(err).ShouldNot(HaveOccurred())
+			rootPath = filepath.Join(dir, "..", "..")
+
+			outputDir, err = ioutil.TempDir(rootPath, "gi18n_integration")
+			Ω(err).ShouldNot(HaveOccurred())
+
+			fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
+			inputFilesPath = filepath.Join(fixturesPath, "f_option", "input_files")
+			expectedFilesPath = filepath.Join(fixturesPath, "f_option", "expected_output")
+
+			session := Runi18n("-c",
+				"rewrite-package",
+				"-f", filepath.Join(inputFilesPath, "issue13.go"),
+				"-o", outputDir,
+				"--root-path", rootPath,
+				"-v",
+			)
+
+			Ω(session.ExitCode()).Should(Equal(0))
+		})
+
+		It("rewrites the input file with T() wrappers around strings in function call", func() {
+			expectedOutputFile := filepath.Join(expectedFilesPath, "issue13.go")
+			bytes, err := ioutil.ReadFile(expectedOutputFile)
+			Ω(err).ShouldNot(HaveOccurred())
+
+			expectedOutput := string(bytes)
+
+			generatedOutputFile := filepath.Join(outputDir, "issue13.go")
+			bytes, err = ioutil.ReadFile(generatedOutputFile)
+			Ω(err).ShouldNot(HaveOccurred())
+
+			actualOutput := string(bytes)
+
+			Ω(actualOutput).Should(Equal(expectedOutput))
+		})
+	})
+
 	Context("strings to rewrite contain complex templated strings", func() {
 		BeforeEach(func() {
 			dir, err := os.Getwd()
