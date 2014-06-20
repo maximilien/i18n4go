@@ -120,7 +120,7 @@ func (rp *rewritePackage) Run() error {
 
 	rp.Println()
 	rp.Println("Total files parsed:", rp.TotalFiles)
-	rp.Println("Total extracted strings:", rp.TotalStrings)
+	rp.Println("Total rewritten strings:", rp.TotalStrings)
 	return err
 }
 
