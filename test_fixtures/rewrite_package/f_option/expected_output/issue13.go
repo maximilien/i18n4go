@@ -11,7 +11,7 @@ func Issue13() string {
 	fmt.Println(someString, T("world"))
 	fmt.Println(someString, T("hello"), T("world"))
 
-	fmt.Println(someString, T("Hello world {{.Arg0}}", map[string]interface{}{"Arg0": T("Hello world {{.Arg0}}")}))
+	fmt.Println(someString, T("Hello world {{.Arg0}}", map[string]interface{}{"Arg0": someString}))
 
 	return fmt.Sprint(10, T("world"))
 }
