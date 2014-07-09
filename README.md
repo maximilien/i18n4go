@@ -1,4 +1,4 @@
-Cloud Foundry CLI i18n Tooling [![Build Status](https://travis-ci.org/cloudfoundry/cli.png?branch=master)](https://travis-ci.org/maximilien/i18n4cf)
+Cloud Foundry CLI i18n Tooling [![Build Status](https://travis-ci.org/cloudfoundry/cli.png?branch=master)](https://travis-ci.org/maximilien/i18n4go)
 ==============================
 
 This is the official i18n tooling for the Cloud Foundry command line client. It allows you to prepare Go language code for internationalization (i18n).
@@ -342,7 +342,7 @@ Finally, if a combined language file contains both extra and missing keys then `
 
 The exclude.json file can be used to manage which strings should not be extract with the `extracting-strings` command. In the `excluded.json` file,
 you can specifie string literals to ignore as well as classes of strings using a Perl-style regular expression. We have provided an example file
-[exclude](https://github.com/maximilien/i18n4cf/blob/master/example/excluded.json) to demonstrate the string and regexp cases.
+[exclude](https://github.com/maximilien/i18n4go/blob/master/example/excluded.json) to demonstrate the string and regexp cases.
 
 ### string literals
 

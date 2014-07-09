@@ -13,7 +13,7 @@ import (
 	"go/token"
 	"io/ioutil"
 
-	"github.com/maximilien/i18n4cf/common"
+	"github.com/maximilien/i18n4go/common"
 
 	"path/filepath"
 	"strconv"

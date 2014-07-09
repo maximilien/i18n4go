@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	. "github.com/maximilien/i18n4cf/integration/test_helpers"
+	. "github.com/maximilien/i18n4go/integration/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -91,7 +91,7 @@ var _ = Describe("extract-strings -f fileName", func() {
 
 		BeforeEach(func() {
 			var err error
-			OUTPUT_PATH, err = ioutil.TempDir("", "gi18n4cf")
+			OUTPUT_PATH, err = ioutil.TempDir("", "gi18n4go")
 			Ω(err).ShouldNot(HaveOccurred())
 
 			session := Runi18n("-c", "extract-strings", "-f", filepath.Join(inputFilesPath, "no_strings.go"), "-o", OUTPUT_PATH)

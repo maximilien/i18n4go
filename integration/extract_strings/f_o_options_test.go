@@ -5,7 +5,7 @@ import (
 	"os"
 	"path/filepath"
 
-	. "github.com/maximilien/i18n4cf/integration/test_helpers"
+	. "github.com/maximilien/i18n4go/integration/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -31,7 +31,7 @@ var _ = Describe("extract-strings -f fileName -o outputDir", func() {
 
 	BeforeEach(func() {
 		var err error
-		outputPath, err = ioutil.TempDir("", "gi18n4cf")
+		outputPath, err = ioutil.TempDir("", "gi18n4go")
 		Ω(err).ToNot(HaveOccurred())
 	})
 

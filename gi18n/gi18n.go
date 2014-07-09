@@ -9,8 +9,8 @@ import (
 
 	"runtime/debug"
 
-	"github.com/maximilien/i18n4cf/cmds"
-	"github.com/maximilien/i18n4cf/common"
+	"github.com/maximilien/i18n4go/cmds"
+	"github.com/maximilien/i18n4go/common"
 )
 
 var options common.Options

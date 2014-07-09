@@ -6,7 +6,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	. "github.com/maximilien/i18n4cf/integration/test_helpers"
+	. "github.com/maximilien/i18n4go/integration/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
 )
@@ -25,7 +25,7 @@ var _ = Describe("extract-strings -d dirName", func() {
 		Ω(err).ShouldNot(HaveOccurred())
 		rootPath = filepath.Join(dir, "..", "..")
 
-		outputPath, err = ioutil.TempDir("", "gi18n4cf")
+		outputPath, err = ioutil.TempDir("", "gi18n4go")
 		Ω(err).ToNot(HaveOccurred())
 
 		fixturesPath = filepath.Join("..", "..", "test_fixtures", "extract_strings")
@@ -37,7 +37,7 @@ var _ = Describe("extract-strings -d dirName", func() {
 		os.RemoveAll(outputPath)
 	})
 
-	Context("When gi18n4cf is run with the -d flag", func() {
+	Context("When gi18n4go is run with the -d flag", func() {
 		BeforeEach(func() {
 			session := Runi18n("-c", "extract-strings", "-v", "--po", "--meta", "-d", inputFilesPath, "-o", outputPath, "--ignore-regexp", "^[.]\\w+.go$")
 
@@ -70,7 +70,7 @@ var _ = Describe("extract-strings -d dirName", func() {
 		})
 	})
 
-	Context("When gi18n4cf is run with the -d -r flags", func() {
+	Context("When gi18n4go is run with the -d -r flags", func() {
 		BeforeEach(func() {
 			inputFilesPath = filepath.Join(inputFilesPath, "..")
 

@@ -11,7 +11,7 @@ import (
 	"net/url"
 	"path/filepath"
 
-	"github.com/maximilien/i18n4cf/common"
+	"github.com/maximilien/i18n4go/common"
 )
 
 type createTranslations struct {

@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/maximilien/i18n4cf/common"
+	"github.com/maximilien/i18n4go/common"
 )
 
 type verifyStrings struct {
