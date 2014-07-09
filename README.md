@@ -1,7 +1,7 @@
 Cloud Foundry CLI i18n Tooling [![Build Status](https://travis-ci.org/cloudfoundry/cli.png?branch=master)](https://travis-ci.org/maximilien/i18n4go)
 ==============================
 
-This is the official i18n tooling for the Cloud Foundry command line client. It allows you to prepare Go language code for internationalization (i18n).
+This is a general purpose i18n tooling for Go language prorams. It allows you to prepare Go language code for internationalization (i18n). This tool was extracted while we worked on enabling the Cloud Foundry CLI for i18n.
 
 ## Getting Started
 ==================
@@ -63,7 +63,7 @@ The general usage for `-extract-strings` command is:
 
 ```
 
-The command `-c extract-strings` pulls strings out of go files.  For the examples below we are running the tool on a copy of the the CloudFoundry CLI cloned in the `./tmp`
+The command `-c extract-strings` pulls strings out of go files.  For the examples below we are running the tool on a copy of the the [CloudFoundry CLI](https://github.com/cloudfoundry/cli) cloned in the `./tmp`
 
 ```
 $ gi18n -c extract-strings -v -p -f ./tmp/cli/cf/app/app.go -o ./tmp/cli/i18n -output-match-package
