@@ -1,0 +1,14 @@
+[
+    {
+        "id": "translated",
+        "translation": "translated"
+    },
+    {
+        "id": "foo",
+        "translation": "foo"
+    },
+    {
+        "id": "This is a string which has been {{.Translated}}.",
+        "translation": "This is a string which has been {{.Translated}}."
+    }
+]
