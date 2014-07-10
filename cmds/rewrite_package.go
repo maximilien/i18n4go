@@ -400,6 +400,14 @@ func (rp *rewritePackage) callExprTFunc(callExpr *ast.CallExpr) bool {
 		return false
 	}
 
+	//DEBUG
+	fmt.Printf("===>callExpr.Fun: %#v\n", callExpr.Fun)
+	callSelExpr, ok := callExpr.Fun.(*ast.SelectorExpr)
+	if ok {
+		fmt.Printf("===>callSelExpr.Sel.Name: %#v\n", callSelExpr.Sel.Name)
+	}
+	//DEBUG
+
 	switch len(callExpr.Args) {
 	case 0:
 		return false
@@ -421,9 +429,9 @@ func (rp *rewritePackage) wrapMultiArgsCallExpr(callExpr *ast.CallExpr) {
 				valueWithoutQuotes, _ := strconv.Unquote(basicLit.Value) //basicLit.Value[1 : len(basicLit.Value)-1]
 
 				if common.IsTemplatedString(valueWithoutQuotes) {
-					rp.wrapCallExprWithTemplatedT(basicLit, callExpr)
+					rp.wrapCallExprWithTemplatedT(basicLit, callExpr, i)
 				} else if common.IsInterpolatedString(valueWithoutQuotes) {
-					rp.wrapCallExprWithInterpolatedT(basicLit, callExpr)
+					rp.wrapCallExprWithInterpolatedT(basicLit, callExpr, i)
 				} else {
 					rp.wrapExprArgs(callExpr.Args[i:])
 				}
@@ -435,7 +443,7 @@ func (rp *rewritePackage) wrapMultiArgsCallExpr(callExpr *ast.CallExpr) {
 	}
 }
 
-func (rp *rewritePackage) wrapCallExprWithInterpolatedT(basicLit *ast.BasicLit, callExpr *ast.CallExpr) {
+func (rp *rewritePackage) wrapCallExprWithInterpolatedT(basicLit *ast.BasicLit, callExpr *ast.CallExpr, argIndex int) {
 	valueWithoutQuotes, _ := strconv.Unquote(basicLit.Value)
 
 	i18nStringInfo, ok := rp.ExtractedStrings[valueWithoutQuotes]
@@ -451,14 +459,23 @@ func (rp *rewritePackage) wrapCallExprWithInterpolatedT(basicLit *ast.BasicLit, 
 		rp.updateExtractedStrings(i18nStringInfo, templatedString)
 	}
 
-	rp.wrapCallExprWithTemplatedT(basicLit, callExpr)
+	rp.wrapCallExprWithTemplatedT(basicLit, callExpr, argIndex)
 }
 
-func (rp *rewritePackage) wrapCallExprWithTemplatedT(basicLit *ast.BasicLit, callExpr *ast.CallExpr) {
-	templatedCallExpr := rp.wrapBasicLitWithTemplatedT(basicLit, callExpr.Args[1:], callExpr)
+func (rp *rewritePackage) wrapCallExprWithTemplatedT(basicLit *ast.BasicLit, callExpr *ast.CallExpr, argIndex int) {
+	templatedCallExpr := rp.wrapBasicLitWithTemplatedT(basicLit, callExpr.Args, callExpr, argIndex)
 	if templatedCallExpr != callExpr {
-		callExpr.Args = make([]ast.Expr, 0)
-		callExpr.Args = append(callExpr.Args, templatedCallExpr)
+		newArgs := []ast.Expr{}
+
+		if argIndex != 0 {
+			for i, arg := range callExpr.Args {
+				if i < argIndex {
+					newArgs = append(newArgs, arg)
+				}
+			}
+		}
+
+		callExpr.Args = append(newArgs, templatedCallExpr)
 	}
 }
 
@@ -472,7 +489,7 @@ func (rp *rewritePackage) wrapExprArgs(exprArgs []ast.Expr) {
 	}
 }
 
-func (rp *rewritePackage) wrapBasicLitWithTemplatedT(basicLit *ast.BasicLit, args []ast.Expr, callExpr *ast.CallExpr) ast.Expr {
+func (rp *rewritePackage) wrapBasicLitWithTemplatedT(basicLit *ast.BasicLit, args []ast.Expr, callExpr *ast.CallExpr, argIndex int) ast.Expr {
 	valueWithoutQuotes, _ := strconv.Unquote(basicLit.Value) //basicLit.Value[1 : len(basicLit.Value)-1]
 
 	_, ok := rp.ExtractedStrings[valueWithoutQuotes]
@@ -486,17 +503,21 @@ func (rp *rewritePackage) wrapBasicLitWithTemplatedT(basicLit *ast.BasicLit, arg
 
 	compositeExpr := []ast.Expr{}
 	processedArgsMap := make(map[string]bool)
+
 	for i, argName := range argNames {
-		if callExpr, ok := args[i].(*ast.CallExpr); ok {
+		fmt.Println("===>argName:", argName)                   //DEBUG
+		fmt.Println("===>args[argIndex+i]:", args[argIndex+i]) //DEBUG
+
+		if callExpr, ok := args[argIndex+i+1].(*ast.CallExpr); ok {
 			rp.callExprTFunc(callExpr)
-		} else if basicLit, ok := args[i].(*ast.BasicLit); ok {
-			args[i] = rp.wrapBasicLitWithT(basicLit)
+		} else if basicLit, ok := args[argIndex+i].(*ast.BasicLit); ok {
+			args[argIndex+i] = rp.wrapBasicLitWithT(basicLit)
 		}
 
 		if processedArgsMap[argName] != true {
 			quotedArgName := "\"" + argName + "\""
 			basicLit.ValuePos = 0
-			keyValueExpr := &ast.KeyValueExpr{Key: &ast.BasicLit{Kind: 9, Value: quotedArgName}, Value: args[i]}
+			keyValueExpr := &ast.KeyValueExpr{Key: &ast.BasicLit{Kind: 9, Value: quotedArgName}, Value: args[argIndex+i+1]}
 			processedArgsMap[argName] = true
 			compositeExpr = append(compositeExpr, keyValueExpr)
 		}
