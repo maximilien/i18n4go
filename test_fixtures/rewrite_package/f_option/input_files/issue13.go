@@ -13,6 +13,7 @@ func Issue13() string {
 
 	fmt.Println(someString, "Hello world %s", someString)
 	fmt.Println(someString, "Hello world %s", fmt.Printf("my_world"))
+	fmt.Println(someString, "Hello world %s", "my_world")
 
 	return fmt.Sprint(10, "world")
 }
