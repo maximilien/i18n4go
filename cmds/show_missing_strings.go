@@ -130,12 +130,14 @@ func (sms *ShowMissingStrings) extractString(f *ast.File, fset *token.FileSet) e
 				funName := x.Fun.(*ast.Ident).Name
 
 				if funName == "T" {
-					translatedString, err := strconv.Unquote(x.Args[0].(*ast.BasicLit).Value)
-					if err != nil {
-						panic(err.Error())
-					}
+					if stringArg, ok := x.Args[0].(*ast.BasicLit); ok {
+						translatedString, err := strconv.Unquote(stringArg.Value)
+						if err != nil {
+							panic(err.Error())
+						}
 
-					sms.TranslatedStrings = append(sms.TranslatedStrings, translatedString)
+						sms.TranslatedStrings = append(sms.TranslatedStrings, translatedString)
+					}
 				}
 			default:
 				//Skip!
