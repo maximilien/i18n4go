@@ -136,6 +136,7 @@ func (sms *ShowMissingStrings) extractString(f *ast.File, fset *token.FileSet, f
 							panic(err.Error())
 						}
 
+						sms.Println("Adding to translated strings:", translatedString)
 						sms.TranslatedStrings = append(sms.TranslatedStrings, filename+": "+translatedString)
 					}
 				}
@@ -152,7 +153,7 @@ func (sms *ShowMissingStrings) extractString(f *ast.File, fset *token.FileSet, f
 func (sms *ShowMissingStrings) showMissingTranslatedStrings() error {
 	missingStrings := false
 	for _, codeString := range sms.TranslatedStrings {
-		if !stringInStringInfos(codeString, sms.I18nStringInfos) {
+		if !sms.stringInStringInfos(codeString, sms.I18nStringInfos) {
 			fmt.Println("Missing:", codeString)
 			missingStrings = true
 		}
@@ -165,9 +166,16 @@ func (sms *ShowMissingStrings) showMissingTranslatedStrings() error {
 	return nil
 }
 
-func stringInStringInfos(str string, list []common.I18nStringInfo) bool {
+func splitFilePathAndString(str string) (string, string) {
+	splitFileStr := strings.SplitAfterN(str, ": ", 2)
+	return splitFileStr[0], splitFileStr[1]
+}
+
+func (sms *ShowMissingStrings) stringInStringInfos(str string, list []common.I18nStringInfo) bool {
+	_, translatedStr := splitFilePathAndString(str)
 	for _, stringInfo := range list {
-		if strings.Contains(str, stringInfo.ID) {
+		if translatedStr == stringInfo.ID {
+			sms.Println("Found", stringInfo.ID, "UNDER", str)
 			return true
 		}
 	}
@@ -191,8 +199,9 @@ func (sms *ShowMissingStrings) showExtraStrings() error {
 }
 
 func stringInTranslatedStrings(stringInfoID string, list []string) bool {
-	for _, translatedStr := range list {
-		if strings.Contains(translatedStr, stringInfoID) {
+	for _, fileAndStr := range list {
+		_, translatedStr := splitFilePathAndString(fileAndStr)
+		if translatedStr == stringInfoID {
 			return true
 		}
 	}
