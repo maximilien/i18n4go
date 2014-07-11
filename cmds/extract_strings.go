@@ -407,25 +407,42 @@ func (es *extractStrings) loadExcludedRegexps() error {
 }
 
 func (es *extractStrings) extractString(f *ast.File, fset *token.FileSet) error {
+	shouldProcessBasicLit := true
 	ast.Inspect(f, func(n ast.Node) bool {
-		var s string
 		switch x := n.(type) {
 		case *ast.BasicLit:
-			s, _ = strconv.Unquote(x.Value)
-			if len(s) > 0 && x.Kind == token.STRING && s != "\t" && s != "\n" && s != " " && !es.filter(s) { //TODO: fix to remove these: s != "\\t" && s != "\\n" && s != " "
-				position := fset.Position(n.Pos())
-				stringInfo := common.StringInfo{Value: s,
-					Filename: position.Filename,
-					Offset:   position.Offset,
-					Line:     position.Line,
-					Column:   position.Column}
-				es.ExtractedStrings[s] = stringInfo
+			if shouldProcessBasicLit {
+				es.processBasicLit(x, n, fset)
+			}
+			shouldProcessBasicLit = true
+		case *ast.IndexExpr:
+			_, ok := x.Index.(*ast.BasicLit)
+			if ok {
+				shouldProcessBasicLit = false
+			}
+		case *ast.KeyValueExpr:
+			_, ok := x.Key.(*ast.BasicLit)
+			if ok {
+				shouldProcessBasicLit = false
 			}
 		}
 		return true
 	})
 
 	return nil
+}
+
+func (es *extractStrings) processBasicLit(basicLit *ast.BasicLit, n ast.Node, fset *token.FileSet) {
+	s, _ := strconv.Unquote(basicLit.Value)
+	if len(s) > 0 && basicLit.Kind == token.STRING && s != "\t" && s != "\n" && s != " " && !es.filter(s) { //TODO: fix to remove these: s != "\\t" && s != "\\n" && s != " "
+		position := fset.Position(n.Pos())
+		stringInfo := common.StringInfo{Value: s,
+			Filename: position.Filename,
+			Offset:   position.Offset,
+			Line:     position.Line,
+			Column:   position.Column}
+		es.ExtractedStrings[s] = stringInfo
+	}
 }
 
 func (es *extractStrings) excludeImports(astFile *ast.File) {
