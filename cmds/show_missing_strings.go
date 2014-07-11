@@ -68,64 +68,32 @@ func (sms *ShowMissingStrings) showMissingStrings() error {
 	sms.I18nStringInfos = stringInfos
 
 	//Run AST to get list of strings
+	err = sms.parseFiles()
+	if err != nil {
+		return err
+	}
+
+	//Compare list of strings with <lang>.all.json
+	err = sms.showMissingTranslatedStrings()
+	if err != nil {
+		return err
+	}
+
+	//Compare list of translated strings with strings in codebase
+	return sms.showExtraStrings()
+}
+
+func (sms *ShowMissingStrings) parseFiles() error {
 	sourceFiles, _ := getFilesAndDir(sms.Directory)
 	for _, sourceFile := range sourceFiles {
-		err = sms.inspectFile(sourceFile)
+		err := sms.inspectFile(sourceFile)
 		if err != nil {
 			return err
 		}
 	}
 
-	//Compare list of strings with en_US.all.json
-	missingStrings := false
-	for _, codeString := range sms.TranslatedStrings {
-		if !stringInStringInfos(codeString, sms.I18nStringInfos) {
-			fmt.Println("Missing:", codeString)
-			missingStrings = true
-		}
-	}
-
-	if missingStrings {
-		return errors.New("Missing Strings!")
-	}
-	return sms.showExtraStrings()
-}
-
-func (sms *ShowMissingStrings) showExtraStrings() error {
-	//Compare list of strings with en_US.all.json
-	additionalStrings := false
-	for _, stringInfo := range sms.I18nStringInfos {
-		if !stringInTranslatedStrings(stringInfo.ID, sms.TranslatedStrings) {
-			fmt.Println("Additional:", stringInfo.ID)
-			additionalStrings = true
-		}
-	}
-	if additionalStrings {
-		return errors.New("Additional Strings!")
-	}
 	return nil
 }
-
-func stringInTranslatedStrings(str string, list []string) bool {
-	for _, translatedStr := range list {
-		if translatedStr == str {
-			return true
-		}
-	}
-
-	return false
-}
-
-func stringInStringInfos(str string, list []common.I18nStringInfo) bool {
-	for _, stringInfo := range list {
-		if stringInfo.ID == str {
-			return true
-		}
-	}
-
-	return false
-}
-
 func (sms *ShowMissingStrings) inspectFile(filename string) error {
 	fset := token.NewFileSet()
 
@@ -177,4 +145,55 @@ func (sms *ShowMissingStrings) extractString(f *ast.File, fset *token.FileSet) e
 	})
 
 	return nil
+}
+
+func (sms *ShowMissingStrings) showMissingTranslatedStrings() error {
+	missingStrings := false
+	for _, codeString := range sms.TranslatedStrings {
+		if !stringInStringInfos(codeString, sms.I18nStringInfos) {
+			fmt.Println("Missing:", codeString)
+			missingStrings = true
+		}
+	}
+
+	if missingStrings {
+		return errors.New("Missing Strings!")
+	}
+
+	return nil
+}
+
+func stringInStringInfos(str string, list []common.I18nStringInfo) bool {
+	for _, stringInfo := range list {
+		if stringInfo.ID == str {
+			return true
+		}
+	}
+
+	return false
+}
+
+// Compares translated strings with strings in codebase.
+func (sms *ShowMissingStrings) showExtraStrings() error {
+	additionalStrings := false
+	for _, stringInfo := range sms.I18nStringInfos {
+		if !stringInTranslatedStrings(stringInfo.ID, sms.TranslatedStrings) {
+			fmt.Println("Additional:", stringInfo.ID)
+			additionalStrings = true
+		}
+	}
+	if additionalStrings {
+		return errors.New("Additional Strings!")
+	}
+	return nil
+}
+
+func stringInTranslatedStrings(str string, list []string) bool {
+	for _, translatedStr := range list {
+		if translatedStr == str {
+			return true
+		}
+	}
+
+	return false
 }
