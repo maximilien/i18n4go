@@ -34,6 +34,8 @@ func main() {
 		verifyStringsCmd()
 	case "merge-strings":
 		mergeStringsCmd()
+	case "show-missing-strings":
+		showMissingStringsCmd()
 	default:
 		usage()
 	}
@@ -140,6 +142,26 @@ func mergeStringsCmd() {
 	mergeStrings.Println("Total time:", duration)
 }
 
+func showMissingStringsCmd() {
+	if options.HelpFlag || (options.DirnameFlag == "") {
+		usage()
+		return
+	}
+
+	showMissingStrings := cmds.NewShowMissingStrings(options)
+
+	startTime := time.Now()
+
+	err := showMissingStrings.Run()
+	if err != nil {
+		showMissingStrings.Println("gi18n: Could not show missing strings, err:", err)
+		os.Exit(1)
+	}
+
+	duration := time.Now().Sub(startTime)
+	showMissingStrings.Println("Total time:", duration)
+}
+
 func init() {
 	flag.StringVar(&options.CommandFlag, "c", "", "the command, one of: extract-strings, create-translations, rewrite-package, verify-strings, merge-strings")
 
@@ -196,6 +218,8 @@ usage: gi18n -c merge-strings [-v] [-r] [--source-language <language>] -d <dirNa
 usage: gi18n -c verify-strings [-v] [--source-language <language>] -f <sourceFileName> --language-files <language files>
    or: gi18n -c verify-strings [-v] [--source-language <language>] -f <sourceFileName> --languages <lang1,lang2,...>
 
+usage: gi18n -c show-missing-strings [-v] -d <dirName> --i18n-strings-filename <language file>
+
   -h | --help                prints the usage
   -v                         verbose
 
@@ -232,7 +256,7 @@ usage: gi18n -c verify-strings [-v] [--source-language <language>] -f <sourceFil
 
   MERGE STRINGS:
 
-  -c merge-strings           the merges strings command which merges multiple <filename>.go.<language>.json files into a <language>.all.json
+  -c merge-strings           the merge strings command which merges multiple <filename>.go.<language>.json files into a <language>.all.json
 
   -r                         [optional] recursesively combine files from all subdirectories
   --source-language          [optional] the source language of the file, typically also part of the file name, e.g., "en_US" (default to 'en')
@@ -261,6 +285,13 @@ usage: gi18n -c verify-strings [-v] [--source-language <language>] -f <sourceFil
   --language-files           a comma separated list of target files for different languages to compare, e.g., "en, en_US, fr_FR, es"
                              if not specified then the languages flag is used to find target files in same directory as source
   --languages                a comma separated list of valid languages with optional territory, e.g., "en, en_US, fr_FR, es"
+
+  SHOW-MISSING-STRINGS:
+
+  -c show-missing-strings    the missing strings command
+
+  -d                         the directory containing the go files to validate
+  --i18n-strings-filename    a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command
 `
 	fmt.Println(usageString)
 }
