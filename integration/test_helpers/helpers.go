@@ -28,7 +28,11 @@ func CompareExpectedToGeneratedTraslationJson(expectedFilePath string, generated
 	expectedTranslation := ReadJson(expectedFilePath)
 	generatedTranslation := ReadJson(generatedFilePath)
 
-	Ω(reflect.DeepEqual(expectedTranslation, generatedTranslation)).Should(BeTrue())
+	jsonExpected, _ := json.Marshal(expectedTranslation)
+	jsonGenerated, _ := json.Marshal(generatedTranslation)
+
+	Ω(reflect.DeepEqual(expectedTranslation, generatedTranslation)).Should(BeTrue(),
+		fmt.Sprintf("Expected\n%v\nto equal\n%v\n", string(jsonGenerated), string(jsonExpected)))
 }
 
 func CompareExpectedToGeneratedExtendedJson(expectedFilePath string, generatedFilePath string) {
