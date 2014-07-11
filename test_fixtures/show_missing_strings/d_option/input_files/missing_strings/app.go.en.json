@@ -1,0 +1,14 @@
+[
+    {
+        "id": "This should be verified.",
+        "translation": "This should be verified."
+    },
+    {
+        "id": "This should be also {{.Verified}}",
+        "translation": "This should be also {{.Verified}}"
+    },
+    {
+        "id": "verified",
+        "translation": "verified"
+    }
+]
