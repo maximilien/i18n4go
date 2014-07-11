@@ -118,10 +118,10 @@ func (sms *ShowMissingStrings) inspectFile(filename string) error {
 		return err
 	}
 
-	return sms.extractString(astFile, fset)
+	return sms.extractString(astFile, fset, filename)
 }
 
-func (sms *ShowMissingStrings) extractString(f *ast.File, fset *token.FileSet) error {
+func (sms *ShowMissingStrings) extractString(f *ast.File, fset *token.FileSet, filename string) error {
 	ast.Inspect(f, func(n ast.Node) bool {
 		switch x := n.(type) {
 		case *ast.CallExpr:
@@ -136,7 +136,7 @@ func (sms *ShowMissingStrings) extractString(f *ast.File, fset *token.FileSet) e
 							panic(err.Error())
 						}
 
-						sms.TranslatedStrings = append(sms.TranslatedStrings, translatedString)
+						sms.TranslatedStrings = append(sms.TranslatedStrings, filename+": "+translatedString)
 					}
 				}
 			default:
@@ -167,7 +167,7 @@ func (sms *ShowMissingStrings) showMissingTranslatedStrings() error {
 
 func stringInStringInfos(str string, list []common.I18nStringInfo) bool {
 	for _, stringInfo := range list {
-		if stringInfo.ID == str {
+		if strings.Contains(str, stringInfo.ID) {
 			return true
 		}
 	}
@@ -190,9 +190,9 @@ func (sms *ShowMissingStrings) showExtraStrings() error {
 	return nil
 }
 
-func stringInTranslatedStrings(str string, list []string) bool {
+func stringInTranslatedStrings(stringInfoID string, list []string) bool {
 	for _, translatedStr := range list {
-		if translatedStr == str {
+		if strings.Contains(translatedStr, stringInfoID) {
 			return true
 		}
 	}
