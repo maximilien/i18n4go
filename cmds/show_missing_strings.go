@@ -129,7 +129,7 @@ func (sms *ShowMissingStrings) extractString(f *ast.File, fset *token.FileSet, f
 			case *ast.Ident:
 				funName := x.Fun.(*ast.Ident).Name
 
-				if funName == "T" {
+				if funName == "T" || funName == "t" {
 					if stringArg, ok := x.Args[0].(*ast.BasicLit); ok {
 						translatedString, err := strconv.Unquote(stringArg.Value)
 						if err != nil {
