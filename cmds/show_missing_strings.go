@@ -107,7 +107,7 @@ func (sms *ShowMissingStrings) inspectFile(filename string) error {
 		sms.Println(err)
 	}
 
-	if strings.HasPrefix(fileInfo.Name(), ".") {
+	if strings.HasPrefix(fileInfo.Name(), ".") || !strings.HasSuffix(fileInfo.Name(), ".go") {
 		sms.Println("WARNING ignoring file:", absFilePath)
 		return nil
 	}
