@@ -400,14 +400,6 @@ func (rp *rewritePackage) callExprTFunc(callExpr *ast.CallExpr) bool {
 		return false
 	}
 
-	//DEBUG
-	fmt.Printf("===>callExpr.Fun: %#v\n", callExpr.Fun)
-	callSelExpr, ok := callExpr.Fun.(*ast.SelectorExpr)
-	if ok {
-		fmt.Printf("===>callSelExpr.Sel.Name: %#v\n", callSelExpr.Sel.Name)
-	}
-	//DEBUG
-
 	switch len(callExpr.Args) {
 	case 0:
 		return false
@@ -433,7 +425,7 @@ func (rp *rewritePackage) wrapMultiArgsCallExpr(callExpr *ast.CallExpr) {
 				} else if common.IsInterpolatedString(valueWithoutQuotes) {
 					rp.wrapCallExprWithInterpolatedT(basicLit, callExpr, i)
 				} else {
-					rp.wrapExprArgs(callExpr.Args[i:])
+					rp.wrapExprArgs(callExpr.Args)
 				}
 
 			} else {
@@ -505,19 +497,22 @@ func (rp *rewritePackage) wrapBasicLitWithTemplatedT(basicLit *ast.BasicLit, arg
 	processedArgsMap := make(map[string]bool)
 
 	for i, argName := range argNames {
-		fmt.Println("===>argName:", argName)                   //DEBUG
-		fmt.Println("===>args[argIndex+i]:", args[argIndex+i]) //DEBUG
-
 		if callExpr, ok := args[argIndex+i+1].(*ast.CallExpr); ok {
 			rp.callExprTFunc(callExpr)
-		} else if basicLit, ok := args[argIndex+i].(*ast.BasicLit); ok {
+		} else if basicLit, ok := args[argIndex+i+1].(*ast.BasicLit); ok {
 			args[argIndex+i] = rp.wrapBasicLitWithT(basicLit)
 		}
 
 		if processedArgsMap[argName] != true {
 			quotedArgName := "\"" + argName + "\""
 			basicLit.ValuePos = 0
-			keyValueExpr := &ast.KeyValueExpr{Key: &ast.BasicLit{Kind: 9, Value: quotedArgName}, Value: args[argIndex+i+1]}
+
+			valueExpr := args[argIndex+i+1]
+			if basicLit, ok := args[argIndex+i+1].(*ast.BasicLit); ok {
+				valueExpr = rp.wrapBasicLitWithT(basicLit)
+			}
+
+			keyValueExpr := &ast.KeyValueExpr{Key: &ast.BasicLit{Kind: 9, Value: quotedArgName}, Value: valueExpr}
 			processedArgsMap[argName] = true
 			compositeExpr = append(compositeExpr, keyValueExpr)
 		}
