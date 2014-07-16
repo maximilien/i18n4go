@@ -8,11 +8,11 @@ import (
 func Interpolated() string {
 	name := "cruel"
 	myName := "evil"
-	fmt.Println("Hello %s world!", name)
-	fmt.Println("Hello %s world!, bye from %s", name, myName)
+	fmt.Printf("Hello %s world!", name)
+	fmt.Printf("Hello %s world!, bye from %s", name, myName)
 
-	fmt.Println("Hello %d(%s) world!, bye from %s", 10, name, "Evil")
+	fmt.Printf("Hello %d(%s) world!, bye from %s", 10, name, "Evil")
 
-	println("Hello %s world!", name)
-	println("Hello %s world! %s", name, name)
+	fmt.Printf("Hello %s world!", name)
+	fmt.Printf("Hello %s world! %s", name, name)
 }
