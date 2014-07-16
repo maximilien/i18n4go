@@ -55,11 +55,6 @@ var _ = Describe("extract-strings -d dirName", func() {
 					filepath.Join(outputPath, strings.Join([]string{filepath.Base(path), "en.json"}, ".")),
 				)
 
-				CompareExpectedToGeneratedExtendedJson(
-					filepath.Join(expectedFilesPath, strings.Join([]string{filepath.Base(path), "extracted.json"}, ".")),
-					filepath.Join(outputPath, strings.Join([]string{filepath.Base(path), "extracted.json"}, ".")),
-				)
-
 				CompareExpectedToGeneratedPo(
 					filepath.Join(expectedFilesPath, strings.Join([]string{filepath.Base(path), "en.po"}, ".")),
 					filepath.Join(outputPath, strings.Join([]string{filepath.Base(path), "en.po"}, ".")),
@@ -87,11 +82,6 @@ var _ = Describe("extract-strings -d dirName", func() {
 				CompareExpectedToGeneratedTraslationJson(
 					filepath.Join(expectedFilesPath, strings.Join([]string{filepath.Base(path), "en.json"}, ".")),
 					filepath.Join(outputPath, strings.Join([]string{filepath.Base(path), "en.json"}, ".")),
-				)
-
-				CompareExpectedToGeneratedExtendedJson(
-					filepath.Join(expectedFilesPath, strings.Join([]string{filepath.Base(path), "extracted.json"}, ".")),
-					filepath.Join(outputPath, strings.Join([]string{filepath.Base(path), "extracted.json"}, ".")),
 				)
 
 				CompareExpectedToGeneratedPo(
