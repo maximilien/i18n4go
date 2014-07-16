@@ -26,7 +26,7 @@ const (
 import (
 	"path/filepath"
 
-	"github.com/cloudfoundry/cli/cf/i18n"
+	i18n "github.com/maximilien/i18n4go/i18n"
 	goi18n "github.com/nicksnyder/go-i18n/i18n"
 )
 
@@ -40,11 +40,12 @@ func init() {
 type rewritePackage struct {
 	options common.Options
 
-	Filename            string
-	OutputDirname       string
-	I18nStringsFilename string
-	I18nStringsDirname  string
-	RootPath            string
+	Filename                string
+	OutputDirname           string
+	I18nStringsFilename     string
+	I18nStringsDirname      string
+	RootPath                string
+	InitCodeSnippetFilename string
 
 	Dirname string
 	Recurse bool
@@ -70,11 +71,12 @@ func NewRewritePackage(options common.Options) rewritePackage {
 	}
 
 	return rewritePackage{options: options,
-		Filename:            options.FilenameFlag,
-		OutputDirname:       options.OutputDirFlag,
-		I18nStringsFilename: options.I18nStringsFilenameFlag,
-		I18nStringsDirname:  options.I18nStringsDirnameFlag,
-		RootPath:            options.RootPathFlag,
+		Filename:                options.FilenameFlag,
+		OutputDirname:           options.OutputDirFlag,
+		I18nStringsFilename:     options.I18nStringsFilenameFlag,
+		I18nStringsDirname:      options.I18nStringsDirnameFlag,
+		RootPath:                options.RootPathFlag,
+		InitCodeSnippetFilename: options.InitCodeSnippetFilename,
 
 		ExtractedStrings:        nil,
 		UpdatedExtractedStrings: nil,
@@ -545,7 +547,6 @@ func (rp *rewritePackage) addInitFuncToPackage(packageName, outputDir, importPat
 	rp.Println("gi18n: adding init func to package:", packageName, " to output dir:", outputDir)
 
 	common.CreateOutputDirsIfNeeded(outputDir)
-	content := strings.Replace(INIT_CODE_SNIPPET, "__PACKAGE__NAME__", packageName, -1)
 
 	pieces := strings.Split(importPath, "/")
 	for index, str := range pieces {
@@ -553,8 +554,25 @@ func (rp *rewritePackage) addInitFuncToPackage(packageName, outputDir, importPat
 	}
 
 	joinedImportPath := "filepath.Join(" + strings.Join(pieces, ", ") + ")"
-	content = strings.Replace(content, "__FULL_IMPORT_PATH__", joinedImportPath, -1)
+	content := rp.getInitFuncCodeSnippetContent(packageName, joinedImportPath)
+
 	return ioutil.WriteFile(filepath.Join(outputDir, "i18n_init.go"), []byte(content), 0666)
+}
+
+func (rp *rewritePackage) getInitFuncCodeSnippetContent(packageName, importPath string) string {
+	snippetContent := INIT_CODE_SNIPPET
+	if rp.InitCodeSnippetFilename != "" {
+		bytes, err := ioutil.ReadFile(rp.InitCodeSnippetFilename)
+		if err != nil {
+			rp.Printf("gi18n: error reading content of init code snippet file: %s\n, using default", rp.InitCodeSnippetFilename)
+		} else {
+			snippetContent = string(bytes)
+		}
+	}
+
+	content := strings.Replace(snippetContent, "__PACKAGE__NAME__", packageName, -1)
+	content = strings.Replace(content, "__FULL_IMPORT_PATH__", importPath, -1)
+	return content
 }
 
 func (rp *rewritePackage) saveASTFile(relativeFilePath, fileName string, astFile *ast.File, fileSet *token.FileSet) error {

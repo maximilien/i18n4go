@@ -3,7 +3,7 @@ package input_files
 import (
 	"path/filepath"
 
-	i18n "github.com/maximilien/i18n4go/i18n"
+	"github.com/cloudfoundry/cf/cli/i18n"
 	goi18n "github.com/nicksnyder/go-i18n/i18n"
 )
 
