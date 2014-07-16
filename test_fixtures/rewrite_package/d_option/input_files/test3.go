@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func DOption() string {
+func DOption3() string {
 	name := "Tim"
 	fmt.Printf("Hello cruel world! from %s", name)
 }
