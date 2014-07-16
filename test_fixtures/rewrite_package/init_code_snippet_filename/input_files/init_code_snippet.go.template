@@ -1,6 +1,7 @@
 package __PACKAGE__NAME__
 
 import (
+	"fmt"
 	"path/filepath"
 
 	"github.com/cloudfoundry/cli/cf/i18n"
@@ -10,5 +11,6 @@ import (
 var T goi18n.TranslateFunc
 
 func init() {
+	fmt.Println("DEBUG: this is a test i18n_init.go file")
 	T = i18n.Init(__FULL_IMPORT_PATH__, i18n.GetResourcesPath())
 }

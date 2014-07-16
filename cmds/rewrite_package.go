@@ -76,7 +76,7 @@ func NewRewritePackage(options common.Options) rewritePackage {
 		I18nStringsFilename:     options.I18nStringsFilenameFlag,
 		I18nStringsDirname:      options.I18nStringsDirnameFlag,
 		RootPath:                options.RootPathFlag,
-		InitCodeSnippetFilename: options.InitCodeSnippetFilename,
+		InitCodeSnippetFilename: options.InitCodeSnippetFilenameFlag,
 
 		ExtractedStrings:        nil,
 		UpdatedExtractedStrings: nil,

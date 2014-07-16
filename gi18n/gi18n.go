@@ -200,7 +200,7 @@ func init() {
 	flag.StringVar(&options.I18nStringsDirnameFlag, "i18n-strings-dirname", "", "a directory with the extracted JSON files, using -output-match-package with -extract-strings this directory should match the input files package name")
 	flag.StringVar(&options.RootPathFlag, "root-path", "", "the root path to the Go source files whose packages are being rewritten, defaults to working directory, if not specified")
 
-	flag.StringVar(&options.RootPathFlag, "init-code-snippet-filename", "", "[optional] the path to a file containing the template snippet for the code that is used for go-i18n initialization")
+	flag.StringVar(&options.InitCodeSnippetFilenameFlag, "init-code-snippet-filename", "", "[optional] the path to a file containing the template snippet for the code that is used for go-i18n initialization")
 
 	flag.Parse()
 }

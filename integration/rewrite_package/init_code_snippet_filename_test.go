@@ -4,6 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 
 	. "github.com/maximilien/i18n4go/integration/test_helpers"
 	. "github.com/onsi/ginkgo"
@@ -41,6 +42,7 @@ var _ = Describe("rewrite-package [...] --init-code-snippet-filename some-file",
 				"rewrite-package",
 				"-f", filepath.Join(inputFilesPath, "issue14.go"),
 				"-o", outputDir,
+				"--root-path", rootPath,
 				"-v",
 			)
 
@@ -62,13 +64,13 @@ var _ = Describe("rewrite-package [...] --init-code-snippet-filename some-file",
 
 			Ω(actualOutput).Should(Equal(expectedOutput))
 
-			expectedOutputFile = filepath.Join(expectedFilesPath, "i18n_init.go")
+			expectedOutputFile = filepath.Join(expectedFilesPath, "i18n_init_default.go")
 			bytes, err = ioutil.ReadFile(expectedOutputFile)
 			Ω(err).ShouldNot(HaveOccurred())
 
-			expectedOutput = string(bytes)
+			expectedOutput = strings.Trim(string(bytes), "\n")
 
-			generatedOutputFile = filepath.Join(outputDir, "i18n_init_default.go")
+			generatedOutputFile = filepath.Join(outputDir, "i18n_init.go")
 			bytes, err = ioutil.ReadFile(generatedOutputFile)
 			Ω(err).ShouldNot(HaveOccurred())
 
@@ -96,6 +98,7 @@ var _ = Describe("rewrite-package [...] --init-code-snippet-filename some-file",
 				"-f", filepath.Join(inputFilesPath, "issue14.go"),
 				"-o", outputDir,
 				"--init-code-snippet-filename", filepath.Join(inputFilesPath, "init_code_snippet.go.template"),
+				"--root-path", rootPath,
 				"-v",
 			)
 
@@ -117,13 +120,13 @@ var _ = Describe("rewrite-package [...] --init-code-snippet-filename some-file",
 
 			Ω(actualOutput).Should(Equal(expectedOutput))
 
-			expectedOutputFile = filepath.Join(expectedFilesPath, "i18n_init.go")
+			expectedOutputFile = filepath.Join(expectedFilesPath, "i18n_init_from_template.go")
 			bytes, err = ioutil.ReadFile(expectedOutputFile)
 			Ω(err).ShouldNot(HaveOccurred())
 
 			expectedOutput = string(bytes)
 
-			generatedOutputFile = filepath.Join(outputDir, "i18n_init_from_template.go")
+			generatedOutputFile = filepath.Join(outputDir, "i18n_init.go")
 			bytes, err = ioutil.ReadFile(generatedOutputFile)
 			Ω(err).ShouldNot(HaveOccurred())
 
