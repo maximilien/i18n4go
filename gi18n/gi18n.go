@@ -200,6 +200,8 @@ func init() {
 	flag.StringVar(&options.I18nStringsDirnameFlag, "i18n-strings-dirname", "", "a directory with the extracted JSON files, using -output-match-package with -extract-strings this directory should match the input files package name")
 	flag.StringVar(&options.RootPathFlag, "root-path", "", "the root path to the Go source files whose packages are being rewritten, defaults to working directory, if not specified")
 
+	flag.StringVar(&options.InitCodeSnippetFilenameFlag, "init-code-snippet-filename", "", "[optional] the path to a file containing the template snippet for the code that is used for go-i18n initialization")
+
 	flag.Parse()
 }
 
@@ -208,8 +210,8 @@ func usage() {
 usage: gi18n -c extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -f <fileName>
    or: gi18n -c extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -d <dirName> [-r] [--ignore-regexp <fileNameRegexp>]
 
-usage: gi18n -c rewrite-package [-v] [-r] -d <dirName> [--i18n-strings-filename <fileName> | --i18n-strings-dirname <dirName>]
-   or: gi18n -c rewrite-package [-v] [-r] -f <fileName> --i18n-strings-filename <fileName>
+usage: gi18n -c rewrite-package [-v] [-r] -d <dirName> [--i18n-strings-filename <fileName> | --i18n-strings-dirname <dirName>] [--init-code-snippet-filename <fileName>]
+   or: gi18n -c rewrite-package [-v] [-r] -f <fileName> --i18n-strings-filename <fileName> [--init-code-snippet-filename <fileName>]
 
 usage: gi18n -c create-translations [-v] [--google-translate-api-key <api key>] [--source-language <language>] -f <fileName> --languages <lang1,lang2,...> -o <outputDir>
 
@@ -249,11 +251,14 @@ usage: gi18n -c show-missing-strings [-v] -d <dirName> --i18n-strings-filename <
   -c rewrite-package         the rewrite package command
   -f                         the source go file to be rewritten
   -d                         the directory containing the go files to rewrite
+
   --i18n-strings-filename    a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command
   --i18n-strings-dirname     a directory with the extracted JSON files, using -output-match-package with -extract-strings this directory should match the input files package name
   --root-path                the root path to the Go source files whose packages are being rewritten, defaults to working directory, if not specified
-  -o                         [optional] output diretory for rewritten file. If not specified, the original file will be overwritten
 
+  --init-code-snippet-filename [optional] the path to a file containing the template snippet for the code that is used for go-i18n initialization"
+  -o                           [optional] output diretory for rewritten file. If not specified, the original file will be overwritten
+  
   MERGE STRINGS:
 
   -c merge-strings           the merge strings command which merges multiple <filename>.go.<language>.json files into a <language>.all.json
