@@ -11,7 +11,6 @@ import (
 
 var _ = Describe("merge-strings -d dirName -source-lanuage sourceLanguage", func() {
 	var (
-		rootPath          string
 		fixturesPath      string
 		inputFilesPath    string
 		expectedFilesPath string
@@ -20,7 +19,6 @@ var _ = Describe("merge-strings -d dirName -source-lanuage sourceLanguage", func
 	BeforeEach(func() {
 		dir, err := os.Getwd()
 		Ω(err).ShouldNot(HaveOccurred())
-		rootPath = filepath.Join(dir, "..", "..")
 
 		fixturesPath = filepath.Join("..", "..", "test_fixtures", "merge_strings", "source_language")
 		inputFilesPath = filepath.Join(fixturesPath, "input_files")

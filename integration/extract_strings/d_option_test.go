@@ -13,7 +13,6 @@ import (
 
 var _ = Describe("extract-strings -d dirName", func() {
 	var (
-		rootPath          string
 		fixturesPath      string
 		inputFilesPath    string
 		expectedFilesPath string
@@ -23,7 +22,6 @@ var _ = Describe("extract-strings -d dirName", func() {
 	BeforeEach(func() {
 		dir, err := os.Getwd()
 		Ω(err).ShouldNot(HaveOccurred())
-		rootPath = filepath.Join(dir, "..", "..")
 
 		outputPath, err = ioutil.TempDir("", "gi18n4go")
 		Ω(err).ToNot(HaveOccurred())

@@ -12,7 +12,6 @@ import (
 
 var _ = Describe("extract-strings -f fileName -o outputDir", func() {
 	var (
-		rootPath          string
 		fixturesPath      string
 		inputFilesPath    string
 		expectedFilesPath string
@@ -22,7 +21,6 @@ var _ = Describe("extract-strings -f fileName -o outputDir", func() {
 	BeforeEach(func() {
 		dir, err := os.Getwd()
 		Ω(err).ShouldNot(HaveOccurred())
-		rootPath = filepath.Join(dir, "..", "..")
 
 		fixturesPath = filepath.Join("..", "..", "test_fixtures", "extract_strings", "f_option")
 		inputFilesPath = filepath.Join(fixturesPath, "input_files")

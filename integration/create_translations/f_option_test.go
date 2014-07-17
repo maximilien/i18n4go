@@ -11,7 +11,6 @@ import (
 
 var _ = Describe("create-translations -f fileName --languages \"[lang,?]+\"", func() {
 	var (
-		rootPath          string
 		fixturesPath      string
 		inputFilesPath    string
 		expectedFilesPath string
@@ -20,7 +19,6 @@ var _ = Describe("create-translations -f fileName --languages \"[lang,?]+\"", fu
 	BeforeEach(func() {
 		dir, err := os.Getwd()
 		Ω(err).ShouldNot(HaveOccurred())
-		rootPath = filepath.Join(dir, "..", "..")
 
 		fixturesPath = filepath.Join("..", "..", "test_fixtures", "create_translations", "f_option")
 		inputFilesPath = filepath.Join(fixturesPath, "input_files")

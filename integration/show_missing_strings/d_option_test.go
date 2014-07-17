@@ -13,7 +13,6 @@ import (
 
 var _ = Describe("show-missing-strings -d dirName", func() {
 	var (
-		rootPath       string
 		fixturesPath   string
 		inputFilesPath string
 		session        *Session
@@ -22,7 +21,6 @@ var _ = Describe("show-missing-strings -d dirName", func() {
 	BeforeEach(func() {
 		dir, err := os.Getwd()
 		Ω(err).ShouldNot(HaveOccurred())
-		rootPath = filepath.Join(dir, "..", "..")
 
 		fixturesPath = filepath.Join("..", "..", "test_fixtures", "show_missing_strings")
 		inputFilesPath = filepath.Join(fixturesPath, "d_option", "input_files")

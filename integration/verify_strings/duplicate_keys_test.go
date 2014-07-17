@@ -12,7 +12,6 @@ import (
 
 var _ = Describe("verify-strings -f fileName", func() {
 	var (
-		rootPath          string
 		fixturesPath      string
 		inputFilesPath    string
 		expectedFilesPath string
@@ -21,7 +20,6 @@ var _ = Describe("verify-strings -f fileName", func() {
 	BeforeEach(func() {
 		dir, err := os.Getwd()
 		Ω(err).ShouldNot(HaveOccurred())
-		rootPath = filepath.Join(dir, "..", "..")
 
 		Ω(err).ToNot(HaveOccurred())
 

@@ -36,6 +36,8 @@ func main() {
 		mergeStringsCmd()
 	case "show-missing-strings":
 		showMissingStringsCmd()
+	case "checkup":
+		checkupCmd()
 	default:
 		usage()
 	}
@@ -162,8 +164,28 @@ func showMissingStringsCmd() {
 	showMissingStrings.Println("Total time:", duration)
 }
 
+func checkupCmd() {
+	if options.HelpFlag {
+		usage()
+		return
+	}
+
+	checkup := cmds.NewCheckup(options)
+
+	startTime := time.Now()
+
+	err := checkup.Run()
+	if err != nil {
+		checkup.Println("gi18n: Could not checkup, err:", err)
+		os.Exit(1)
+	}
+
+	duration := time.Now().Sub(startTime)
+	checkup.Println("Total time:", duration)
+}
+
 func init() {
-	flag.StringVar(&options.CommandFlag, "c", "", "the command, one of: extract-strings, create-translations, rewrite-package, verify-strings, merge-strings")
+	flag.StringVar(&options.CommandFlag, "c", "", "the command, one of: extract-strings, create-translations, rewrite-package, verify-strings, merge-strings, checkup")
 
 	flag.BoolVar(&options.HelpFlag, "h", false, "prints the usage")
 	flag.BoolVar(&options.LongHelpFlag, "-help", false, "prints the usage")
@@ -221,6 +243,8 @@ usage: gi18n -c verify-strings [-v] [--source-language <language>] -f <sourceFil
    or: gi18n -c verify-strings [-v] [--source-language <language>] -f <sourceFileName> --languages <lang1,lang2,...>
 
 usage: gi18n -c show-missing-strings [-v] -d <dirName> --i18n-strings-filename <language file>
+
+usage: gi18n -c checkup
 
   -h | --help                prints the usage
   -v                         verbose
@@ -297,6 +321,10 @@ usage: gi18n -c show-missing-strings [-v] -d <dirName> --i18n-strings-filename <
 
   -d                         the directory containing the go files to validate
   --i18n-strings-filename    a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command
+
+  CHECKUP:
+
+  -c checkup                 the checkup command which ensures that the strings in code match strings in resource files and vice versa
 `
 	fmt.Println(usageString)
 }
