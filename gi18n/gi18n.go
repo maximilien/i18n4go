@@ -38,6 +38,8 @@ func main() {
 		showMissingStringsCmd()
 	case "checkup":
 		checkupCmd()
+	case "fixup":
+		fixupCmd()
 	default:
 		usage()
 	}
@@ -184,8 +186,28 @@ func checkupCmd() {
 	checkup.Println("Total time:", duration)
 }
 
+func fixupCmd() {
+	if options.HelpFlag {
+		usage()
+		return
+	}
+
+	fixup := cmds.NewFixup(options)
+
+	startTime := time.Now()
+
+	err := fixup.Run()
+	if err != nil {
+		fixup.Println("gi18n: Could not fixup, err:", err)
+		os.Exit(1)
+	}
+
+	duration := time.Now().Sub(startTime)
+	fixup.Println("Total time:", duration)
+}
+
 func init() {
-	flag.StringVar(&options.CommandFlag, "c", "", "the command, one of: extract-strings, create-translations, rewrite-package, verify-strings, merge-strings, checkup")
+	flag.StringVar(&options.CommandFlag, "c", "", "the command, one of: extract-strings, create-translations, rewrite-package, verify-strings, merge-strings, checkup, fixup")
 
 	flag.BoolVar(&options.HelpFlag, "h", false, "prints the usage")
 	flag.BoolVar(&options.LongHelpFlag, "-help", false, "prints the usage")
@@ -282,7 +304,7 @@ usage: gi18n -c checkup
 
   --init-code-snippet-filename [optional] the path to a file containing the template snippet for the code that is used for go-i18n initialization"
   -o                           [optional] output diretory for rewritten file. If not specified, the original file will be overwritten
-  
+
   MERGE STRINGS:
 
   -c merge-strings           the merge strings command which merges multiple <filename>.go.<language>.json files into a <language>.all.json
@@ -325,6 +347,10 @@ usage: gi18n -c checkup
   CHECKUP:
 
   -c checkup                 the checkup command which ensures that the strings in code match strings in resource files and vice versa
+
+  FIXUP:
+
+  -c fixup                   the fixup command which interactively lets users add, update, or remove translations keys from code and resource files.
 `
 	fmt.Println(usageString)
 }

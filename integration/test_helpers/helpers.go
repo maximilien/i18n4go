@@ -53,7 +53,7 @@ func RemoveAllFiles(args ...string) {
 }
 
 func Runi18n(args ...string) *Session {
-	session := RunCommand(gi18nExec, args...)
+	session := RunCommand(Gi18nExec, args...)
 	return session
 }
 
