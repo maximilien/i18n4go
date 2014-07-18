@@ -18,7 +18,7 @@ var _ = Describe("merge-strings -d dirName", func() {
 	)
 
 	BeforeEach(func() {
-		dir, err := os.Getwd()
+		_, err := os.Getwd()
 		Ω(err).ShouldNot(HaveOccurred())
 
 		fixturesPath = filepath.Join("..", "..", "test_fixtures", "merge_strings")

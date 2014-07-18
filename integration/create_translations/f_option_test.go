@@ -17,7 +17,7 @@ var _ = Describe("create-translations -f fileName --languages \"[lang,?]+\"", fu
 	)
 
 	BeforeEach(func() {
-		dir, err := os.Getwd()
+		_, err := os.Getwd()
 		Ω(err).ShouldNot(HaveOccurred())
 
 		fixturesPath = filepath.Join("..", "..", "test_fixtures", "create_translations", "f_option")

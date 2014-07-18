@@ -19,7 +19,7 @@ var _ = Describe("extract-strings -f fileName -o outputDir", func() {
 	)
 
 	BeforeEach(func() {
-		dir, err := os.Getwd()
+		_, err := os.Getwd()
 		Ω(err).ShouldNot(HaveOccurred())
 
 		fixturesPath = filepath.Join("..", "..", "test_fixtures", "extract_strings", "f_option")

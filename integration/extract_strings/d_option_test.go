@@ -20,7 +20,7 @@ var _ = Describe("extract-strings -d dirName", func() {
 	)
 
 	BeforeEach(func() {
-		dir, err := os.Getwd()
+		_, err := os.Getwd()
 		Ω(err).ShouldNot(HaveOccurred())
 
 		outputPath, err = ioutil.TempDir("", "gi18n4go")

@@ -18,7 +18,7 @@ var _ = Describe("verify-strings -f fileName", func() {
 	)
 
 	BeforeEach(func() {
-		dir, err := os.Getwd()
+		_, err := os.Getwd()
 		Ω(err).ShouldNot(HaveOccurred())
 
 		Ω(err).ToNot(HaveOccurred())
