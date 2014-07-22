@@ -96,45 +96,87 @@ var _ = Describe("fixup", func() {
 			fixturesPath = filepath.Join("..", "..", "test_fixtures", "fixup", "notsogood")
 		})
 
-		It("adds strings when user types 'y'", func() {
-			// Write to the writer whatever we want.
-			file, err := ioutil.ReadFile("./stdin.txt")
-			Expect(err).ShouldNot(HaveOccurred())
-
-			writer.Write(file)
-
+		It("adds strings to all the locales", func() {
 			session.Wait()
-			Expect(err).ShouldNot(HaveOccurred())
-
 			output := string(session.Out.Contents())
 
-			// strings wrapped in T() in the code that don't have corresponding keys in the translation files
 			Ω(output).Should(ContainSubstring("Adding these strings to the translation file:"))
 			Ω(output).Should(ContainSubstring("Heal the world"))
 
-			// check english json files and see that new string is added
-			file, err = ioutil.ReadFile(filepath.Join(".", "translations", "en_US.all.json"))
+			file, err := ioutil.ReadFile(filepath.Join(".", "translations", "en_US.all.json"))
 			Ω(err).ShouldNot(HaveOccurred())
 
 			Ω(file).Should(ContainSubstring("\"Heal the world\""))
 
-			// check other translation files to see if key exists
 			chineseFile, err := ioutil.ReadFile(filepath.Join(".", "translations", "zh_CN.all.json"))
 			Ω(err).ShouldNot(HaveOccurred())
 
 			Ω(chineseFile).Should(ContainSubstring("\"Heal the world\""))
 
-			// keys in the translations that don't have corresponding strings wrapped in T() in the code
-			//Ω(output).Should(ContainSubstring("\"Make it a better place\" exists in en_US, but not in the code"))
+		})
+	})
 
-			// keys in non-english translations that don't exist in the english translation
-			//Ω(output).Should(ContainSubstring("\"For you and for me\" exists in zh_CN, but not in en_US"))
+	Context("When there are old strings in the translations that don't exist in the code", func() {
+		It("removes the strings from all the locales", func() {
+			session.Wait()
+			output := string(session.Out.Contents())
 
-			// keys that exist in the english translation but are missing in non-english translations
-			//Ω(output).Should(ContainSubstring("\"And the entire human race\" exists in en_US, but not in zh_CN"))
+			Ω(output).Should(ContainSubstring("Removing these strings from the translation file:"))
+			Ω(output).Should(ContainSubstring("Make it a better place"))
 
-			Ω(session.ExitCode()).Should(Equal(0))
+			file, err := ioutil.ReadFile(filepath.Join(".", "translations", "en_US.all.json"))
+			Ω(err).ShouldNot(HaveOccurred())
 
+			Ω(file).ShouldNot(ContainSubstring("\"Make it a better place\""))
+
+			chineseFile, err := ioutil.ReadFile(filepath.Join(".", "translations", "zh_CN.all.json"))
+			Ω(err).ShouldNot(HaveOccurred())
+
+			Ω(chineseFile).ShouldNot(ContainSubstring("\"Make it a better place\""))
+		})
+	})
+
+	Context("When a string has been updated in the code", func() {
+		It("prompts the user again if they do not input a correct response", func() {
+
+		})
+
+		It("displayes all the possible translations that the new string could map to", func() {
+
+		})
+
+		Context("When the user says the translation was updated", func() {
+			It("marks the foreign language translations as dirty", func() {
+
+			})
+
+			It("Updates the keys for all translation files", func() {
+
+			})
+
+			It("Updates the english translation", func() {
+
+			})
+		})
+
+		Context("When the user says the translation was not updated", func() {
+			It("adds the new translation", func() {
+
+			})
+		})
+
+		Context("when a user quits the interactive prompt", func() {
+			It("does not add any new translations", func() {
+
+			})
+
+			It("does not remove any translations", func() {
+
+			})
+
+			It("does not update any of the translations", func() {
+
+			})
 		})
 	})
 })

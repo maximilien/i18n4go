@@ -76,17 +76,20 @@ func (fu *Fixup) Run() error {
 	}
 
 	additionalTranslations := getAdditionalTranslations(source, englishStringInfos)
-	//	deletedTranslations :=
+	removedTranslations := getRemovedTranslations(source, englishStringInfos)
 	//	updatedTranslations :=
 
 	for locale, i18nFiles := range locales {
 		translatedStrings, err := fu.findI18nStrings(i18nFiles[0])
-
 		if err != nil {
 			fmt.Println(fmt.Sprintf("Couldn't get the strings from %s: %s", locale, err.Error()))
 			return err
 		}
+
 		err = addTranslations(translatedStrings, i18nFiles[0], additionalTranslations)
+		err = removeTranslations(translatedStrings, i18nFiles[0], removedTranslations)
+
+		err = writeStringInfoMapToJSON(translatedStrings, i18nFiles[0])
 	}
 
 	if err == nil {
@@ -164,16 +167,40 @@ func (fu *Fixup) findI18nStrings(i18nFile string) (i18nStrings map[string]common
 
 func getAdditionalTranslations(sourceTranslations map[string]int, englishTranslations map[string]common.I18nStringInfo) []string {
 	additionalTranslations := []string{}
-	//diffSlaveToMaster := []string{}
 	//masterUpdates := map[string]string{} //[old] -> new
 
-	//get master -> slave diff
 	for id, _ := range sourceTranslations {
 		if _, ok := englishTranslations[id]; !ok {
 			additionalTranslations = append(additionalTranslations, id)
 		}
 	}
 	return additionalTranslations
+}
+
+func getRemovedTranslations(sourceTranslations map[string]int, englishTranslations map[string]common.I18nStringInfo) []string {
+	removedTranslations := []string{}
+
+	for id, _ := range englishTranslations {
+		if _, ok := sourceTranslations[id]; !ok {
+			removedTranslations = append(removedTranslations, id)
+		}
+	}
+
+	return removedTranslations
+}
+
+func writeStringInfoMapToJSON(localeMap map[string]common.I18nStringInfo, localeFile string) error {
+	localeArray := common.I18nStringInfoMapValues2Array(localeMap)
+	encodedLocale, err := json.MarshalIndent(localeArray, "", "   ")
+	if err != nil {
+		return err
+	}
+
+	err = ioutil.WriteFile(localeFile, encodedLocale, 0644)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func addTranslations(localeMap map[string]common.I18nStringInfo, localeFile string, addTranslations []string) error {
@@ -223,23 +250,24 @@ func addTranslations(localeMap map[string]common.I18nStringInfo, localeFile stri
 		//new
 	*/
 	fmt.Println("Adding these strings to the translation file:")
+
 	for _, id := range addTranslations {
 		localeMap[id] = common.I18nStringInfo{ID: id, Translation: id}
 		fmt.Println(id)
 	}
-	localeArray := common.I18nStringInfoMapValues2Array(localeMap)
-	encodedLocale, err := json.MarshalIndent(localeArray, "", "   ")
-	if err != nil {
-		return err
-	}
-	fmt.Println(localeFile)
-	fmt.Println(string(encodedLocale))
-	err = ioutil.WriteFile(localeFile, encodedLocale, 0644)
-	if err != nil {
-		return err
+
+	return err
+}
+
+func removeTranslations(localeMap map[string]common.I18nStringInfo, localeFile string, remTranslations []string) error {
+	var err error
+	fmt.Println("Removing these strings from the translation file:")
+
+	for _, id := range remTranslations {
+		delete(localeMap, id)
+		fmt.Println(id)
 	}
 
-	//delete
 	return err
 }
 
