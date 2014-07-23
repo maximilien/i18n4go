@@ -41,6 +41,7 @@ type Options struct {
 type I18nStringInfo struct {
 	ID          string `json:"id"`
 	Translation string `json:"translation"`
+	Dirty       bool   `json:bool`
 }
 
 type StringInfo struct {

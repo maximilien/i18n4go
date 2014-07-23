@@ -5,7 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"os"
 	"strconv"
+	"strings"
 
 	"go/ast"
 	"go/parser"
@@ -77,7 +79,81 @@ func (fu *Fixup) Run() error {
 
 	additionalTranslations := getAdditionalTranslations(source, englishStringInfos)
 	removedTranslations := getRemovedTranslations(source, englishStringInfos)
-	//	updatedTranslations :=
+
+	updatedTranslations := map[string]string{}
+
+	if len(additionalTranslations) > 0 {
+		for index, newUpdatedTranslation := range additionalTranslations {
+			if len(removedTranslations) > 0 {
+				var input string
+
+				escape := true
+
+				for escape {
+					fmt.Printf("Is the string \"%s\" a new or updated string? [new/upd]\n", newUpdatedTranslation)
+
+					_, err := fmt.Scanf("%s\n", &input)
+
+					if err != nil {
+						panic(err)
+					}
+
+					input = strings.ToLower(input)
+
+					switch input {
+					case "new":
+						/*for i, key := range diffSlaveToMaster {
+							fmt.Printf("%d: %s\n", i+1, key)
+						}
+
+						var number int
+						fmt.Scanf("%d\n", &number)
+						// Check input
+						if number <= 0 || number > len(diffSlaveToMaster) {
+							goto chooseKey
+						}
+
+						// Get old ID, add the new ID to english, delete old ID.
+						updateString := diffSlaveToMaster[number-1]
+						fu.English[id] = id
+						delete(fu.English, updateString)
+						masterUpdates[updateString] = id
+
+						diffSlaveToMaster = removeFromSlice(diffSlaveToMaster, number-1)
+						// Take previous key and change to new key in all translations
+						// (change translation in english also), mark as dirty.
+						*/
+						escape = false
+					case "upd":
+						fmt.Println("Select the number for the previous translation:")
+						for index, value := range removedTranslations {
+							fmt.Printf("\t%d. %s\n", (index + 1), value)
+						}
+
+						var updSelection int
+						_, err := fmt.Scanf("%d\n", &updSelection)
+
+						if err == nil && updSelection > 0 && updSelection <= len(removedTranslations) {
+							updSelection = updSelection - 1
+
+							updatedTranslations[removedTranslations[updSelection]] = newUpdatedTranslation
+
+							removedTranslations = removeFromSlice(removedTranslations, updSelection)
+							additionalTranslations = removeFromSlice(additionalTranslations, index)
+						}
+						escape = false
+					case "exit":
+						fmt.Println("Canceling fixup")
+						os.Exit(0)
+					default:
+						fmt.Println("Invalid response.")
+					}
+				}
+			}
+		}
+	}
+
+	fmt.Println("UPDATES: ", updatedTranslations)
 
 	for locale, i18nFiles := range locales {
 		translatedStrings, err := fu.findI18nStrings(i18nFiles[0])
@@ -86,8 +162,17 @@ func (fu *Fixup) Run() error {
 			return err
 		}
 
-		err = addTranslations(translatedStrings, i18nFiles[0], additionalTranslations)
-		err = removeTranslations(translatedStrings, i18nFiles[0], removedTranslations)
+		if len(updatedTranslations) > 0 {
+			updateTranslations(translatedStrings, i18nFiles[0], updatedTranslations)
+		}
+
+		if len(additionalTranslations) > 0 {
+			addTranslations(translatedStrings, i18nFiles[0], additionalTranslations)
+		}
+
+		if len(removedTranslations) > 0 {
+			removeTranslations(translatedStrings, i18nFiles[0], removedTranslations)
+		}
 
 		err = writeStringInfoMapToJSON(translatedStrings, i18nFiles[0])
 	}
@@ -154,7 +239,6 @@ func (fu *Fixup) findSourceStrings() (sourceStrings map[string]int, err error) {
 
 func (fu *Fixup) findI18nStrings(i18nFile string) (i18nStrings map[string]common.I18nStringInfo, err error) {
 	i18nStrings = make(map[string]common.I18nStringInfo)
-	//make(map[string]string)
 
 	stringInfos, err := common.LoadI18nStringInfos(i18nFile)
 
@@ -167,7 +251,6 @@ func (fu *Fixup) findI18nStrings(i18nFile string) (i18nStrings map[string]common
 
 func getAdditionalTranslations(sourceTranslations map[string]int, englishTranslations map[string]common.I18nStringInfo) []string {
 	additionalTranslations := []string{}
-	//masterUpdates := map[string]string{} //[old] -> new
 
 	for id, _ := range sourceTranslations {
 		if _, ok := englishTranslations[id]; !ok {
@@ -203,65 +286,18 @@ func writeStringInfoMapToJSON(localeMap map[string]common.I18nStringInfo, locale
 	return nil
 }
 
-func addTranslations(localeMap map[string]common.I18nStringInfo, localeFile string, addTranslations []string) error {
-	var err error
-	/*
-		//get slave -> master diff
-		for id, translation := range diff {
-			if master[id] == 0 {
-				diffSlaveToMaster = append(diffSlaveToMaster, id)
-			}
-		}
-		//updates
-		for _, id := range additionalTranslations {
-			var input rune
-		addOrModified:
-			fmt.Printf("Is %s an updated key [y,n]? ", id)
-			fmt.Scanf("%c\n", &input)
-			switch input {
-			case 'y':
-			chooseKey:
-				fmt.Printf("What was the previous key?\n")
-				for i, key := range diffSlaveToMaster {
-					fmt.Printf("%d: %s\n", i+1, key)
-				}
-
-				var number int
-				fmt.Scanf("%d\n", &number)
-				// Check input
-				if number <= 0 || number > len(diffSlaveToMaster) {
-					goto chooseKey
-				}
-
-				// Get old ID, add the new ID to english, delete old ID.
-				updateString := diffSlaveToMaster[number-1]
-				fu.English[id] = id
-				delete(fu.English, updateString)
-				masterUpdates[updateString] = id
-
-				diffSlaveToMaster = removeFromSlice(diffSlaveToMaster, number-1)
-				// Take previous key and change to new key in all translations
-				// (change translation in english also), mark as dirty.
-			case 'n':
-			default:
-				goto addOrModified
-			}
-		}
-		//new
-	*/
-	fmt.Println("Adding these strings to the translation file:")
+func addTranslations(localeMap map[string]common.I18nStringInfo, localeFile string, addTranslations []string) {
+	fmt.Printf("Adding these strings to the %s translation file:\n", localeFile)
 
 	for _, id := range addTranslations {
 		localeMap[id] = common.I18nStringInfo{ID: id, Translation: id}
 		fmt.Println(id)
 	}
-
-	return err
 }
 
 func removeTranslations(localeMap map[string]common.I18nStringInfo, localeFile string, remTranslations []string) error {
 	var err error
-	fmt.Println("Removing these strings from the translation file:")
+	fmt.Printf("Removing these strings from the %s translation file:\n", localeFile)
 
 	for _, id := range remTranslations {
 		delete(localeMap, id)
@@ -269,6 +305,19 @@ func removeTranslations(localeMap map[string]common.I18nStringInfo, localeFile s
 	}
 
 	return err
+}
+
+func updateTranslations(localMap map[string]common.I18nStringInfo, localeFile string, updTranslations map[string]string) {
+	fmt.Printf("Updating these strings from the %s translation file:\n", localeFile)
+
+	for key, value := range updTranslations {
+		if localeFile == "en_US" {
+			localMap[value] = common.I18nStringInfo{ID: value, Translation: value}
+		} else {
+			localMap[value] = common.I18nStringInfo{ID: value, Translation: localMap[key].Translation, Dirty: true}
+		}
+		delete(localMap, key)
+	}
 }
 
 func removeFromSlice(slice []string, index int) []string {
