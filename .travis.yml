@@ -5,7 +5,7 @@ before_install:
 - go get code.google.com/p/go.tools/cmd/vet
 - go get github.com/onsi/ginkgo/...
 - go get github.com/onsi/gomega/...
-install: bin/true
+install: true
 script: bin/test
 branches:
   only:
