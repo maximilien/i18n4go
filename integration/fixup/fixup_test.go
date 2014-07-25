@@ -146,6 +146,9 @@ var _ = Describe("fixup", func() {
 			Ω(getNextOutputLine(stdoutReader)).Should(ContainSubstring("Adding these strings"))
 			Ω(getNextOutputLine(stdoutReader)).Should(ContainSubstring("Heal the world"))
 
+			exitCode := cmd.Wait()
+			Ω(exitCode).Should(BeNil())
+
 			file, err := ioutil.ReadFile(filepath.Join(".", "translations", "en_US.all.json"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(file).Should(ContainSubstring("\"Heal the world\""))
@@ -153,9 +156,6 @@ var _ = Describe("fixup", func() {
 			chineseFile, err := ioutil.ReadFile(filepath.Join(".", "translations", "zh_CN.all.json"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(chineseFile).Should(ContainSubstring("\"Heal the world\""))
-
-			exitCode := cmd.Wait()
-			Ω(exitCode).Should(BeNil())
 		})
 	})
 
@@ -168,6 +168,9 @@ var _ = Describe("fixup", func() {
 			Ω(getNextOutputLine(stdoutReader)).Should(ContainSubstring("Removing these strings"))
 			Ω(getNextOutputLine(stdoutReader)).Should(ContainSubstring("Heal the world"))
 
+			exitCode := cmd.Wait()
+			Ω(exitCode).Should(BeNil())
+
 			file, err := ioutil.ReadFile(filepath.Join(".", "translations", "en_US.all.json"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(file).ShouldNot(ContainSubstring("\"Heal the world\""))
@@ -175,13 +178,10 @@ var _ = Describe("fixup", func() {
 			chineseFile, err := ioutil.ReadFile(filepath.Join(".", "translations", "zh_CN.all.json"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(chineseFile).ShouldNot(ContainSubstring("\"Heal the world\""))
-
-			exitCode := cmd.Wait()
-			Ω(exitCode).Should(BeNil())
 		})
 	})
 
-	Context("When a string has been updated in the code", func() {
+	Context("When a string has been updated or added in the code", func() {
 		BeforeEach(func() {
 			fixturesPath = filepath.Join("..", "..", "test_fixtures", "fixup", "notsogood", "update")
 		})
@@ -211,28 +211,10 @@ var _ = Describe("fixup", func() {
 		})
 
 		Context("When the user says the translation was updated", func() {
-			var (
-				apples = common.I18nStringInfo{ID: "I like apples.", Translation: "I like apples."}
-			)
-
 			JustBeforeEach(func() {
 				Ω(getNextOutputLine(stdoutReader)).Should(ContainSubstring("Is the string \"I like apples.\" a new or updated string? [new/upd]"))
 				stdinPipe.Write([]byte("upd\n"))
 				stdinPipe.Write([]byte("1\n"))
-			})
-
-			It("marks the foreign language translations as dirty", func() {
-				cmd.Wait()
-
-				translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "zh_CN.all.json"))
-				Ω(err).ShouldNot(HaveOccurred())
-
-				mappedTranslations, err := common.CreateI18nStringInfoMap(translations)
-				Ω(err).ShouldNot(HaveOccurred())
-
-				fmt.Println(mappedTranslations)
-
-				Ω(mappedTranslations["I like apples."].Dirty).Should(BeTrue())
 			})
 
 			It("Updates the keys for all translation files", func() {
@@ -242,60 +224,66 @@ var _ = Describe("fixup", func() {
 				Ω(err).ShouldNot(HaveOccurred())
 				mappedTranslations, err := common.CreateI18nStringInfoMap(translations)
 				Ω(err).ShouldNot(HaveOccurred())
-
 				Ω(mappedTranslations["I like bananas."]).Should(Equal(common.I18nStringInfo{}))
-				Ω(mappedTranslations["I like apples."]).Should(Equal(apples))
+				Ω(mappedTranslations["I like apples."]).ShouldNot(Equal(common.I18nStringInfo{}))
 
 				translations, err = common.LoadI18nStringInfos(filepath.Join(".", "translations", "zh_CN.all.json"))
 				Ω(err).ShouldNot(HaveOccurred())
 				mappedTranslations, err = common.CreateI18nStringInfoMap(translations)
 				Ω(err).ShouldNot(HaveOccurred())
 				Ω(mappedTranslations["I like bananas."]).Should(Equal(common.I18nStringInfo{}))
-				Ω(mappedTranslations["I like apples."]).Should(Equal(apples))
+				Ω(mappedTranslations["I like apples."]).ShouldNot(Equal(common.I18nStringInfo{}))
 			})
 
-			It("Updates the english translation", func() {
+			It("Updates all the translation", func() {
 				cmd.Wait()
 
 				translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "en_US.all.json"))
 				Ω(err).ShouldNot(HaveOccurred())
-
 				mappedTranslations, err := common.CreateI18nStringInfoMap(translations)
 				Ω(err).ShouldNot(HaveOccurred())
-
 				Ω(mappedTranslations["I like apples."].Translation).Should(Equal("I like apples."))
 			})
 
-			Context("When the user can select multiple choices for an update", func() {
-				It("displayes all the possible translations that the updated string could map to", func() {
-					Ω(getNextOutputLine(stdoutReader)).Should(ContainSubstring("Select the number for the previous translation:"))
-					Ω(getNextOutputLine(stdoutReader)).Should(ContainSubstring("1. I like bananas."))
-					//another item
-				})
+			It("marks the foreign language translations as updated", func() {
+				cmd.Wait()
 
-				It("Removes the last updated selection on the second prompt", func() {
-					//check that item was removed
-				})
+				translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "zh_CN.all.json"))
+				Ω(err).ShouldNot(HaveOccurred())
+				mappedTranslations, err := common.CreateI18nStringInfoMap(translations)
+				Ω(err).ShouldNot(HaveOccurred())
+
+				Ω(mappedTranslations["I like apples."].Updated).Should(BeTrue())
+				Ω(mappedTranslations["I like apples."].Translation).ShouldNot(Equal("I like apples."))
 			})
 		})
 
-		PContext("When the user says the translation was not updated", func() {
-			PIt("adds the new translation", func() {
+		Context("When the user says the translation is new", func() {
+			var (
+				apple = common.I18nStringInfo{ID: "I like apples.", Translation: "I like apples.", Updated: false}
+			)
 
-			})
-		})
-
-		PContext("when a user quits the interactive prompt", func() {
-			PIt("does not add any new translations", func() {
-
-			})
-
-			PIt("does not remove any translations", func() {
-
+			JustBeforeEach(func() {
+				Ω(getNextOutputLine(stdoutReader)).Should(ContainSubstring("Is the string \"I like apples.\" a new or updated string? [new/upd]"))
+				stdinPipe.Write([]byte("new\n"))
 			})
 
-			PIt("does not update any of the translations", func() {
+			It("adds the new translation and deletes the old translation from all translation files", func() {
+				cmd.Wait()
 
+				translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "en_US.all.json"))
+				Ω(err).ShouldNot(HaveOccurred())
+				mappedTranslations, err := common.CreateI18nStringInfoMap(translations)
+				Ω(err).ShouldNot(HaveOccurred())
+				Ω(mappedTranslations["I like bananas."]).Should(Equal(common.I18nStringInfo{}))
+				Ω(mappedTranslations["I like apples."]).Should(Equal(apple))
+
+				translations, err = common.LoadI18nStringInfos(filepath.Join(".", "translations", "zh_CN.all.json"))
+				Ω(err).ShouldNot(HaveOccurred())
+				mappedTranslations, err = common.CreateI18nStringInfoMap(translations)
+				Ω(err).ShouldNot(HaveOccurred())
+				Ω(mappedTranslations["I like bananas."]).Should(Equal(common.I18nStringInfo{}))
+				Ω(mappedTranslations["I like apples."]).Should(Equal(apple))
 			})
 		})
 	})

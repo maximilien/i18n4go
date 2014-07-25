@@ -1,0 +1,22 @@
+[
+   {
+      "id": "Translated hello world!",
+      "translation": "Translated hello world!",
+      "Dirty": false
+   },
+   {
+      "id": "And the entire human race",
+      "translation": "And the entire human race",
+      "Dirty": false
+   },
+   {
+      "id": "Potato",
+      "translation": "Potato",
+      "Dirty": false
+   },
+   {
+      "id": "I like bananas.",
+      "translation": "I like bananas.",
+      "Dirty": true
+   }
+]
