@@ -287,6 +287,40 @@ var _ = Describe("fixup", func() {
 			})
 		})
 	})
+
+	Context("When a foreign language is missing an english translation", func() {
+		BeforeEach(func() {
+			fixturesPath = filepath.Join("..", "..", "test_fixtures", "fixup", "notsogood", "missing_foreign_key")
+		})
+
+		It("adds the extra translation", func() {
+			cmd.Wait()
+
+			translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "zh_CN.all.json"))
+			Ω(err).ShouldNot(HaveOccurred())
+			mappedTranslations, err := common.CreateI18nStringInfoMap(translations)
+			Ω(err).ShouldNot(HaveOccurred())
+			Ω(mappedTranslations["I'm the extra key"]).Should(Equal(
+				common.I18nStringInfo{ID: "I'm the extra key", Translation: "I'm the extra key", Modified: false},
+			))
+		})
+	})
+
+	Context("When a foreign language has an extra key", func() {
+		BeforeEach(func() {
+			fixturesPath = filepath.Join("..", "..", "test_fixtures", "fixup", "notsogood", "extra_foreign_key")
+		})
+
+		It("removes the extra translation", func() {
+			cmd.Wait()
+
+			translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "zh_CN.all.json"))
+			Ω(err).ShouldNot(HaveOccurred())
+			mappedTranslations, err := common.CreateI18nStringInfoMap(translations)
+			Ω(err).ShouldNot(HaveOccurred())
+			Ω(mappedTranslations["I'm the extra key"]).Should(Equal(common.I18nStringInfo{}))
+		})
+	})
 })
 
 func storeTranslationFiles(dir string) (files map[string][]byte, err error) {

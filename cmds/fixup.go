@@ -77,6 +77,27 @@ func (fu *Fixup) Run() error {
 		return err
 	}
 
+	//Check english to all other files before source
+	for locale, i18nFile := range locales {
+		if locale != "en_US" {
+			foreignStringInfos, _ := fu.findI18nStrings(i18nFile[0])
+			foreignAdditionalTranslations := getAdditionalForeignTranslations(englishStringInfos, foreignStringInfos)
+
+			foreignMissingTranslations := getMissingForeignTranslations(englishStringInfos, foreignStringInfos)
+
+			if len(foreignMissingTranslations) > 0 {
+				addTranslations(foreignStringInfos, i18nFile[0], foreignMissingTranslations)
+			}
+
+			if len(foreignAdditionalTranslations) > 0 {
+				removeTranslations(foreignStringInfos, i18nFile[0], foreignAdditionalTranslations)
+			}
+
+			writeStringInfoMapToJSON(foreignStringInfos, i18nFile[0])
+		}
+	}
+
+	//rewrite everything now
 	potentialAdditionalTranslations := getAdditionalTranslations(source, englishStringInfos)
 	removedTranslations := getRemovedTranslations(source, englishStringInfos)
 
@@ -248,6 +269,16 @@ func getAdditionalTranslations(sourceTranslations map[string]int, englishTransla
 	return additionalTranslations
 }
 
+func getAdditionalForeignTranslations(englishTranslations, foreignTranslations map[string]common.I18nStringInfo) []string {
+	additionalForeignTranslations := []string{}
+	for key, _ := range foreignTranslations {
+		if (englishTranslations[key] == common.I18nStringInfo{}) {
+			additionalForeignTranslations = append(additionalForeignTranslations, key)
+		}
+	}
+	return additionalForeignTranslations
+}
+
 func getRemovedTranslations(sourceTranslations map[string]int, englishTranslations map[string]common.I18nStringInfo) []string {
 	removedTranslations := []string{}
 
@@ -258,6 +289,16 @@ func getRemovedTranslations(sourceTranslations map[string]int, englishTranslatio
 	}
 
 	return removedTranslations
+}
+
+func getMissingForeignTranslations(englishTranslations, foreignTranslations map[string]common.I18nStringInfo) []string {
+	missingForeignTranslations := []string{}
+	for key, _ := range englishTranslations {
+		if (foreignTranslations[key] == common.I18nStringInfo{}) {
+			missingForeignTranslations = append(missingForeignTranslations, key)
+		}
+	}
+	return missingForeignTranslations
 }
 
 func writeStringInfoMapToJSON(localeMap map[string]common.I18nStringInfo, localeFile string) error {
