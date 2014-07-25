@@ -41,7 +41,7 @@ type Options struct {
 type I18nStringInfo struct {
 	ID          string `json:"id"`
 	Translation string `json:"translation"`
-	Updated     bool   `json:"updated"`
+	Modified    bool   `json:"modified"`
 }
 
 type StringInfo struct {

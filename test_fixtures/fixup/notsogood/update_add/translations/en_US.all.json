@@ -2,16 +2,16 @@
    {
       "id": "Translated hello world!",
       "translation": "Translated hello world!",
-      "dirty": false
+      "modified": false
    },
    {
       "id": "And the entire human race",
       "translation": "And the entire human race",
-      "dirty": false
+      "modified": false
    },
    {
       "id": "I like bananas.",
       "translation": "I like bananas.",
-      "dirty": false
+      "modified": false
    }
 ]
