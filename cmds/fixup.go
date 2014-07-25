@@ -32,30 +32,30 @@ func NewFixup(options common.Options) Fixup {
 	}
 }
 
-func (fu *Fixup) Options() common.Options {
-	return fu.options
+func (fix *Fixup) Options() common.Options {
+	return fix.options
 }
 
-func (fu *Fixup) Println(a ...interface{}) (int, error) {
-	if fu.options.VerboseFlag {
+func (fix *Fixup) Println(a ...interface{}) (int, error) {
+	if fix.options.VerboseFlag {
 		return fmt.Println(a...)
 	}
 
 	return 0, nil
 }
 
-func (fu *Fixup) Printf(msg string, a ...interface{}) (int, error) {
-	if fu.options.VerboseFlag {
+func (fix *Fixup) Printf(msg string, a ...interface{}) (int, error) {
+	if fix.options.VerboseFlag {
 		return fmt.Printf(msg, a...)
 	}
 
 	return 0, nil
 }
 
-func (fu *Fixup) Run() error {
+func (fix *Fixup) Run() error {
 	//FIND PROBLEMS HERE AND RETURN AN ERROR
-	source, err := fu.findSourceStrings()
-	fu.Source = source
+	source, err := fix.findSourceStrings()
+	fix.Source = source
 
 	if err != nil {
 		fmt.Println(fmt.Sprintf("Couldn't find any source strings: %s", err.Error()))
@@ -70,7 +70,7 @@ func (fu *Fixup) Run() error {
 		return errors.New("Could not find an i18n file for locale: en_US")
 	}
 
-	englishStringInfos, err := fu.findI18nStrings(englishFile)
+	englishStringInfos, err := fix.findI18nStrings(englishFile)
 
 	if err != nil {
 		fmt.Println(fmt.Sprintf("Couldn't find the english strings: %s", err.Error()))
@@ -80,7 +80,7 @@ func (fu *Fixup) Run() error {
 	//Check english to all other files before source
 	for locale, i18nFile := range locales {
 		if locale != "en_US" {
-			foreignStringInfos, _ := fu.findI18nStrings(i18nFile[0])
+			foreignStringInfos, _ := fix.findI18nStrings(i18nFile[0])
 			foreignAdditionalTranslations := getAdditionalForeignTranslations(englishStringInfos, foreignStringInfos)
 
 			foreignMissingTranslations := getMissingForeignTranslations(englishStringInfos, foreignStringInfos)
@@ -165,7 +165,7 @@ func (fu *Fixup) Run() error {
 	}
 
 	for locale, i18nFiles := range locales {
-		translatedStrings, err := fu.findI18nStrings(i18nFiles[0])
+		translatedStrings, err := fix.findI18nStrings(i18nFiles[0])
 		if err != nil {
 			fmt.Println(fmt.Sprintf("Couldn't get the strings from %s: %s", locale, err.Error()))
 			return err
@@ -193,11 +193,11 @@ func (fu *Fixup) Run() error {
 	return err
 }
 
-func (fu *Fixup) inspectFile(file string) (translatedStrings []string, err error) {
+func (fix *Fixup) inspectFile(file string) (translatedStrings []string, err error) {
 	fset := token.NewFileSet()
 	astFile, err := parser.ParseFile(fset, file, nil, parser.AllErrors)
 	if err != nil {
-		fu.Println(err)
+		fix.Println(err)
 		return
 	}
 
@@ -227,12 +227,12 @@ func (fu *Fixup) inspectFile(file string) (translatedStrings []string, err error
 	return
 }
 
-func (fu *Fixup) findSourceStrings() (sourceStrings map[string]int, err error) {
+func (fix *Fixup) findSourceStrings() (sourceStrings map[string]int, err error) {
 	sourceStrings = make(map[string]int)
 	files := getGoFiles(".")
 
 	for _, file := range files {
-		fileStrings, err := fu.inspectFile(file)
+		fileStrings, err := fix.inspectFile(file)
 		if err != nil {
 			fmt.Println("Error when inspecting go file: ", file)
 			return sourceStrings, err
@@ -246,7 +246,7 @@ func (fu *Fixup) findSourceStrings() (sourceStrings map[string]int, err error) {
 	return
 }
 
-func (fu *Fixup) findI18nStrings(i18nFile string) (i18nStrings map[string]common.I18nStringInfo, err error) {
+func (fix *Fixup) findI18nStrings(i18nFile string) (i18nStrings map[string]common.I18nStringInfo, err error) {
 	i18nStrings = make(map[string]common.I18nStringInfo)
 
 	stringInfos, err := common.LoadI18nStringInfos(i18nFile)
