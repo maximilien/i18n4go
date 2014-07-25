@@ -1,18 +1,22 @@
 [
    {
       "id": "cruel",
-      "translation": "cruel"
+      "translation": "cruel",
+      "modified": false
    },
    {
       "id": "Bye from {{.Arg0}}",
-      "translation": "Bye from {{.Arg0}}"
+      "translation": "Bye from {{.Arg0}}",
+      "modified": false
    },
    {
       "id": "Evil",
-      "translation": "Evil"
+      "translation": "Evil",
+      "modified": false
    },
    {
       "id": "Hello {{.Arg0}} world!",
-      "translation": "Hello {{.Arg0}} world!"
+      "translation": "Hello {{.Arg0}} world!",
+      "modified": false
    }
 ]
