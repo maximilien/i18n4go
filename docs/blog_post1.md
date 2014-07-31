@@ -2,15 +2,12 @@
 
 ## Abstract
 
-* brief summary of CF CLI problem
-* spike to get i18n added to CLI
-* extracted i18n4go
+In this post we will give an introductory overview of the i18n4go tool which allows one to easily globalize any Go language program. The i18n4go toolset was extracted while globalizing the CLoudFoundry command line interface and is an example of the CloudFoundry community usage of the Go language as well as contributing back to that community, in effect cross pollinating both communities, as was done with the Ginko and Gomega toolsets.
 
 ## Introduction
+As the CloudFoundry project gets an increasingly global audience (users and developers) there is increasingly a need to globalize the parts of the system interfacing the main users. In particular, as IBM's Bluemix public installation of CF was announced, one of the gapping hole was to globalize the primary interface to CF from all users, the command line interface or CLI. Since the CF CLI is conversational by nature, it is a good candidate for internationalization (i18n), even if the majority of developers speak English, having the CLI converse in your own native tongue could make the whole experience more familiar and natural.
 
-* brief history of the tool
-* what is lacking in existing i18n tools for Go lang
-* why i18n is important
+So it was with these motivation that the IBM CF community team decided to take on the major task of converting the entire CLI code base for globalization. Working closely with our Pivotal colleagues, what transpired in the span of about two months is a complete update of the CLI to enable any human language and a release of the CLI in the default English as well as French along with a call to action to the community to submit new translations. The following blog post does not chronicle this exercise, but rather gives an introduction to the resulting tooling that was develop in the process. This tool is a general purpose Go language tool (written in Go) to help in globalizing any Go program. We call it: i18n4go.
 
 ### Organization
 
