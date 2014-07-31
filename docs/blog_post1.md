@@ -11,11 +11,7 @@ So it was with these motivation that the IBM CF community team decided to take o
 
 ### Organization
 
-* related tools
-* architecture and design
-* applying tool to small Go language project
-* typical workflow
-* conclusion and future
+The rest of this post is organized as follows. First we take a look at what related tools exist in the Go language community that are helpful in globalizing Go programs. Next we will give an overview of our approach, which is completely tools-driven. After that we will use a public OSS Go program that could make use of globalization and walk you through the steps to convert it for internationalization. We then complete with a summary of the typical workflow of a developer using i18n4go and briefly touch on future works.
 
 ## Related Tools
 
