@@ -1,4 +1,4 @@
-# Introducing i18n4go - Go language tool for internationalization (i18n)
+# Introducing i18n4go - Go language tooling for internationalization (i18n)
 
 ## Abstract
 
@@ -15,6 +15,7 @@ The rest of this post is organized as follows. First we take a look at what rela
 
 ## Related Tools
 
+Since the Go language community is rather young, there
 * i18n tooling for Java and Ruby
 * existing i18n tooling for Go language
 
