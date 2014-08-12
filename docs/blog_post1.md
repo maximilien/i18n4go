@@ -39,13 +39,15 @@ Since the Go language community is rather young, there
 * rewriting code
 * creating translations
 * verifying translations
-* maintaining
+* modifying strings
+* maintaining strings
 
 ## Conclusion and Future
 
 * recap of tool features
-* using on CF CLI
+* using tool on CF CLI
 * what is missing?
 * immediate next steps
+* future next steps
 
 ## References
