@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 
@@ -303,6 +304,9 @@ func getMissingForeignTranslations(englishTranslations, foreignTranslations map[
 
 func writeStringInfoMapToJSON(localeMap map[string]common.I18nStringInfo, localeFile string) error {
 	localeArray := common.I18nStringInfoMapValues2Array(localeMap)
+
+	sort.Sort(array(localeArray))
+
 	encodedLocale, err := json.MarshalIndent(localeArray, "", "   ")
 	if err != nil {
 		return err
@@ -353,4 +357,22 @@ func updateTranslations(localMap map[string]common.I18nStringInfo, localeFile st
 
 func removeFromSlice(slice []string, index int) []string {
 	return append(slice[:index], slice[index+1:]...)
+}
+
+//Interface for sort
+
+type array []common.I18nStringInfo
+
+func (stringInfos array) Len() int {
+	return len(stringInfos)
+}
+
+func (stringInfos array) Less(i, j int) bool {
+	return stringInfos[i].ID < stringInfos[j].ID
+}
+
+func (stringInfos array) Swap(i, j int) {
+	tmpI18nStringInfo := stringInfos[i]
+	stringInfos[i] = stringInfos[j]
+	stringInfos[j] = tmpI18nStringInfo
 }
