@@ -66,7 +66,7 @@ The general usage for `-extract-strings` command is:
 The command `-c extract-strings` pulls strings out of go files.  For the examples below we are running the tool on a copy of the the [CloudFoundry CLI](https://github.com/cloudfoundry/cli) cloned in the `./tmp`
 
 ```
-$ gi18n -c extract-strings -v -p -f ./tmp/cli/cf/app/app.go -o ./tmp/cli/i18n -output-match-package
+$ gi18n -c extract-strings -v --po -f ./tmp/cli/cf/app/app.go -o ./tmp/cli/i18n -output-match-package
 
 gi18n: extracting strings from file: ./tmp/cli/cf/app/app.go
 Could not find: excluded.json
@@ -118,7 +118,7 @@ msgstr "%s help [COMMAND]"
 To extract multiples files that are in one directory, use the following:
 
 ```
-$ gi18n -c extract-strings -v -p -d ./tmp/cli/cf/app/ -o ./tmp/cli/i18n -output-match-package -ignore-regexp ".*test.*"
+$ gi18n -c extract-strings -v --po -d ./tmp/cli/cf/app/ -o ./tmp/cli/i18n -output-match-package -ignore-regexp ".*test.*"
 
 ...
 ```
