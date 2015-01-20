@@ -1,7 +1,7 @@
 i18n Tooling for the Go Language [![Build Status](https://travis-ci.org/maximilien/i18n4go.svg?branch=master)](https://travis-ci.org/maximilien/i18n4go#)
 ==============================
 
-This is a general purpose i18n tooling for Go language prorams. It allows you to prepare Go language code for internationalization (i18n). This tool was extracted while we worked on enabling the Cloud Foundry CLI for i18n.
+This is a general purpose i18n tooling for Go language programs. It allows you to prepare Go language code for internationalization (i18n). This tool was extracted while we worked on enabling the [Cloud Foundry CLI](https://github.com/cloudfoundry/cli) while adding i18n support.
 
 ## Getting Started
 ==================
