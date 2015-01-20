@@ -4,14 +4,15 @@ i18n Tooling for the Go Language [![Build Status](https://travis-ci.org/maximili
 This is a general purpose i18n tooling for Go language programs. It allows you to prepare Go language code for internationalization (i18n). This tool was extracted while we worked on enabling the [Cloud Foundry CLI](https://github.com/cloudfoundry/cli) while adding i18n support.
 
 ## Getting Started
-==================
+------------------
+
 Download and run the installer for your platform from the section below. If you are on OS X, you can also install the gi18n tool
 with homebrew--run `brew install gi18n` *.
 
 Once installed, you can use it to issue some of the typical i18n tooling processes.
 
 ### Printing Usage
-==================
+------------------
 
 Printing the usage help
 
@@ -392,13 +393,10 @@ $ gi18n -c extract-strings -v -d ./tmp/cli/cf/api/resources -o ./tmp/cli/i18n -o
 
 We can inspect the `./tmp/cli/i18n/resources/events.go.en.json` file and see that there are no strings with the expression `json:`.
 
-## Stable Release
-=================
-
-TBD
+---------
 
 ### Edge Releases (master)
-==========================
+--------------------------
 
 Get latest code here on Github and build it: `./bin/build` *
 
@@ -407,12 +405,12 @@ The binary will be in the `./out` * directory.
 You can follow our development progress on [Pivotal Tracker](https://www.pivotaltracker.com/n/projects/1071880).
 
 ## Troubleshooting / FAQs
-=========================
+-------------------------
 
 None for now. Submit questions/comments as issues and we will update here
 
 ### Filing Bugs
-===============
+---------------
 
 ##### For simple bugs (eg: text formatting, help messages, etc), please provide
 
@@ -427,14 +425,14 @@ None for now. Submit questions/comments as issues and we will update here
 - any other relevant information
 
 ## Cloning the repository
-=========================
+-------------------------
 
 1. Install [Go](https://golang.org)
 1. Clone (Forking beforehand for development).
 1. [Ensure your $GOPATH is set correctly](http://golang.org/cmd/go/#hdr-GOPATH_environment_variable)
 
 ## Building *
-=============
+-------------
 
 1. Run `./bin/build`
 1. The binary will be built into the `./out` directory.
@@ -442,7 +440,7 @@ None for now. Submit questions/comments as issues and we will update here
 Optionally, you can use `bin/run` to compile and run the executable in one step.
 
 ## Developing *
-===============
+---------------
 
 1. Run `go get code.google.com/p/go.tools/cmd/vet`
 2. Run `go get github.com/cloudfoundry/cli ...` to install test dependencies
@@ -452,7 +450,7 @@ Optionally, you can use `bin/run` to compile and run the executable in one step.
 1. Submit a pull request.
 
 ## Contributing
-===============
+---------------
 
 * We welcome any and all contributions as Pull Requests (PR)
 * We also welcome issues and bug report and new feature request. We will address as time permits
@@ -463,10 +461,10 @@ Optionally, you can use `bin/run` to compile and run the executable in one step.
 ### Managing dependencies
 -------------------------
 
-* [Godep](https://github.com/tools/godep)
+* All dependencies managed via [Godep](https://github.com/tools/godep). See [Godeps/_workspace](https://github.com/maximilien/i18n4go/tree/master/Godeps/_workspace) directory on master
 
 ### Current conventions
-========================
+-----------------------
 
 * Basic Go conventions
 * Strict TDD for any code added or changed
