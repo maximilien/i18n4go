@@ -395,15 +395,7 @@ We can inspect the `./tmp/cli/i18n/resources/events.go.en.json` file and see tha
 ## Stable Release
 =================
 
-### Installers *
-----------------
-- [Debian 32 bit]()
-- [Debian 64 bit]()
-- [Redhat 32 bit]()
-- [Redhat 64 bit]()
-- [Mac OS X 64 bit]()
-- [Windows 32 bit]()
-- [Windows 64 bit]()
+TBD
 
 ### Edge Releases (master)
 ==========================
@@ -417,10 +409,7 @@ You can follow our development progress on [Pivotal Tracker](https://www.pivotal
 ## Troubleshooting / FAQs
 =========================
 
-### Linux
----------
-
-TBD
+None for now. Submit questions/comments as issues and we will update here
 
 ### Filing Bugs
 ===============
@@ -457,7 +446,7 @@ Optionally, you can use `bin/run` to compile and run the executable in one step.
 
 1. Run `go get code.google.com/p/go.tools/cmd/vet`
 2. Run `go get github.com/cloudfoundry/cli ...` to install test dependencies
-1. Write a Ginkgo test.
+1. Write a [Ginkgo](https://github.com/onsi/ginkgo) test.
 1. Run `bin/test` and watch the test fail.
 1. Make the test pass.
 1. Submit a pull request.
@@ -465,24 +454,22 @@ Optionally, you can use `bin/run` to compile and run the executable in one step.
 ## Contributing
 ===============
 
-### Architecture overview
-------------------------
-
-TODO
+* We welcome any and all contributions as Pull Requests (PR)
+* We also welcome issues and bug report and new feature request. We will address as time permits
+* Follow the steps above in Developing to get your system setup correctly
+* Please make sure your PR is passing Travis before submitting
+* Feel free to email me or the current collaborators if you have additional questions about contributions
 
 ### Managing dependencies
 -------------------------
 
-TODO
-
-### Example command
--------------------
-
-TODO
+* [Godep](https://github.com/tools/godep)
 
 ### Current conventions
 ========================
 
-TODO
+* Basic Go conventions
+* Strict TDD for any code added or changed
+* Go fakes when needing to mock objects
 
 (*) these items are in the works, we will remove the * once they are available
