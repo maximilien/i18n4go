@@ -14,9 +14,9 @@ Once installed, you can use it to issue some of the typical i18n tooling process
 ### Typical Workflow
 --------------------
 
-The recommended workflow is to use the commands (documented below) in the following order:
+The recommended workflow is to use the commands (documented below) in the following order. For each command, use the command's help or this README for details and to experiment for your project. So the nine steps are:
 
-1. **extract-strings** which will automatically extract every string from your Go source files and create a JSON and optionally a PO file. For each command, use the help or this README for details and to experiment for your project.
+1. **extract-strings** which will automatically extract every string from your Go source files and create a JSON and optionally a PO file.
 
 2. **merge-strings** to create one file and removing what is not needed and strings you do not want to i18n. This could be important and time consuming but to help this process, we've found that it's good to keep a list of all the strings that you do not want to i18n as well as string patterns (as regex). Take a look at the CF CLI [excluded.json](https://github.com/cloudfoundry/cli/blob/master/cf/i18n/excluded.json) for a real world example file you might end up with. The regex in there might be useful to reuse.
 
