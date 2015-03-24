@@ -37,6 +37,10 @@ For instance to create `fr_FR` file(s) for French and every other locale_Languag
 
 9. ship and profit :)
 
+### Typical Workflow Diagram
+
+![Typical i18n4go workflow diagram](https://github.com/maximilien/i18n4go/blob/master/docs/images/typical-workflow.png)
+
 ### Help
 --------
 
