@@ -578,8 +578,8 @@
 			<integer>164</integer>
 			<key>Points</key>
 			<array>
-				<string>{399.50386744878057, 360.51425835122251}</string>
-				<string>{346.99226510243881, 353.94482834203643}</string>
+				<string>{399.50386744878057, 360.51425831691341}</string>
+				<string>{346.99226510243881, 353.94482826252028}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -637,8 +637,8 @@
 			<integer>166</integer>
 			<key>Points</key>
 			<array>
-				<string>{407.50054555508422, 530.14813422782765}</string>
-				<string>{378.49895607414084, 528.79224275089666}</string>
+				<string>{407.5005783952036, 530.06336881032109}</string>
+				<string>{378.4990059251399, 528.66717651825149}</string>
 			</array>
 			<key>Style</key>
 			<dict>
