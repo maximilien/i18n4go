@@ -8,10 +8,19 @@ This tool is licensed under the [Apache 2.0 OSS license](https://github.com/maxi
 ## Getting Started
 ------------------
 
-Download and run the installer for your platform from the section below. If you are on OS X, you can also install the gi18n tool
-with homebrew--run `brew install gi18n` *.
+Clone this repo and build it. Using, for instance, the commands:
 
-Once installed, you can use it to issue some of the typical i18n tooling processes.
+```
+$mkdir -p i18n4go/src/github.com/maximilien
+$export GOPATH=./i18n4go:$GOPATH
+$git clone https://github.com/maximilien/i18n4go i18n4go/src/github.com/maximilien
+$cd i18n4go/src/github.com/maximilien/i18n4go
+$./bin/build
+```
+
+The executable output should now be located in: `out/gi18n`. Place it wherever you want, e.g., `/usr/local/bin` on Linux or Mac OS X.
+
+You can use the `gi18n` executable to issue some of the typical i18n tooling processes.
 
 ### Typical Workflow
 --------------------
