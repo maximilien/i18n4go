@@ -1,28 +1,13 @@
 {
 	"ImportPath": "github.com/maximilien/i18n4go",
-	"GoVersion": "go1.2",
+	"GoVersion": "go1.3.3",
 	"Packages": [
 		"./..."
 	],
 	"Deps": [
 		{
-			"ImportPath": "code.google.com/p/go.crypto/ssh/terminal",
-			"Comment": "null-209",
-			"Rev": "23b39e4e860172e1983ded00a9d2f7e42b7683d0"
-		},
-		{
-			"ImportPath": "code.google.com/p/go.net/websocket",
-			"Comment": "null-131",
-			"Rev": "b50b866786741d3f936d7456f6bd4c2641e2b042"
-		},
-		{
-			"ImportPath": "github.com/codegangsta/cli",
-			"Comment": "1.0.0-31-gc606efc",
-			"Rev": "c606efc92b966e5f627f2785d28e7e92787e08d0"
-		},
-		{
-			"ImportPath": "github.com/gorilla/websocket",
-			"Rev": "10a95d14a3a215f5e2045d3dbbcd29f1ab209586"
+			"ImportPath": "github.com/nicksnyder/go-i18n/i18n",
+			"Rev": "c722cd1cec3e26a1393aecf0058c9f3a037a9657"
 		},
 		{
 			"ImportPath": "github.com/onsi/ginkgo",
@@ -31,6 +16,10 @@
 		{
 			"ImportPath": "github.com/onsi/gomega",
 			"Rev": "f5533d435ebfcf4fa0463202dc0e966b983618b8"
+		},
+		{
+			"ImportPath": "github.com/pivotal-cf-experimental/jibber_jabber",
+			"Rev": "901694860a59e63e1d392e6597ca919364f6abd1"
 		}
 	]
 }
