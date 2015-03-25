@@ -13,6 +13,8 @@ import (
 	"github.com/maximilien/i18n4go/common"
 )
 
+const VERSION = "v0.1.1"
+
 var options common.Options
 
 func main() {
@@ -352,7 +354,7 @@ usage: gi18n -c checkup
 
   -c fixup                   the fixup command which interactively lets users add, update, or remove translations keys from code and resource files.
 `
-	fmt.Println(usageString)
+	fmt.Println(fmt.Sprintf("%s\nVersion %s", usageString, VERSION))
 }
 
 func handlePanic() {
