@@ -1,3 +1,6 @@
+# Changes in v0.1.2
+- fix for issue #22
+
 # Changes in v0.1.1
 - added Typical Workflow Diagram and minor clarifications to README
 - added version string to usage and this file to keep track of changes
