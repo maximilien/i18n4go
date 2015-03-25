@@ -126,14 +126,16 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 			inputFilesPath = filepath.Join(fixturesPath, "d_option", "input_files")
 			expectedFilesPath = filepath.Join(fixturesPath, "d_option", "expected_output")
 
-			CopyFile(filepath.Join(expectedFilesPath, "doption", "_test.go.en.json"), filepath.Join(expectedFilesPath, "doption", "test.go.en.json"))
+			err = os.MkdirAll(filepath.Join(outputDir, "doption"), 0777)
+			Ω(err).ShouldNot(HaveOccurred())
+
+			CopyFile(filepath.Join(expectedFilesPath, "doption", "_test.go.en.json"), filepath.Join(outputDir, "doption", "test.go.en.json"))
 
 			session := Runi18n("-c",
 				"rewrite-package",
 				"-d", inputFilesPath,
 				"-o", outputDir,
 				"--ignore-regexp", "^[.]\\w+.go$", //Ignoring .*.go files, otherwise it defaults to ignoring *test*.go
-				"--i18n-strings-filename", filepath.Join(expectedFilesPath, "doption", "test.go.en.json"),
 				"-v",
 			)
 
@@ -161,7 +163,10 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 			inputFilesPath = filepath.Join(fixturesPath, "d_option", "input_files")
 			expectedFilesPath = filepath.Join(fixturesPath, "d_option", "expected_output")
 
-			CopyFile(filepath.Join(expectedFilesPath, "doption", "_en.all.json"), filepath.Join(expectedFilesPath, "doption", "en.all.json"))
+			err = os.MkdirAll(filepath.Join(outputDir, "doption"), 0777)
+			Ω(err).ShouldNot(HaveOccurred())
+
+			CopyFile(filepath.Join(expectedFilesPath, "doption", "_en.all.json"), filepath.Join(outputDir, "doption", "en.all.json"))
 
 			session := Runi18n("-c",
 				"rewrite-package",
@@ -196,15 +201,17 @@ var _ = Describe("rewrite-package -d dirname -r", func() {
 			inputFilesPath = filepath.Join(fixturesPath, "d_option", "input_files")
 			expectedFilesPath = filepath.Join(fixturesPath, "d_option", "expected_output")
 
-			CopyFile(filepath.Join(expectedFilesPath, "doption", "_test.go.en.json"), filepath.Join(expectedFilesPath, "doption", "test.go.en.json"))
-			CopyFile(filepath.Join(expectedFilesPath, "doption", "_test2.go.en.json"), filepath.Join(expectedFilesPath, "doption", "test2.go.en.json"))
+			err = os.MkdirAll(filepath.Join(outputDir, "doption"), 0777)
+			Ω(err).ShouldNot(HaveOccurred())
+
+			CopyFile(filepath.Join(expectedFilesPath, "doption", "_test.go.en.json"), filepath.Join(outputDir, "doption", "test.go.en.json"))
+			CopyFile(filepath.Join(expectedFilesPath, "doption", "_test2.go.en.json"), filepath.Join(outputDir, "doption", "test2.go.en.json"))
 
 			session := Runi18n("-c",
 				"rewrite-package",
 				"-d", inputFilesPath,
 				"-o", outputDir,
 				"--ignore-regexp", "^[.]\\w+.go$", //Ignoring .*.go files, otherwise it defaults to ignoring *test*.go
-				"--i18n-strings-dirname", filepath.Join(expectedFilesPath, "doption"),
 				"-v",
 			)
 
