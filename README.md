@@ -8,6 +8,8 @@ This tool is licensed under the [Apache 2.0 OSS license](https://github.com/maxi
 ## Getting Started
 ------------------
 
+### Cloning and Building
+
 Clone this repo and build it. Using the following commands on a Linux or Mac OS X system:
 
 ```
@@ -23,7 +25,36 @@ NOTE: if you get any dependency errors, then use `go get path/to/dependency` to 
 
 The executable output should now be located in: `out/gi18n`. Place it wherever you want, e.g., `/usr/local/bin` on Linux or Mac OS X.
 
-You can use the `gi18n` executable to issue some of the typical i18n tooling processes.
+You can now use the `gi18n` executable to issue some of the typical i18n tooling processes.
+
+### Running Tests
+
+You should run the tests to make sure all is well, do this with: `$ ./bin/test` in your cloned repository.
+
+The output should be similar to:
+
+```
+$ bin/test
+
+ Cleaning build artifacts...
+
+ Formatting packages...
+
+ Integration Testing packages:
+ok  	github.com/maximilien/i18n4go/integration/checkup	1.571s
+ok  	github.com/maximilien/i18n4go/integration/create_translations	1.542s
+ok  	github.com/maximilien/i18n4go/integration/extract_strings	1.694s
+ok  	github.com/maximilien/i18n4go/integration/fixup	1.657s
+ok  	github.com/maximilien/i18n4go/integration/merge_strings	1.645s
+ok  	github.com/maximilien/i18n4go/integration/rewrite_package	1.853s
+ok  	github.com/maximilien/i18n4go/integration/show_missing_strings	1.590s
+?   	github.com/maximilien/i18n4go/integration/test_helpers	[no test files]
+ok  	github.com/maximilien/i18n4go/integration/verify_strings	1.701s
+
+ Vetting packages for potential issues...
+
+SWEET SUITE SUCCESS
+```
 
 ### Typical Workflow
 --------------------
