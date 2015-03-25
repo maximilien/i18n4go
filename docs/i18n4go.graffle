@@ -52,6 +52,67 @@
 	<key>GraphicsList</key>
 	<array>
 		<dict>
+			<key>Class</key>
+			<string>LineGraphic</string>
+			<key>Head</key>
+			<dict>
+				<key>ID</key>
+				<integer>217</integer>
+			</dict>
+			<key>ID</key>
+			<integer>218</integer>
+			<key>Points</key>
+			<array>
+				<string>{201.33966508164207, 506.6815029963978}</string>
+				<string>{123.95760832864848, 550.07589248848205}</string>
+			</array>
+			<key>Style</key>
+			<dict>
+				<key>stroke</key>
+				<dict>
+					<key>HeadArrow</key>
+					<string>0</string>
+					<key>Legacy</key>
+					<true/>
+					<key>Pattern</key>
+					<integer>1</integer>
+					<key>TailArrow</key>
+					<string>0</string>
+				</dict>
+			</dict>
+			<key>Tail</key>
+			<dict>
+				<key>ID</key>
+				<integer>172</integer>
+				<key>Position</key>
+				<real>0.24320065975189209</real>
+			</dict>
+		</dict>
+		<dict>
+			<key>Bounds</key>
+			<string>{{15, 543.75}, {121, 67}}</string>
+			<key>Class</key>
+			<string>ShapedGraphic</string>
+			<key>ID</key>
+			<integer>217</integer>
+			<key>Shape</key>
+			<string>NoteShape</string>
+			<key>Style</key>
+			<dict/>
+			<key>Text</key>
+			<dict>
+				<key>Text</key>
+				<string>{\rtf1\ansi\ansicpg1252\cocoartf1344\cocoasubrtf720
+\cocoascreenfonts1{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\qc
+
+\f0\fs20 \cf0 Might be missing some strings or have invalid or duplicated strings. Fix and do step 7 again}</string>
+				<key>VerticalPad</key>
+				<integer>0</integer>
+			</dict>
+		</dict>
+		<dict>
 			<key>Bounds</key>
 			<string>{{84.562687366281637, 251.54546153659192}, {46, 20}}</string>
 			<key>Class</key>
@@ -120,8 +181,8 @@
 			<integer>215</integer>
 			<key>Points</key>
 			<array>
-				<string>{82.524492033384035, 237.09091052196771}</string>
-				<string>{81.578979388932908, 285.50009617542526}</string>
+				<string>{82.524244099043585, 237.09091052196771}</string>
+				<string>{81.576760935435928, 285.50009578559661}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -898,8 +959,8 @@ translators}</string>
 			<integer>164</integer>
 			<key>Points</key>
 			<array>
-				<string>{399.50386744878057, 360.51425834414647}</string>
-				<string>{346.99226510243881, 353.94482832563676}</string>
+				<string>{399.50386744878057, 360.51425835122251}</string>
+				<string>{346.99226510243881, 353.94482834203643}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -957,8 +1018,8 @@ translators}</string>
 			<integer>166</integer>
 			<key>Points</key>
 			<array>
-				<string>{407.50055694988004, 530.11843487624947}</string>
-				<string>{378.49897372818953, 528.74842317505238}</string>
+				<string>{407.50019860421742, 534.71983809666392}</string>
+				<string>{378.49949640040182, 535.5374885043517}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1018,7 +1079,7 @@ translators}</string>
 			<array>
 				<string>{85.950208922808642, 395.49756276652369}</string>
 				<string>{97, 507}</string>
-				<string>{152.50483214028733, 512.47636681225822}</string>
+				<string>{152.51769336144952, 517.58460458613456}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1056,7 +1117,7 @@ translators}</string>
 			<array>
 				<string>{514.9303378385523, 316.42012494234331}</string>
 				<string>{505, 387}</string>
-				<string>{378.36860560558648, 459.23805510962086}</string>
+				<string>{378.34411470764695, 467.44896237872638}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -1165,8 +1226,8 @@ translators}</string>
 			<integer>173</integer>
 			<key>Points</key>
 			<array>
-				<string>{262.71430085222465, 612.99951414280463}</string>
-				<string>{261.01557685116376, 667.50024269017911}</string>
+				<string>{261.83804308960811, 643.99939047896987}</string>
+				<string>{261.01744872007265, 667.50030456197715}</string>
 			</array>
 			<key>Style</key>
 			<dict>
@@ -2289,7 +2350,7 @@ and \
 		</dict>
 		<dict>
 			<key>Bounds</key>
-			<string>{{153.5, 435.24999952316284}, {224, 176.75}}</string>
+			<string>{{153.5, 435.24999952316284}, {224, 207.75}}</string>
 			<key>Class</key>
 			<string>ShapedGraphic</string>
 			<key>ID</key>
@@ -2369,7 +2430,7 @@ and \
 	<key>MasterSheets</key>
 	<array/>
 	<key>ModificationDate</key>
-	<string>2015-03-25 01:41:18 +0000</string>
+	<string>2015-03-25 02:45:20 +0000</string>
 	<key>Modifier</key>
 	<string>dr.max</string>
 	<key>NotesVisible</key>
@@ -2464,7 +2525,7 @@ and \
 		<key>SidebarWidth</key>
 		<integer>120</integer>
 		<key>VisibleRegion</key>
-		<string>{{-157, 88.75}, {890.5, 517.5}}</string>
+		<string>{{-157, 99.25}, {890.5, 517.5}}</string>
 		<key>Zoom</key>
 		<real>2</real>
 		<key>ZoomValues</key>
