@@ -8,14 +8,15 @@ This tool is licensed under the [Apache 2.0 OSS license](https://github.com/maxi
 ## Getting Started
 ------------------
 
-Clone this repo and build it. Using, for instance, the commands:
+Clone this repo and build it. Using the following commands on a Linux or Mac OS X system:
 
 ```
-$mkdir -p i18n4go/src/github.com/maximilien
-$export GOPATH=./i18n4go:$GOPATH
-$git clone https://github.com/maximilien/i18n4go i18n4go/src/github.com/maximilien
-$cd i18n4go/src/github.com/maximilien/i18n4go
-$./bin/build
+$ mkdir -p i18n4go/src/github.com/maximilien
+$ export GOPATH=$(pwd)/i18n4go:$GOPATH
+$ cd i18n4go/src/github.com/maximilien
+$ git clone https://github.com/maximilien/i18n4go.git
+$ cd i18n4go
+$ ./bin/build
 ```
 
 The executable output should now be located in: `out/gi18n`. Place it wherever you want, e.g., `/usr/local/bin` on Linux or Mac OS X.
