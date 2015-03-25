@@ -9,6 +9,7 @@ This tool is licensed under the [Apache 2.0 OSS license](https://github.com/maxi
 ------------------
 
 ### Cloning and Building
+------------------------
 
 Clone this repo and build it. Using the following commands on a Linux or Mac OS X system:
 
@@ -28,6 +29,7 @@ The executable output should now be located in: `out/gi18n`. Place it wherever y
 You can now use the `gi18n` executable to issue some of the typical i18n tooling processes.
 
 ### Running Tests
+-----------------
 
 You should run the tests to make sure all is well, do this with: `$ ./bin/test` in your cloned repository.
 
