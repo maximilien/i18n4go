@@ -14,10 +14,12 @@ Clone this repo and build it. Using the following commands on a Linux or Mac OS 
 $ mkdir -p i18n4go/src/github.com/maximilien
 $ export GOPATH=$(pwd)/i18n4go:$GOPATH
 $ cd i18n4go/src/github.com/maximilien
-$ git clone https://github.com/maximilien/i18n4go.git
+$ git clone https://github.com/maximilien/i18n4go.git 
 $ cd i18n4go
 $ ./bin/build
 ```
+
+NOTE: if you get any dependency errors, then use `go get path/to/dependency` to get it, e.g., `go get github.com/onsi/ginkgo` and `go get github.com/onsi/gomega`
 
 The executable output should now be located in: `out/gi18n`. Place it wherever you want, e.g., `/usr/local/bin` on Linux or Mac OS X.
 
