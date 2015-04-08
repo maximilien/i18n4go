@@ -23,7 +23,7 @@ var _ = Describe("extract-strings -d dirName", func() {
 		_, err := os.Getwd()
 		Ω(err).ShouldNot(HaveOccurred())
 
-		outputPath, err = ioutil.TempDir("", "gi18n4go")
+		outputPath, err = ioutil.TempDir("", "i18n4go4go")
 		Ω(err).ToNot(HaveOccurred())
 
 		fixturesPath = filepath.Join("..", "..", "test_fixtures", "extract_strings")
@@ -35,7 +35,7 @@ var _ = Describe("extract-strings -d dirName", func() {
 		os.RemoveAll(outputPath)
 	})
 
-	Context("When gi18n4go is run with the -d flag", func() {
+	Context("When i18n4go4go is run with the -d flag", func() {
 		BeforeEach(func() {
 			session := Runi18n("-c", "extract-strings", "-v", "--po", "--meta", "-d", inputFilesPath, "-o", outputPath, "--ignore-regexp", "^[.]\\w+.go$")
 
@@ -63,7 +63,7 @@ var _ = Describe("extract-strings -d dirName", func() {
 		})
 	})
 
-	Context("When gi18n4go is run with the -d -r flags", func() {
+	Context("When i18n4go4go is run with the -d -r flags", func() {
 		BeforeEach(func() {
 			inputFilesPath = filepath.Join(inputFilesPath, "..")
 

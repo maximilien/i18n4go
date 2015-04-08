@@ -6,10 +6,10 @@ import (
 	. "github.com/onsi/gomega"
 )
 
-var Gi18nExec string
+var I18n4goExec string
 
 func BuildExecutable() {
 	var err error
-	Gi18nExec, err = gexec.Build("./../../gi18n")
+	I18n4goExec, err = gexec.Build("./../../i18n4go")
 	Ω(err).ShouldNot(HaveOccurred())
 }

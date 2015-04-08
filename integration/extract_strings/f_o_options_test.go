@@ -29,7 +29,7 @@ var _ = Describe("extract-strings -f fileName -o outputDir", func() {
 
 	BeforeEach(func() {
 		var err error
-		outputPath, err = ioutil.TempDir("", "gi18n4go")
+		outputPath, err = ioutil.TempDir("", "i18n4go4go")
 		Ω(err).ToNot(HaveOccurred())
 	})
 

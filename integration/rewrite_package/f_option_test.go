@@ -31,7 +31,7 @@ var _ = Describe("rewrite-package -f filename", func() {
 			Ω(err).ShouldNot(HaveOccurred())
 			rootPath = filepath.Join(dir, "..", "..")
 
-			outputDir, err = ioutil.TempDir(rootPath, "gi18n_integration")
+			outputDir, err = ioutil.TempDir(rootPath, "i18n4go_integration")
 			Ω(err).ShouldNot(HaveOccurred())
 
 			fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
@@ -79,7 +79,7 @@ var _ = Describe("rewrite-package -f filename", func() {
 			Ω(err).ShouldNot(HaveOccurred())
 			rootPath = filepath.Join(dir, "..", "..")
 
-			outputDir, err = ioutil.TempDir(rootPath, "gi18n_integration")
+			outputDir, err = ioutil.TempDir(rootPath, "i18n4go_integration")
 			Ω(err).ShouldNot(HaveOccurred())
 
 			fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
@@ -134,7 +134,7 @@ var _ = Describe("rewrite-package -f filename", func() {
 			Ω(err).ShouldNot(HaveOccurred())
 			rootPath = filepath.Join(dir, "..", "..")
 
-			outputDir, err = ioutil.TempDir(rootPath, "gi18n_integration")
+			outputDir, err = ioutil.TempDir(rootPath, "i18n4go_integration")
 			Ω(err).ShouldNot(HaveOccurred())
 
 			fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
@@ -174,7 +174,7 @@ var _ = Describe("rewrite-package -f filename", func() {
 			Ω(err).ShouldNot(HaveOccurred())
 			rootPath = filepath.Join(dir, "..", "..")
 
-			outputDir, err = ioutil.TempDir(rootPath, "gi18n_integration")
+			outputDir, err = ioutil.TempDir(rootPath, "i18n4go_integration")
 			Ω(err).ShouldNot(HaveOccurred())
 
 			fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
