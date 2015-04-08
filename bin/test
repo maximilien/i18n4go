@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 (
   set -e
@@ -12,9 +12,6 @@
   }
 
   trap printStatus EXIT
-
-PACKAGE_ROOT_PATH=github.com/maximilien/i18n4go
-
   export GOPATH=$(godep path):$GOPATH
 
   echo -e "\n Cleaning build artifacts..."
@@ -24,8 +21,8 @@ PACKAGE_ROOT_PATH=github.com/maximilien/i18n4go
   go fmt ./...
 
   echo -e "\n Integration Testing packages:"
-  go test ./src/$PACKAGE_ROOT_PATH/integration/... -parallel 4 $@
+  go test ./integration/... -parallel 4 $@
 
   echo -e "\n Vetting packages for potential issues..."
-  go tool vet src/$PACKAGE_ROOT_PATH/cmds src/$PACKAGE_ROOT_PATH/common src/$PACKAGE_ROOT_PATH/main src/$PACKAGE_ROOT_PATH/i18n
+  go tool vet cmds common main i18n
 )
