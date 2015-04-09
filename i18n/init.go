@@ -100,7 +100,7 @@ func loadFromAsset(packageName, assetPath, locale, language string) error {
 		return errors.New(fmt.Sprintf("Could not load i18n asset: %v", assetKey))
 	}
 
-	tmpDir, err := ioutil.TempDir("", "gi18n_res")
+	tmpDir, err := ioutil.TempDir("", "i18n4go_res")
 	if err != nil {
 		return err
 	}

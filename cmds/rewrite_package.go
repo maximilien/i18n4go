@@ -145,7 +145,7 @@ func (rp *rewritePackage) loadStringsToBeTranslated(fileName string) error {
 }
 
 func (rp *rewritePackage) processDir(dirName string, recursive bool) error {
-	rp.Printf("gi18n: rewriting strings in dir %s, recursive: %t\n", dirName, recursive)
+	rp.Printf("i18n4go: rewriting strings in dir %s, recursive: %t\n", dirName, recursive)
 	rp.Println()
 
 	fileInfos, _ := ioutil.ReadDir(dirName)
@@ -163,9 +163,9 @@ func (rp *rewritePackage) processDir(dirName string, recursive bool) error {
 			}
 
 			rp.I18nStringsFilename = filepath.Join(rp.I18nStringsDirname, i18nFilename)
-			rp.Printf("gi18n: loading JSON strings from file: %s\n", rp.I18nStringsFilename)
+			rp.Printf("i18n4go: loading JSON strings from file: %s\n", rp.I18nStringsFilename)
 			if err := rp.loadStringsToBeTranslated(rp.I18nStringsFilename); err != nil {
-				rp.Println("gi18n: WARNING could not find JSON file:", rp.I18nStringsFilename, err.Error())
+				rp.Println("i18n4go: WARNING could not find JSON file:", rp.I18nStringsFilename, err.Error())
 				rp.resetProcessing()
 				continue
 			}
@@ -200,7 +200,7 @@ func (rp *rewritePackage) ignoreFile(fileName string) bool {
 
 func (rp *rewritePackage) processFilename(fileName string) error {
 	rp.TotalFiles += 1
-	rp.Println("gi18n: rewriting strings for source file:", fileName)
+	rp.Println("i18n4go: rewriting strings for source file:", fileName)
 
 	fileSet := token.NewFileSet()
 
@@ -222,7 +222,7 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 
 	importPath, err := rp.determineImportPath(absFilePath)
 	if err != nil {
-		rp.Println("gi18n: error determining the import path:", err.Error())
+		rp.Println("i18n4go: error determining the import path:", err.Error())
 		return err
 	}
 
@@ -233,20 +233,20 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 	outputDir := filepath.Join(rp.OutputDirname, filepath.Dir(rp.relativePathForFile(fileName)))
 	err = rp.addInitFuncToPackage(astFile.Name.Name, outputDir, importPath)
 	if err != nil {
-		rp.Println("gi18n: error adding init() func to package:", err.Error())
+		rp.Println("i18n4go: error adding init() func to package:", err.Error())
 		return err
 	}
 
 	err = rp.insertTFuncCall(astFile)
 	if err != nil {
-		rp.Println("gi18n: error appending T() to AST file:", err.Error())
+		rp.Println("i18n4go: error appending T() to AST file:", err.Error())
 		return err
 	}
 
 	relativeFilePath := rp.relativePathForFile(fileName)
 	err = rp.saveASTFile(relativeFilePath, fileName, astFile, fileSet)
 	if err != nil {
-		rp.Println("gi18n: error saving AST file:", err.Error())
+		rp.Println("i18n4go: error saving AST file:", err.Error())
 		return err
 	}
 
@@ -254,7 +254,7 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 		i18nStringInfos := common.I18nStringInfoMapValues2Array(rp.UpdatedExtractedStrings)
 		err := common.SaveI18nStringInfos(rp, rp.Options(), i18nStringInfos, rp.I18nStringsFilename)
 		if err != nil {
-			rp.Println("gi18n: error saving updated i18n strings file:", err.Error())
+			rp.Println("i18n4go: error saving updated i18n strings file:", err.Error())
 			return err
 		}
 	}
@@ -265,36 +265,36 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 func (rp *rewritePackage) determineImportPath(filePath string) (string, error) {
 	dirName := filepath.Dir(filePath)
 	if rp.options.RootPathFlag == "" {
-		rp.Println("gi18n: using the PWD as the rootPath:", os.Getenv("PWD"))
+		rp.Println("i18n4go: using the PWD as the rootPath:", os.Getenv("PWD"))
 		rp.RootPath = os.Getenv("PWD")
 	}
-	rp.Println("gi18n: determining import path using root path:", rp.RootPath)
+	rp.Println("i18n4go: determining import path using root path:", rp.RootPath)
 	pkg, err := build.Default.ImportDir(rp.RootPath, build.ImportMode(1))
 	if err != nil {
-		rp.Println("gi18n: error getting root path import:", err.Error)
+		rp.Println("i18n4go: error getting root path import:", err.Error)
 		return "", err
 	}
-	rp.Println("gi18n: got a root pkg with import path:", pkg.ImportPath)
+	rp.Println("i18n4go: got a root pkg with import path:", pkg.ImportPath)
 
 	otherPkg, err := build.Default.ImportDir(dirName, build.ImportMode(0))
 	if err != nil {
-		rp.Println("gi18n: error getting root path import:", err.Error)
+		rp.Println("i18n4go: error getting root path import:", err.Error)
 		return "", err
 	}
-	rp.Println("gi18n: got a pkg with import:", otherPkg.ImportPath)
+	rp.Println("i18n4go: got a pkg with import:", otherPkg.ImportPath)
 
 	importPath := otherPkg.ImportPath
 	importPath = strings.Replace(importPath, pkg.ImportPath, "", 1)
 	if strings.HasPrefix(importPath, "/") {
 		importPath = strings.TrimLeft(importPath, "/")
 	}
-	rp.Println("gi18n: using import path as:", importPath)
+	rp.Println("i18n4go: using import path as:", importPath)
 
 	return importPath, nil
 }
 
 func (rp *rewritePackage) insertTFuncCall(astFile *ast.File) error {
-	rp.Println("gi18n: inserting T() calls for strings that need to be translated")
+	rp.Println("i18n4go: inserting T() calls for strings that need to be translated")
 	var declarations []ast.Decl
 	if len(astFile.Imports) > 0 {
 		declarations = astFile.Decls[1:]
@@ -544,7 +544,7 @@ func (rp *rewritePackage) wrapBasicLitWithT(basicLit *ast.BasicLit) ast.Expr {
 }
 
 func (rp *rewritePackage) addInitFuncToPackage(packageName, outputDir, importPath string) error {
-	rp.Println("gi18n: adding init func to package:", packageName, " to output dir:", outputDir)
+	rp.Println("i18n4go: adding init func to package:", packageName, " to output dir:", outputDir)
 
 	common.CreateOutputDirsIfNeeded(outputDir)
 
@@ -564,7 +564,7 @@ func (rp *rewritePackage) getInitFuncCodeSnippetContent(packageName, importPath 
 	if rp.InitCodeSnippetFilename != "" {
 		bytes, err := ioutil.ReadFile(rp.InitCodeSnippetFilename)
 		if err != nil {
-			rp.Printf("gi18n: error reading content of init code snippet file: %s\n, using default", rp.InitCodeSnippetFilename)
+			rp.Printf("i18n4go: error reading content of init code snippet file: %s\n, using default", rp.InitCodeSnippetFilename)
 		} else {
 			snippetContent = string(bytes)
 		}

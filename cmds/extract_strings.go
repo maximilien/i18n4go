@@ -88,7 +88,7 @@ func (es *extractStrings) Run() error {
 	} else {
 		err := es.InspectDir(es.options.DirnameFlag, es.options.RecurseFlag)
 		if err != nil {
-			es.Println("gi18n: could not extract strings from directory:", es.options.DirnameFlag)
+			es.Println("i18n4go: could not extract strings from directory:", es.options.DirnameFlag)
 			return err
 		}
 		es.Println()
@@ -99,7 +99,7 @@ func (es *extractStrings) Run() error {
 }
 
 func (es *extractStrings) InspectFile(filename string) error {
-	es.Println("gi18n: extracting strings from file:", filename)
+	es.Println("i18n4go: extracting strings from file:", filename)
 	if es.options.DryRunFlag {
 		es.Println("WARNING running in -dry-run mode")
 	}
@@ -207,7 +207,7 @@ func (es *extractStrings) InspectFile(filename string) error {
 }
 
 func (es *extractStrings) InspectDir(dirName string, recursive bool) error {
-	es.Printf("gi18n: inspecting dir %s, recursive: %t\n", dirName, recursive)
+	es.Printf("i18n4go: inspecting dir %s, recursive: %t\n", dirName, recursive)
 	es.Println()
 
 	fset := token.NewFileSet()

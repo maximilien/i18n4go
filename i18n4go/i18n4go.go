@@ -13,7 +13,7 @@ import (
 	"github.com/maximilien/i18n4go/common"
 )
 
-const VERSION = "v0.1.1"
+const VERSION = "v0.2.0"
 
 var options common.Options
 
@@ -59,7 +59,7 @@ func extractStringsCmd() {
 
 	err := cmd.Run()
 	if err != nil {
-		cmd.Println("gi18n: Could not extract strings, err:", err)
+		cmd.Println("i18n4go: Could not extract strings, err:", err)
 		os.Exit(1)
 	}
 
@@ -79,7 +79,7 @@ func createTranslationsCmd() {
 
 	err := cmd.Run()
 	if err != nil {
-		cmd.Println("gi18n: Could not create translation files, err:", err)
+		cmd.Println("i18n4go: Could not create translation files, err:", err)
 		os.Exit(1)
 	}
 
@@ -99,7 +99,7 @@ func verifyStringsCmd() {
 
 	err := cmd.Run()
 	if err != nil {
-		cmd.Println("gi18n: Could not verify strings for input filename, err:", err)
+		cmd.Println("i18n4go: Could not verify strings for input filename, err:", err)
 		os.Exit(1)
 	}
 
@@ -120,7 +120,7 @@ func rewritePackageCmd() {
 
 	err := cmd.Run()
 	if err != nil {
-		cmd.Println("gi18n: Could not successfully rewrite package, err:", err)
+		cmd.Println("i18n4go: Could not successfully rewrite package, err:", err)
 		os.Exit(1)
 	}
 
@@ -140,7 +140,7 @@ func mergeStringsCmd() {
 
 	err := mergeStrings.Run()
 	if err != nil {
-		mergeStrings.Println("gi18n: Could not merge strings, err:", err)
+		mergeStrings.Println("i18n4go: Could not merge strings, err:", err)
 		os.Exit(1)
 	}
 
@@ -160,7 +160,7 @@ func showMissingStringsCmd() {
 
 	err := showMissingStrings.Run()
 	if err != nil {
-		showMissingStrings.Println("gi18n: Could not show missing strings, err:", err)
+		showMissingStrings.Println("i18n4go: Could not show missing strings, err:", err)
 		os.Exit(1)
 	}
 
@@ -180,7 +180,7 @@ func checkupCmd() {
 
 	err := checkup.Run()
 	if err != nil {
-		checkup.Println("gi18n: Could not checkup, err:", err)
+		checkup.Println("i18n4go: Could not checkup, err:", err)
 		os.Exit(1)
 	}
 
@@ -200,7 +200,7 @@ func fixupCmd() {
 
 	err := fixup.Run()
 	if err != nil {
-		fixup.Println("gi18n: Could not fixup, err:", err)
+		fixup.Println("i18n4go: Could not fixup, err:", err)
 		os.Exit(1)
 	}
 
@@ -253,22 +253,22 @@ func init() {
 
 func usage() {
 	usageString := `
-usage: gi18n -c extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -f <fileName>
-   or: gi18n -c extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -d <dirName> [-r] [--ignore-regexp <fileNameRegexp>]
+usage: i18n4go -c extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -f <fileName>
+   or: i18n4go -c extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -d <dirName> [-r] [--ignore-regexp <fileNameRegexp>]
 
-usage: gi18n -c rewrite-package [-v] [-r] -d <dirName> [--i18n-strings-filename <fileName> | --i18n-strings-dirname <dirName>] [--init-code-snippet-filename <fileName>]
-   or: gi18n -c rewrite-package [-v] [-r] -f <fileName> --i18n-strings-filename <fileName> [--init-code-snippet-filename <fileName>]
+usage: i18n4go -c rewrite-package [-v] [-r] -d <dirName> [--i18n-strings-filename <fileName> | --i18n-strings-dirname <dirName>] [--init-code-snippet-filename <fileName>]
+   or: i18n4go -c rewrite-package [-v] [-r] -f <fileName> --i18n-strings-filename <fileName> [--init-code-snippet-filename <fileName>]
 
-usage: gi18n -c create-translations [-v] [--google-translate-api-key <api key>] [--source-language <language>] -f <fileName> --languages <lang1,lang2,...> -o <outputDir>
+usage: i18n4go -c create-translations [-v] [--google-translate-api-key <api key>] [--source-language <language>] -f <fileName> --languages <lang1,lang2,...> -o <outputDir>
 
-usage: gi18n -c merge-strings [-v] [-r] [--source-language <language>] -d <dirName>
+usage: i18n4go -c merge-strings [-v] [-r] [--source-language <language>] -d <dirName>
 
-usage: gi18n -c verify-strings [-v] [--source-language <language>] -f <sourceFileName> --language-files <language files>
-   or: gi18n -c verify-strings [-v] [--source-language <language>] -f <sourceFileName> --languages <lang1,lang2,...>
+usage: i18n4go -c verify-strings [-v] [--source-language <language>] -f <sourceFileName> --language-files <language files>
+   or: i18n4go -c verify-strings [-v] [--source-language <language>] -f <sourceFileName> --languages <lang1,lang2,...>
 
-usage: gi18n -c show-missing-strings [-v] -d <dirName> --i18n-strings-filename <language file>
+usage: i18n4go -c show-missing-strings [-v] -d <dirName> --i18n-strings-filename <language file>
 
-usage: gi18n -c checkup
+usage: i18n4go -c checkup
 
   -h | --help                prints the usage
   -v                         verbose
@@ -378,7 +378,7 @@ func handlePanic() {
 func displayCrashDialog(errorMessage string) {
 	formattedString := `
 Something completely unexpected happened. This is a bug in %s.
-Please file this bug : https://github.com/maximilien/gi18n/issues
+Please file this bug : https://github.com/maximilien/i18n4go/issues
 Tell us that you ran this command:
 
 	%s
@@ -393,5 +393,5 @@ and this stack trace:
 	`
 
 	stackTrace := "\t" + strings.Replace(string(debug.Stack()), "\n", "\n\t", -1)
-	println(fmt.Sprintf(formattedString, "gi18n", strings.Join(os.Args, " "), errorMessage, stackTrace))
+	println(fmt.Sprintf(formattedString, "i18n4go", strings.Join(os.Args, " "), errorMessage, stackTrace))
 }

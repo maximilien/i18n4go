@@ -189,7 +189,7 @@ func SaveStringsInPo(printer PrinterInterface, options Options, stringInfos map[
 }
 
 func SaveI18nStringsInPo(printer PrinterInterface, options Options, i18nStrings []I18nStringInfo, fileName string) error {
-	printer.Println("gi18n: creating and saving i18n strings to .po file:", fileName)
+	printer.Println("i18n4go: creating and saving i18n strings to .po file:", fileName)
 
 	if !options.DryRunFlag && len(i18nStrings) != 0 {
 		file, err := os.Create(fileName)
@@ -276,7 +276,7 @@ func CopyI18nStringInfoMap(i18nStringInfoMap map[string]I18nStringInfo) map[stri
 func GetTemplatedStringArgs(aString string) []string {
 	re, err := getTemplatedStringRegexp()
 	if err != nil {
-		fmt.Errorf("gi18n: Error compiling templated string Regexp: %s", err.Error())
+		fmt.Errorf("i18n4go: Error compiling templated string Regexp: %s", err.Error())
 		return []string{}
 	}
 
@@ -294,7 +294,7 @@ func GetTemplatedStringArgs(aString string) []string {
 func IsTemplatedString(aString string) bool {
 	re, err := getTemplatedStringRegexp()
 	if err != nil {
-		fmt.Errorf("gi18n: Error compiling templated string Regexp: %s", err.Error())
+		fmt.Errorf("i18n4go: Error compiling templated string Regexp: %s", err.Error())
 		return false
 	}
 
@@ -304,7 +304,7 @@ func IsTemplatedString(aString string) bool {
 func IsInterpolatedString(aString string) bool {
 	re, err := getInterpolatedStringRegexp()
 	if err != nil {
-		fmt.Errorf("gi18n: Error compiling interpolated string Regexp: %s", err.Error())
+		fmt.Errorf("i18n4go: Error compiling interpolated string Regexp: %s", err.Error())
 		return false
 	}
 
@@ -318,7 +318,7 @@ func ConvertToTemplatedString(aString string) string {
 
 	re, err := getInterpolatedStringRegexp()
 	if err != nil {
-		fmt.Errorf("gi18n: Error compiling interpolated string Regexp: %s", err.Error())
+		fmt.Errorf("i18n4go: Error compiling interpolated string Regexp: %s", err.Error())
 		return ""
 	}
 

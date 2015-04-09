@@ -72,7 +72,7 @@ func (ms *MergeStrings) combineStringInfosPerDirectory(directory string) error {
 	ms.I18nStringInfos = common.I18nStringInfoMapValues2Array(combinedMap)
 	sort.Sort(ms)
 	common.SaveI18nStringInfos(ms, ms.Options(), ms.I18nStringInfos, filePath)
-	ms.Println("gi18n: saving combined language file: " + filePath)
+	ms.Println("i18n4go: saving combined language file: " + filePath)
 
 	if ms.Recurse {
 		for _, directory = range directories {
@@ -104,7 +104,7 @@ func (ms MergeStrings) matchFileToSourceLanguage(files []string, lang string) (l
 	for _, file := range files {
 		if strings.Contains(file, languageMatcher) {
 			list = append(list, file)
-			ms.Println("gi18n: scanning file: " + file)
+			ms.Println("i18n4go: scanning file: " + file)
 		}
 	}
 	return

@@ -109,7 +109,7 @@ var _ = Describe("extract-strings -f fileName", func() {
 
 		BeforeEach(func() {
 			var err error
-			OUTPUT_PATH, err = ioutil.TempDir("", "gi18n4go")
+			OUTPUT_PATH, err = ioutil.TempDir("", "i18n4go4go")
 			Ω(err).ShouldNot(HaveOccurred())
 
 			session := Runi18n("-c", "extract-strings", "-f", filepath.Join(inputFilesPath, "no_strings.go"), "-o", OUTPUT_PATH)

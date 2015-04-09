@@ -75,24 +75,24 @@ func (ct *createTranslations) Printf(msg string, a ...interface{}) (int, error) 
 }
 
 func (ct *createTranslations) Run() error {
-	ct.Println("gi18n: creating translation files for:", ct.Filename)
+	ct.Println("i18n4go: creating translation files for:", ct.Filename)
 	ct.Println()
 
 	for _, language := range ct.Languages {
-		ct.Println("gi18n: creating translation file copy for language:", language)
+		ct.Println("i18n4go: creating translation file copy for language:", language)
 
 		if ct.options.GoogleTranslateApiKeyFlag != "" {
 			destFilename, err := ct.createTranslationFileWithGoogleTranslate(language)
 			if err != nil {
-				return fmt.Errorf("gi18n: could not create translation file for language: %s with Google Translate", language)
+				return fmt.Errorf("i18n4go: could not create translation file for language: %s with Google Translate", language)
 			}
-			ct.Println("gi18n: created translation file with Google Translate:", destFilename)
+			ct.Println("i18n4go: created translation file with Google Translate:", destFilename)
 		} else {
 			destFilename, err := ct.createTranslationFile(ct.Filename, language)
 			if err != nil {
-				return fmt.Errorf("gi18n: could not create default translation file for language: %s\nerr:%s", language, err.Error())
+				return fmt.Errorf("i18n4go: could not create default translation file for language: %s\nerr:%s", language, err.Error())
 			}
-			ct.Println("gi18n: created default translation file:", destFilename)
+			ct.Println("i18n4go: created default translation file:", destFilename)
 		}
 	}
 
@@ -110,7 +110,7 @@ func (ct *createTranslations) createTranslationFileWithGoogleTranslate(language 
 	err = common.CreateOutputDirsIfNeeded(ct.OutputDirname)
 	if err != nil {
 		ct.Println(err)
-		return "", fmt.Errorf("gi18n: could not create output directory: %s", ct.OutputDirname)
+		return "", fmt.Errorf("i18n4go: could not create output directory: %s", ct.OutputDirname)
 	}
 
 	destFilename := filepath.Join(ct.OutputDirname, strings.Replace(fileName, ct.options.SourceLanguageFlag, language, -1))
@@ -118,19 +118,19 @@ func (ct *createTranslations) createTranslationFileWithGoogleTranslate(language 
 	i18nStringInfos, err := common.LoadI18nStringInfos(ct.Filename)
 	if err != nil {
 		ct.Println(err)
-		return "", fmt.Errorf("gi18n: could not load i18n strings from file: %s", ct.Filename)
+		return "", fmt.Errorf("i18n4go: could not load i18n strings from file: %s", ct.Filename)
 	}
 
 	if len(i18nStringInfos) == 0 {
-		return "", fmt.Errorf("gi18n: input file: %s is empty", ct.Filename)
+		return "", fmt.Errorf("i18n4go: input file: %s is empty", ct.Filename)
 	}
 
-	ct.Println("gi18n: attempting to use Google Translate to translate source strings in: ", language)
+	ct.Println("i18n4go: attempting to use Google Translate to translate source strings in: ", language)
 	modifiedI18nStringInfos := make([]common.I18nStringInfo, len(i18nStringInfos))
 	for i, i18nStringInfo := range i18nStringInfos {
 		translation, _, err := ct.googleTranslate(i18nStringInfo.Translation, language)
 		if err != nil {
-			ct.Println("gi18n: error invoking Google Translate for string:", i18nStringInfo.Translation)
+			ct.Println("i18n4go: error invoking Google Translate for string:", i18nStringInfo.Translation)
 		} else {
 			modifiedI18nStringInfos[i] = common.I18nStringInfo{ID: i18nStringInfo.ID, Translation: translation}
 		}
@@ -139,7 +139,7 @@ func (ct *createTranslations) createTranslationFileWithGoogleTranslate(language 
 	err = common.SaveI18nStringInfos(ct, ct.Options(), modifiedI18nStringInfos, destFilename)
 	if err != nil {
 		ct.Println(err)
-		return "", fmt.Errorf("gi18n: could not save Google Translate i18n strings to file: %s", destFilename)
+		return "", fmt.Errorf("i18n4go: could not save Google Translate i18n strings to file: %s", destFilename)
 	}
 
 	if ct.options.PoFlag {
@@ -147,7 +147,7 @@ func (ct *createTranslations) createTranslationFileWithGoogleTranslate(language 
 		err = common.SaveI18nStringsInPo(ct, ct.Options(), modifiedI18nStringInfos, poFilename)
 		if err != nil {
 			ct.Println(err)
-			return "", fmt.Errorf("gi18n: could not save PO file: %s", poFilename)
+			return "", fmt.Errorf("i18n4go: could not save PO file: %s", poFilename)
 		}
 	}
 
@@ -165,15 +165,15 @@ func (ct *createTranslations) createTranslationFile(sourceFilename string, langu
 	i18nStringInfos, err := common.LoadI18nStringInfos(sourceFilename)
 	if err != nil {
 		ct.Println(err)
-		return "", fmt.Errorf("gi18n: could not load i18n strings from file: %s", sourceFilename)
+		return "", fmt.Errorf("i18n4go: could not load i18n strings from file: %s", sourceFilename)
 	}
 
 	if len(i18nStringInfos) == 0 {
-		return "", fmt.Errorf("gi18n: input file: %s is empty", sourceFilename)
+		return "", fmt.Errorf("i18n4go: input file: %s is empty", sourceFilename)
 	}
 
 	destFilename := filepath.Join(ct.OutputDirname, strings.Replace(fileName, ct.options.SourceLanguageFlag, language, -1))
-	ct.Println("gi18n: creating translation file:", destFilename)
+	ct.Println("i18n4go: creating translation file:", destFilename)
 
 	return destFilename, common.CopyFileContents(sourceFilename, destFilename)
 }
@@ -184,7 +184,7 @@ func (ct *createTranslations) googleTranslate(translateString string, language s
 
 	response, err := http.Get(googleTranslateUrl)
 	if err != nil {
-		ct.Println("gi18n: ERROR invoking Google Translate: ", googleTranslateUrl)
+		ct.Println("i18n4go: ERROR invoking Google Translate: ", googleTranslateUrl)
 		return "", "", err
 	}
 
@@ -192,14 +192,14 @@ func (ct *createTranslations) googleTranslate(translateString string, language s
 
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		ct.Println("gi18n: ERROR parsing Google Translate response body")
+		ct.Println("i18n4go: ERROR parsing Google Translate response body")
 		return "", "", err
 	}
 
 	var googleTranslateData GoogleTranslateData
 	err = json.Unmarshal(body, &googleTranslateData)
 	if err != nil {
-		ct.Println("gi18n: ERROR parsing Google Translate response body")
+		ct.Println("i18n4go: ERROR parsing Google Translate response body")
 		return "", "", err
 	}
 

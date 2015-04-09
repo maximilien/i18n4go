@@ -69,7 +69,7 @@ var _ = Describe("fixup", func() {
 		}
 
 		//session = Runi18n("-c", "fixup")
-		cmd = exec.Command(Gi18nExec, "-c", "fixup")
+		cmd = exec.Command(I18n4goExec, "-c", "fixup")
 
 		stdinPipe, err = cmd.StdinPipe()
 		if err != nil {
