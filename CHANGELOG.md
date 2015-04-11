@@ -1,4 +1,4 @@
-# Changes in v0.2.0
+# Changes in v0.2.1
 - renamed executable to i18n4go
 - minor update to README
 
