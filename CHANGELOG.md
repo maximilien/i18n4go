@@ -1,3 +1,7 @@
+# Changes in v0.2.0
+- renamed executable to i18n4go
+- minor update to README
+
 # Changes in v0.1.2
 - fix for issue #22
 
