@@ -11,6 +11,7 @@ i18n4go -c extract-strings -v --output-flat -o demo1-i18n -f demo1/demo1.go
 
 # basic extract strings w demo1-i18n/excluded.json
 
+cp demo1/excluded.json demo1-i18n/excluded.json
 i18n4go -c extract-strings -v -e ./demo1-i18n/excluded.json --output-flat -o demo1-i18n -f demo1/demo1.go
 
 # cp go project files into demo1-i18n
@@ -22,6 +23,14 @@ cp demo1/generate-language-resources demo1-i18n/generate-language-resources
 # rewrite package demo1
 
 i18n4go -c rewrite-package -v -d demo1-i18n --i18n-strings-filename demo1-i18n/demo1.go.en.json --init-code-snippet-filename i18n_init/cf_cli_i18n_init.go.template
+
+# extract string again to have strings with args
+
+i18n4go -c extract-strings -v -e ./demo1-i18n/excluded.json --output-flat -o demo1-i18n -f demo1-i18n/demo1.go
+
+# go into the new i18n project
+
+cd demo1-i18n
 
 # create i18n resources
 
@@ -46,4 +55,5 @@ i18n4go -c create-translations -v --source-language en -f en.all.json --language
 # test and run
 
 ./out/demo1
+LANG=fr_FR ./out/demo1
 
