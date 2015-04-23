@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+
+go get github.com/jteeuwen/go-bindata/...
+
+echo " Generating i18n Resource file"
+go-bindata -pkg main -ignore ".go" -o ./i18n_resources.go ./i18n/resources/...

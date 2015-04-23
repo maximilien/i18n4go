@@ -1,0 +1,12 @@
+[
+   {
+      "id": "Hello from Goffer land and i18n4go",
+      "translation": "Bonjour de la terre des Goffer land et de i18n4go",
+      "modified": false
+   },
+   {
+      "id": "Version {{.Arg0}}\n",
+      "translation": "Version {{.Arg0}}\n",
+      "modified": false
+   }
+]

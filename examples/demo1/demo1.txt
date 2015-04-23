@@ -1,0 +1,49 @@
+# move to examples directory
+cd examples
+
+# basic extract strings w/o excluded.json WITH --dry-run
+
+i18n4go -c extract-strings -v --dry-run --output-flat -o demo1-i18n -f demo1/demo1.go
+
+# basic extract strings w/o excluded.json
+
+i18n4go -c extract-strings -v --output-flat -o demo1-i18n -f demo1/demo1.go
+
+# basic extract strings w demo1-i18n/excluded.json
+
+i18n4go -c extract-strings -v -e ./demo1-i18n/excluded.json --output-flat -o demo1-i18n -f demo1/demo1.go
+
+# cp go project files into demo1-i18n
+
+cp demo1/demo1.go demo1-i18n/demo1.go
+cp demo1/build demo1-i18n/build
+cp demo1/generate-language-resources demo1-i18n/generate-language-resources
+
+# rewrite package demo1
+
+i18n4go -c rewrite-package -v -d demo1-i18n --i18n-strings-filename demo1-i18n/demo1.go.en.json --init-code-snippet-filename i18n_init/cf_cli_i18n_init.go.template
+
+# create i18n resources
+
+mkdir -p i18n/resources
+
+# merge translation to all.en.json
+
+i18n4go -c merge-strings -v --source-language en -d .
+
+# create translation files
+
+i18n4go -c create-translations -v --source-language en -f en.all.json --languages en_US,fr_FR,es_ES,de_DE,zh_Hans -o i18n/resources
+
+# generate resource assets
+
+./generate-language-resources
+
+# build executable
+
+./build
+
+# test and run
+
+./out/demo1
+
