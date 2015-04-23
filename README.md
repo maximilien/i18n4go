@@ -11,7 +11,7 @@ This tool is licensed under the [Apache 2.0 OSS license](https://github.com/maxi
 ### Overview Presentations
 --------------------------
 
-* Talk at [GoSF Meetup](http://www.meetup.com/golangsf/events/220603955/) on April, 2015. Slides ([PDF](https://github.com/maximilien/presentations/blob/master/2015/i18n4go-gosf-meetup/releases/i18n4go-v0.4.1.pdf)and [PPTX](https://github.com/maximilien/presentations/blob/master/2015/i18n4go-gosf-meetup/releases/i18n4go-v0.4.1.pptx)), video, [demo](https://github.com/maximilien/i18n4go/tree/master/examples/demo1)
+* Talk at [GoSF Meetup](http://www.meetup.com/golangsf/events/220603955/) on April, 2015. Slides ([PDF](https://github.com/maximilien/presentations/blob/master/2015/i18n4go-gosf-meetup/releases/i18n4go-v0.4.1.pdf) and [PPTX](https://github.com/maximilien/presentations/blob/master/2015/i18n4go-gosf-meetup/releases/i18n4go-v0.4.1.pptx)), video, [demo](https://github.com/maximilien/i18n4go/tree/master/examples/demo1)
 
 ### Cloning and Building
 ------------------------
