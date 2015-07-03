@@ -475,15 +475,6 @@ We can inspect the `./tmp/cli/i18n/resources/events.go.en.json` file and see tha
 
 ---------
 
-### Edge Releases (master)
---------------------------
-
-Get latest code here on Github and build it: `./bin/build` *
-
-The binary will be in the `./out` * directory.
-
-You can follow our development progress on [Pivotal Tracker](https://www.pivotaltracker.com/n/projects/1071880).
-
 ## Troubleshooting / FAQs
 -------------------------
 
