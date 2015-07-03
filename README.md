@@ -511,7 +511,7 @@ None for now. Submit questions/comments as issues and we will update here
 1. Clone (Forking beforehand for development).
 1. [Ensure your $GOPATH is set correctly](http://golang.org/cmd/go/#hdr-GOPATH_environment_variable)
 
-## Building *
+## Building
 -------------
 
 1. Run `./bin/build`
@@ -519,7 +519,7 @@ None for now. Submit questions/comments as issues and we will update here
 
 Optionally, you can use `bin/run` to compile and run the executable in one step.
 
-## Developing *
+## Developing
 -------------
 
 1. Run `go get golang.org/x/tools/cmd/vet`
