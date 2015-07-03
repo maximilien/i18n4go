@@ -515,19 +515,19 @@ None for now. Submit questions/comments as issues and we will update here
 -------------
 
 1. Run `./bin/build`
-1. The binary will be built into the `./out` directory.
+1. The binary will be built into the `./out` directory
 
 Optionally, you can use `bin/run` to compile and run the executable in one step.
 
 ## Developing *
----------------
+-------------
 
-1. Run `go get code.google.com/p/go.tools/cmd/vet`
-2. Run `go get github.com/cloudfoundry/cli ...` to install test dependencies
-1. Write a [Ginkgo](https://github.com/onsi/ginkgo) test.
-1. Run `bin/test` and watch the test fail.
-1. Make the test pass.
-1. Submit a pull request.
+1. Run `go get golang.org/x/tools/cmd/vet`
+2. Run `go get github.com/xxx ...` to install test dependencies (as you see errors)
+1. Write a [Ginkgo](https://github.com/onsi/ginkgo) test
+1. Run `bin/test` and watch the test fail
+1. Make the test pass
+1. Submit a pull request
 
 ## Contributing
 ---------------
@@ -538,12 +538,19 @@ Optionally, you can use `bin/run` to compile and run the executable in one step.
 * Please make sure your PR is passing Travis before submitting
 * Feel free to email me or the current collaborators if you have additional questions about contributions
 
-### Managing dependencies
+## Managing dependencies
 -------------------------
 
 * All dependencies managed via [Godep](https://github.com/tools/godep). See [Godeps/_workspace](https://github.com/maximilien/i18n4go/tree/master/Godeps/_workspace) directory on master
 
-### Current conventions
+### Short `godep` Guide
+* If you ever import a new package `foo/bar` (after you `go get foo/bar`, so that foo/bar is in `$GOPATH`), you can type `godep save ./...` to add it to the `Godeps` directory.
+* To restore dependencies from the `Godeps` directory, simply use `godep restore`. `restore` is the opposite of `save`.
+* If you ever remove a dependency or a link becomes deprecated, the easiest way is probably to remove your entire `Godeps` directory and run `godep save ./...` again, after making sure all your dependencies are in your `$GOPATH`. Don't manually edit `Godeps.json`!
+* To update an existing dependency, you can use `godep update foo/bar` or `godep update foo/...` (where `...` is a wildcard)
+* The godep project [readme](https://github.com/tools/godep/README.md) is a pretty good resource: [https://github.com/tools/godep](https://github.com/tools/godep)
+
+## Current conventions
 -----------------------
 
 * Basic Go conventions
