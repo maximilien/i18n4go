@@ -15,7 +15,7 @@ This tool is licensed under the [Apache 2.0 OSS license](https://github.com/maxi
 
 [![GoSF Meetup Talk on i18n4go on April, 2015](http://img.youtube.com/vi/S_NdzSj1syg/0.jpg)](https://www.youtube.com/watch?v=S_NdzSj1syg)
 
-* Blog post: IBM's developerWorks: [i18n4go: Taking your Golang Projects Global for Fun or Profits](https://developer.ibm.com/open/2015/07/18/i18n4go-taking-golang-projects-global-fun-profits/)
+* Blog post on July, 2015 at IBM's developerWorks: [i18n4go: Taking your Golang Projects Global for Fun or Profits](https://developer.ibm.com/open/2015/07/18/i18n4go-taking-golang-projects-global-fun-profits/)
 
 ### Cloning and Building
 ------------------------
