@@ -527,11 +527,13 @@ Optionally, you can use `bin/run` to compile and run the executable in one step.
 ## Contributing
 ---------------
 
+* We gratefully acknowledge and thank the [current contributors](https://github.com/maximilien/i18n4go/graphs/contributors)
 * We welcome any and all contributions as Pull Requests (PR)
 * We also welcome issues and bug report and new feature request. We will address as time permits
 * Follow the steps above in Developing to get your system setup correctly
 * Please make sure your PR is passing Travis before submitting
 * Feel free to email me or the current collaborators if you have additional questions about contributions
+* Before submitting your first PR, please read and follow steps in [CONTRIBUTING.md](CONTRIBUTING.md)
 
 ## Managing dependencies
 -------------------------
