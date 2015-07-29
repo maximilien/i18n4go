@@ -1,26 +1,28 @@
 {
 	"ImportPath": "github.com/maximilien/i18n4go",
-	"GoVersion": "go1.3.3",
+	"GoVersion": "go1.4.2",
 	"Packages": [
 		"./..."
 	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/nicksnyder/go-i18n/i18n",
-			"Rev": "c722cd1cec3e26a1393aecf0058c9f3a037a9657"
+			"Comment": "v1.1.0-13-g9962a4a",
+			"Rev": "9962a4ace19b64d9e0331ae1c94ba138b404c422"
 		},
 		{
 			"ImportPath": "github.com/onsi/ginkgo",
-			"Rev": "51ddbbc2ace9f9ad4cf06ba63442ea2ef2019837"
+			"Comment": "v1.2.0-8-g25380c6",
+			"Rev": "25380c62e61d3f90436be125b8127dbae578fdef"
 		},
 		{
 			"ImportPath": "github.com/onsi/gomega",
-			"Comment": "v1.0-33-ge7b2cd9",
-			"Rev": "e7b2cd96b5633fbc5f0c221159a5c1e85323f770"
+			"Comment": "v1.0-50-gd6c945f",
+			"Rev": "d6c945f9fdbf6cad99e85b0feff591caa268e0db"
 		},
 		{
 			"ImportPath": "github.com/pivotal-cf-experimental/jibber_jabber",
-			"Rev": "901694860a59e63e1d392e6597ca919364f6abd1"
+			"Rev": "5181a0a92a50f392c5638170d6cfad5397df5895"
 		}
 	]
 }

@@ -89,6 +89,14 @@ var pluralSpecs = map[string]*PluralSpec{
 		},
 	},
 
+	// Burmese
+	"my": &PluralSpec{
+		Plurals: newPluralSet(Other),
+		PluralFunc: func(ops *operands) Plural {
+			return Other
+		},
+	},
+
 	// Catalan
 	"ca": &PluralSpec{
 		Plurals: newPluralSet(One, Other),
@@ -193,6 +201,14 @@ var pluralSpecs = map[string]*PluralSpec{
 		},
 	},
 
+	// Indonesian
+	"id": &PluralSpec{
+		Plurals: newPluralSet(Other),
+		PluralFunc: func(ops *operands) Plural {
+			return Other
+		},
+	},
+
 	// Italian
 	"it": &PluralSpec{
 		Plurals: newPluralSet(One, Other),
@@ -238,6 +254,14 @@ var pluralSpecs = map[string]*PluralSpec{
 					return Few
 				}
 			}
+			return Other
+		},
+	},
+
+	// Malay
+	"ms": &PluralSpec{
+		Plurals: newPluralSet(Other),
+		PluralFunc: func(ops *operands) Plural {
 			return Other
 		},
 	},
