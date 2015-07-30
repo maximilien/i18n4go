@@ -5,6 +5,11 @@ This is a general purpose internationalization (i18n) tooling for Go language pr
 
 This tool is licensed under the [Apache 2.0 OSS license](https://github.com/maximilien/i18n4go/blob/master/LICENSE). We'd love to hear from you if you are using, attempting to use, or planning to use this tool. Feel free to [open an issue (good or bad)](https://github.com/maximilien/i18n4go/issues) here on Github or send email to `i18n4go` at the Gmail domain.
 
+<p>
+We use Slack for public discussions and support. To chit chat, ask for help, or offer your own, join us in the
+<a href="https://dwopen.slack.com">dWOpen i18n4go team</a>: <script async defer src="https://raw.githubusercontent.com/maximilien/i18n4go/master/slack/slackin.js"></script>
+</p>
+
 ## Getting Started
 ------------------
 
