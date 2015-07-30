@@ -7,7 +7,9 @@ This tool is licensed under the [Apache 2.0 OSS license](https://github.com/maxi
 
 <p>
 We use Slack for public discussions and support. To chit chat, ask for help, or offer your own, join us in the
-<a href="https://dwopen.slack.com">dWOpen i18n4go team</a>: <script async defer src="https://raw.githubusercontent.com/maximilien/i18n4go/master/slack/slackin.js"></script>
+<a href="https://dwopen.slack.com">dWOpen i18n4go team</a>
+![Slack]
+(https://raw.githubusercontent.com/maximilien/i18n4go/master/slack/slack.png)
 </p>
 
 ## Getting Started
