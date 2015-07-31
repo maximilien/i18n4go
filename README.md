@@ -9,7 +9,7 @@ Three ways to contact us:
 
 1. Feel free to [open an issue (good or bad)](https://github.com/maximilien/i18n4go/issues) here on Github
 2. Send email to `i18n4go` at the Gmail domain.
-3. Use Slack for public discussions and support. Go to the [IBM dwOpen](http://developer.ibm.com/open] i18n4go channel
+3. Use Slack for public discussions and support. Go to the [IBM dwOpen](http://developer.ibm.com/open) i18n4go channel
 [![dWOpen Slack](https://raw.githubusercontent.com/maximilien/i18n4go/master/slack/slack.png)](https://dwopen.slack.com/messages/i18n4go/)
 
 ## Getting Started
