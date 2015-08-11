@@ -452,7 +452,7 @@ you can specifie string literals to ignore as well as classes of strings using a
 String literals are defined within the `excludedStrings` array. Any strings in your source files that exactly matches one of these will not be extracted
 to the generated files from extracted strings.
 
-```
+```json
  ...
   "excludedStrings" : [
      "",
@@ -476,7 +476,7 @@ If we inspect the `./tmp/cli/i18n/app/app.go.en.json` file there should not be a
 
 Regular expressions can be defined using the same JSON annotation as string literals with the tag `"excludedRegexps"`.
 
-```
+```json
 {
 ...
 "excludedRegexps" : [
