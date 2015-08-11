@@ -190,7 +190,7 @@ This file is the JSON formatted translation file for English. Some of its conten
 
 ```json
 [
-    ...
+  ...
     {
         "id": "Show help",
         "translation": "Show help"
@@ -453,14 +453,14 @@ String literals are defined within the `excludedStrings` array. Any strings in y
 to the generated files from extracted strings.
 
 ```json
- ...
+  ...
   "excludedStrings" : [
-     "",
+    "",
     " ",
     "\n",
     "help",
     ...
-  ] ...
+  ]
 }
 ```
 
