@@ -5,12 +5,13 @@ This is a general purpose internationalization (i18n) tooling for Go language pr
 
 This tool is licensed under the [Apache 2.0 OSS license](https://github.com/maximilien/i18n4go/blob/master/LICENSE). We'd love to hear from you if you are using, attempting to use, or planning to use this tool. 
 
-Three ways to contact us:
+Four ways to contact us:
 
 1. Feel free to [open an issue (good or bad)](https://github.com/maximilien/i18n4go/issues) here on Github
 2. Send email to `i18n4go` at the Gmail domain.
 3. Use Slack for public discussions and support. Go to the [IBM dwOpen](http://developer.ibm.com/open) i18n4go channel
 [![dWOpen Slack](https://raw.githubusercontent.com/maximilien/i18n4go/master/slack/slack.png)](https://dwopen.slack.com/messages/i18n4go/)
+4. [![Join the chat at https://gitter.im/cloudfoundry-incubator/cf-abacus](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/cloudfoundry-incubator/cf-abacus?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 ## Getting Started
 ------------------
