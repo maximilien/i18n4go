@@ -1,7 +1,7 @@
 i18n Tooling for the Go Language [![Build Status](https://travis-ci.org/maximilien/i18n4go.svg?branch=master)](https://travis-ci.org/maximilien/i18n4go#)
 ==============================
 
-[![Join the chat at https://gitter.im/maximilien/i18n4go](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/maximilien/i18n4go?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![dWOpen Slack](https://raw.githubusercontent.com/maximilien/i18n4go/master/slack/badge.svg)](https://dwopen.slack.com/messages/i18n4go/)
+[![Join the chat at https://gitter.im/maximilien/i18n4go](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/maximilien/i18n4go?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![dWOpen Slack](https://raw.githubusercontent.com/maximilien/i18n4go/master/slack/slack.png)](https://dwopen.slack.com/messages/i18n4go/)
 
 This is a general purpose internationalization (i18n) tooling for Go language (Golang) programs. It allows you to prepare Go language code for internationalization and localization (l10n). You can also use it to help maintain the resulting i18n-enabled Golang code so that it remains internationalized. This tool was extracted while we worked on enabling the [Cloud Foundry CLI](https://github.com/cloudfoundry/cli) with i18n support.
 
