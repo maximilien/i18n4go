@@ -138,6 +138,21 @@ func (cu *Checkup) inspectFile(file string) (translatedStrings []string, err err
 						translatedStrings = append(translatedStrings, translatedString)
 					}
 				}
+			case *ast.SelectorExpr:
+				expr := x.Fun.(*ast.SelectorExpr)
+				if ident, ok := expr.X.(*ast.Ident); ok {
+					funName := expr.Sel.Name
+
+					if ident.Name == "i18n" && (funName == "T" || funName == "t") {
+						if stringArg, ok := x.Args[0].(*ast.BasicLit); ok {
+							translatedString, err := strconv.Unquote(stringArg.Value)
+							if err != nil {
+								panic(err.Error())
+							}
+							translatedStrings = append(translatedStrings, translatedString)
+						}
+					}
+				}
 			default:
 				//Skip!
 			}
