@@ -13,7 +13,7 @@ import (
 	"github.com/maximilien/i18n4go/common"
 )
 
-const VERSION = "v0.2.3"
+const VERSION = "v0.2.4"
 
 var options common.Options
 
