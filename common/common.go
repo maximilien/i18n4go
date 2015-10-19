@@ -276,7 +276,7 @@ func CopyI18nStringInfoMap(i18nStringInfoMap map[string]I18nStringInfo) map[stri
 func GetTemplatedStringArgs(aString string) []string {
 	re, err := getTemplatedStringRegexp()
 	if err != nil {
-		fmt.Errorf("i18n4go: Error compiling templated string Regexp: %s", err.Error())
+		fmt.Printf("i18n4go: Error compiling templated string Regexp: %s", err.Error())
 		return []string{}
 	}
 
