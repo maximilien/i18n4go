@@ -441,6 +441,36 @@ i18n4go: Could not verify strings for input filename, err: i18n4go: target file 
 
 Finally, if a combined language file contains both extra and missing keys then `verify-strings` will generate two diff files: `missing` and `extra`.
 
+## checkup
+
+The general usage for `-c checkup` command is:
+
+```
+  ...
+  CHECKUP:
+
+  -c checkup            the checkup command
+
+
+  -q                    the qualifier to use when calling the T(...), defaults to empty but can be used to set to something like i18n for example, such that, i18n.T(...) is used for T(...) function
+
+```
+
+The `checkup` command ensures that the strings in code match strings in resource files and vice versa.
+
+## fixup
+
+The general usage for `-c fixup` command is:
+
+```
+  ...
+  FIXUP:
+
+  -c fixup            the fixup command
+```
+
+The `fixup` command interactively lets users add, update, or remove translations keys from code and resource files.
+
 ## Specifying `excluded.json` File
 
 The exclude.json file can be used to manage which strings should not be extract with the `extracting-strings` command. In the `excluded.json` file,
