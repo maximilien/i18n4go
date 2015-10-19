@@ -52,7 +52,7 @@ func CheckFile(fileName string) (string, string, error) {
 	}
 
 	if !fileInfo.Mode().IsRegular() {
-		return "", "", fmt.Errorf("Non-regular source file %s (%s)", fileInfo.Name(), fileInfo.Mode().String())
+		return "", "", fmt.Errorf("i18n4go: Non-regular source file %s (%s)\n", fileInfo.Name(), fileInfo.Mode().String())
 	}
 
 	return filepath.Base(fileName), filepath.Dir(fileName), nil
@@ -276,7 +276,7 @@ func CopyI18nStringInfoMap(i18nStringInfoMap map[string]I18nStringInfo) map[stri
 func GetTemplatedStringArgs(aString string) []string {
 	re, err := getTemplatedStringRegexp()
 	if err != nil {
-		fmt.Printf("i18n4go: Error compiling templated string Regexp: %s", err.Error())
+		fmt.Printf("i18n4go: Error compiling templated string Regexp: %s\n", err.Error())
 		return []string{}
 	}
 
@@ -294,7 +294,7 @@ func GetTemplatedStringArgs(aString string) []string {
 func IsTemplatedString(aString string) bool {
 	re, err := getTemplatedStringRegexp()
 	if err != nil {
-		fmt.Printf("i18n4go: Error compiling templated string Regexp: %s", err.Error())
+		fmt.Printf("i18n4go: Error compiling templated string Regexp: %s\n", err.Error())
 		return false
 	}
 
@@ -304,7 +304,7 @@ func IsTemplatedString(aString string) bool {
 func IsInterpolatedString(aString string) bool {
 	re, err := getInterpolatedStringRegexp()
 	if err != nil {
-		fmt.Printf("i18n4go: Error compiling interpolated string Regexp: %s", err.Error())
+		fmt.Printf("i18n4go: Error compiling interpolated string Regexp: %s\n", err.Error())
 		return false
 	}
 
@@ -318,7 +318,7 @@ func ConvertToTemplatedString(aString string) string {
 
 	re, err := getInterpolatedStringRegexp()
 	if err != nil {
-		fmt.Printf("i18n4go: Error compiling interpolated string Regexp: %s", err.Error())
+		fmt.Printf("i18n4go: Error compiling interpolated string Regexp: %s\n", err.Error())
 		return ""
 	}
 
