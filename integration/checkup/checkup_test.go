@@ -60,6 +60,20 @@ var _ = Describe("checkup", func() {
 		})
 	})
 
+	Context("when the i18n package is fully qualified", func() {
+		BeforeEach(func() {
+			fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "qualified")
+		})
+
+		It("returns 0", func() {
+			Ω(session.ExitCode()).Should(Equal(0))
+		})
+
+		It("prints a reassuring message", func() {
+			Ω(session).Should(Say("OK"))
+		})
+	})
+
 	Context("When there are problems", func() {
 		BeforeEach(func() {
 			fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "notsogood")
