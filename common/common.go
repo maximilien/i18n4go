@@ -294,7 +294,7 @@ func GetTemplatedStringArgs(aString string) []string {
 func IsTemplatedString(aString string) bool {
 	re, err := getTemplatedStringRegexp()
 	if err != nil {
-		fmt.Errorf("i18n4go: Error compiling templated string Regexp: %s", err.Error())
+		fmt.Printf("i18n4go: Error compiling templated string Regexp: %s", err.Error())
 		return false
 	}
 
@@ -304,7 +304,7 @@ func IsTemplatedString(aString string) bool {
 func IsInterpolatedString(aString string) bool {
 	re, err := getInterpolatedStringRegexp()
 	if err != nil {
-		fmt.Errorf("i18n4go: Error compiling interpolated string Regexp: %s", err.Error())
+		fmt.Printf("i18n4go: Error compiling interpolated string Regexp: %s", err.Error())
 		return false
 	}
 
@@ -318,7 +318,7 @@ func ConvertToTemplatedString(aString string) string {
 
 	re, err := getInterpolatedStringRegexp()
 	if err != nil {
-		fmt.Errorf("i18n4go: Error compiling interpolated string Regexp: %s", err.Error())
+		fmt.Printf("i18n4go: Error compiling interpolated string Regexp: %s", err.Error())
 		return ""
 	}
 
