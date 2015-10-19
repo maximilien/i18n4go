@@ -1,3 +1,8 @@
+# Changes in v0.2.3
+- removed the main/* directory
+- added -q flag to checkup to allow qualifiers to be specified, so that i18n.T(...) can be used
+- update to README to match new checkup -q flag
+
 # Changes in v0.2.1
 - renamed executable to i18n4go
 - minor update to README
