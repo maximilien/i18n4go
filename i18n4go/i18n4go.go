@@ -13,7 +13,7 @@ import (
 	"github.com/maximilien/i18n4go/common"
 )
 
-const VERSION = "v0.2.0"
+const VERSION = "v0.2.2"
 
 var options common.Options
 
@@ -248,6 +248,8 @@ func init() {
 
 	flag.StringVar(&options.InitCodeSnippetFilenameFlag, "init-code-snippet-filename", "", "[optional] the path to a file containing the template snippet for the code that is used for go-i18n initialization")
 
+	flag.StringVar(&options.QualifierFlag, "q", "", "[optional] the qualifier string that is used when using the T(...) function, default to nothing but could be set to `i18n` so that all calls would be: i18n.T(...)")
+
 	flag.Parse()
 }
 
@@ -349,6 +351,7 @@ usage: i18n4go -c checkup
   CHECKUP:
 
   -c checkup                 the checkup command which ensures that the strings in code match strings in resource files and vice versa
+  -q                         the qualifier to use when calling the T(...), defaults to empty but can be used to set to something like i18n for example, such that, i18n.T(...) is used for T(...) function
 
   FIXUP:
 

@@ -53,7 +53,7 @@ func (cu *Checkup) Run() error {
 	sourceStrings, err := cu.findSourceStrings()
 
 	if err != nil {
-		fmt.Println(fmt.Sprintf("Couldn't find any source strings: %s", err.Error()))
+		cu.Println(fmt.Sprintf("Couldn't find any source strings: %s", err.Error()))
 		return err
 	}
 
@@ -61,14 +61,14 @@ func (cu *Checkup) Run() error {
 
 	englishFiles := locales["en_US"]
 	if englishFiles == nil {
-		fmt.Println("Could not find an i18n file for locale: en_US")
+		cu.Println("Could not find an i18n file for locale: en_US")
 		return errors.New("Could not find an i18n file for locale: en_US")
 	}
 
 	englishStrings, err := cu.findI18nStrings(englishFiles)
 
 	if err != nil {
-		fmt.Println(fmt.Sprintf("Couldn't find the english strings: %s", err.Error()))
+		cu.Println(fmt.Sprintf("Couldn't find the english strings: %s", err.Error()))
 		return err
 	}
 
@@ -82,7 +82,7 @@ func (cu *Checkup) Run() error {
 		translatedStrings, err := cu.findI18nStrings(i18nFiles)
 
 		if err != nil {
-			fmt.Println(fmt.Sprintf("Couldn't get the strings from %s: %s", locale, err.Error()))
+			cu.Println(fmt.Sprintf("Couldn't get the strings from %s: %s", locale, err.Error()))
 			return err
 		}
 
@@ -90,7 +90,7 @@ func (cu *Checkup) Run() error {
 	}
 
 	if err == nil {
-		fmt.Printf("OK")
+		cu.Printf("OK")
 	}
 
 	return err
@@ -142,8 +142,7 @@ func (cu *Checkup) inspectFile(file string) (translatedStrings []string, err err
 				expr := x.Fun.(*ast.SelectorExpr)
 				if ident, ok := expr.X.(*ast.Ident); ok {
 					funName := expr.Sel.Name
-
-					if ident.Name == "i18n" && (funName == "T" || funName == "t") {
+					if ident.Name == cu.options.QualifierFlag && (funName == "T" || funName == "t") {
 						if stringArg, ok := x.Args[0].(*ast.BasicLit); ok {
 							translatedString, err := strconv.Unquote(stringArg.Value)
 							if err != nil {
@@ -170,7 +169,7 @@ func (cu *Checkup) findSourceStrings() (sourceStrings map[string]string, err err
 	for _, file := range files {
 		fileStrings, err := cu.inspectFile(file)
 		if err != nil {
-			fmt.Println("Error when inspecting go file: ", file)
+			cu.Println("Error when inspecting go file: ", file)
 			return sourceStrings, err
 		}
 
@@ -261,14 +260,14 @@ func (cu *Checkup) findI18nStrings(i18nFiles []string) (i18nStrings map[string]s
 func (cu *Checkup) diffStrings(sourceNameOne, sourceNameTwo string, stringsOne, stringsTwo map[string]string) (err error) {
 	for key, _ := range stringsOne {
 		if stringsTwo[key] == "" {
-			fmt.Printf("\"%s\" exists in %s, but not in %s\n", key, sourceNameOne, sourceNameTwo)
+			cu.Printf("\"%s\" exists in %s, but not in %s\n", key, sourceNameOne, sourceNameTwo)
 			err = errors.New("Strings don't match")
 		}
 	}
 
 	for key, _ := range stringsTwo {
 		if stringsOne[key] == "" {
-			fmt.Printf("\"%s\" exists in %s, but not in %s\n", key, sourceNameTwo, sourceNameOne)
+			cu.Printf("\"%s\" exists in %s, but not in %s\n", key, sourceNameTwo, sourceNameOne)
 			err = errors.New("Strings don't match")
 		}
 	}

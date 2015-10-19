@@ -36,19 +36,13 @@ var _ = Describe("checkup", func() {
 		}
 	})
 
-	JustBeforeEach(func() {
-		err = os.Chdir(fixturesPath)
-		if err != nil {
-			fmt.Println("Could not change to fixtures directory")
-			panic(err.Error())
-		}
-
-		session = Runi18n("-c", "checkup")
-	})
-
 	Context("When there are no problems", func() {
 		BeforeEach(func() {
 			fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "allgood")
+			err = os.Chdir(fixturesPath)
+			Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
+
+			session = Runi18n("-c", "checkup", "-v")
 		})
 
 		It("returns 0", func() {
@@ -63,6 +57,10 @@ var _ = Describe("checkup", func() {
 	Context("when the i18n package is fully qualified", func() {
 		BeforeEach(func() {
 			fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "qualified")
+			err = os.Chdir(fixturesPath)
+			Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
+
+			session = Runi18n("-c", "checkup", "-v", "-q", "i18n")
 		})
 
 		It("returns 0", func() {
@@ -70,6 +68,7 @@ var _ = Describe("checkup", func() {
 		})
 
 		It("prints a reassuring message", func() {
+			session = Runi18n("-c", "checkup", "-v", "-q", "i18n")
 			Ω(session).Should(Say("OK"))
 		})
 	})
@@ -77,6 +76,10 @@ var _ = Describe("checkup", func() {
 	Context("When there are problems", func() {
 		BeforeEach(func() {
 			fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "notsogood")
+			err = os.Chdir(fixturesPath)
+			Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
+
+			session = Runi18n("-c", "checkup", "-v")
 		})
 
 		It("shows all inconsistent strings and returns 1", func() {

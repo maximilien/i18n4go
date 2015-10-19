@@ -36,6 +36,8 @@ type Options struct {
 	RootPathFlag string
 
 	InitCodeSnippetFilenameFlag string
+
+	QualifierFlag string
 }
 
 type I18nStringInfo struct {
