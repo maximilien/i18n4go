@@ -63,6 +63,9 @@ import (
 
 // TranslateFunc returns the translation of the string identified by translationID.
 //
+// If there is no translation for translationID, then the translationID itself is returned.
+// This makes it easy to identify missing translations in your app.
+//
 // If translationID is a non-plural form, then the first variadic argument may be a map[string]interface{}
 // or struct that contains template data.
 //
@@ -110,6 +113,16 @@ func ParseTranslationFileBytes(filename string, buf []byte) error {
 // It is useful if your translations are in a format not supported by LoadTranslationFile.
 func AddTranslation(lang *language.Language, translations ...translation.Translation) {
 	defaultBundle.AddTranslation(lang, translations...)
+}
+
+// LanguageTags returns the tags of all languages that have been added.
+func LanguageTags() []string {
+	return defaultBundle.LanguageTags()
+}
+
+// LanguageTranslationIDs returns the ids of all translations that have been added for a given language.
+func LanguageTranslationIDs(languageTag string) []string {
+	return defaultBundle.LanguageTranslationIDs(languageTag)
 }
 
 // MustTfunc is similar to Tfunc except it panics if an error happens.

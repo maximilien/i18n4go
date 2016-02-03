@@ -7,22 +7,26 @@
 	"Deps": [
 		{
 			"ImportPath": "github.com/nicksnyder/go-i18n/i18n",
-			"Comment": "v1.1.0-13-g9962a4a",
-			"Rev": "9962a4ace19b64d9e0331ae1c94ba138b404c422"
+			"Comment": "v1.4.0",
+			"Rev": "37e5c2de3e03e4b82693e3fcb4a6aa2cc4eb07e3"
 		},
 		{
 			"ImportPath": "github.com/onsi/ginkgo",
-			"Comment": "v1.2.0-8-g25380c6",
-			"Rev": "25380c62e61d3f90436be125b8127dbae578fdef"
+			"Comment": "v1.2.0-42-g07d85e6",
+			"Rev": "07d85e6b10c4289c7d612f9b13f45ba36f66d55b"
 		},
 		{
 			"ImportPath": "github.com/onsi/gomega",
-			"Comment": "v1.0-50-gd6c945f",
-			"Rev": "d6c945f9fdbf6cad99e85b0feff591caa268e0db"
+			"Comment": "v1.0-81-gad93e46",
+			"Rev": "ad93e463829d54602c66e94813bc1eb9b10d454c"
 		},
 		{
 			"ImportPath": "github.com/pivotal-cf-experimental/jibber_jabber",
-			"Rev": "5181a0a92a50f392c5638170d6cfad5397df5895"
+			"Rev": "bcc4c8345a21301bf47c032ff42dd1aae2fe3027"
+		},
+		{
+			"ImportPath": "gopkg.in/yaml.v2",
+			"Rev": "f7716cbe52baa25d2e9b0d0da546fcf909fc16b4"
 		}
 	]
 }

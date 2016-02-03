@@ -4,10 +4,9 @@ package bundle
 import (
 	"encoding/json"
 	"fmt"
+	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"reflect"
-
-	//	"launchpad.net/goyaml"
 
 	"path/filepath"
 
@@ -81,10 +80,8 @@ func parseTranslations(filename string, buf []byte) ([]translation.Translation, 
 	switch format := filepath.Ext(filename); format {
 	case ".json":
 		unmarshalFunc = json.Unmarshal
-	/*
-		case ".yaml":
-			unmarshalFunc = goyaml.Unmarshal
-	*/
+	case ".yaml":
+		unmarshalFunc = yaml.Unmarshal
 	default:
 		return nil, fmt.Errorf("unsupported file extension %s", format)
 	}
@@ -132,6 +129,24 @@ func (b *Bundle) AddTranslation(lang *language.Language, translations ...transla
 // Translations returns all translations in the bundle.
 func (b *Bundle) Translations() map[string]map[string]translation.Translation {
 	return b.translations
+}
+
+// LanguageTags returns the tags of all languages that that have been added.
+func (b *Bundle) LanguageTags() []string {
+	var tags []string
+	for k := range b.translations {
+		tags = append(tags, k)
+	}
+	return tags
+}
+
+// LanguageTranslationIDs returns the ids of all translations that have been added for a given language.
+func (b *Bundle) LanguageTranslationIDs(languageTag string) []string {
+	var ids []string
+	for id := range b.translations[languageTag] {
+		ids = append(ids, id)
+	}
+	return ids
 }
 
 // MustTfunc is similar to Tfunc except it panics if an error happens.
