@@ -271,14 +271,14 @@ func (rp *rewritePackage) determineImportPath(filePath string) (string, error) {
 	rp.Println("i18n4go: determining import path using root path:", rp.RootPath)
 	pkg, err := build.Default.ImportDir(rp.RootPath, build.ImportMode(1))
 	if err != nil {
-		rp.Println("i18n4go: error getting root path import:", err.Error)
+		rp.Println("i18n4go: error getting root path import:", err.Error())
 		return "", err
 	}
 	rp.Println("i18n4go: got a root pkg with import path:", pkg.ImportPath)
 
 	otherPkg, err := build.Default.ImportDir(dirName, build.ImportMode(0))
 	if err != nil {
-		rp.Println("i18n4go: error getting root path import:", err.Error)
+		rp.Println("i18n4go: error getting root path import:", err.Error())
 		return "", err
 	}
 	rp.Println("i18n4go: got a pkg with import:", otherPkg.ImportPath)
