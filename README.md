@@ -139,7 +139,7 @@ usage: i18n4go -c create-translations [-v] [--google-translate-api-key <api key>
 
 ## extract-strings
 
-The general usage for `-extract-strings` command is:
+The general usage for `-c extract-strings` command is:
 
 ```
   ...
@@ -230,7 +230,7 @@ The generated output JSON files are in: `./tmp/cli/i18n/app`
 
 ## merge-strings
 
-The general usage for `-merge-strings` command is:
+The general usage for `-c merge-strings` command is:
 
 ```
   ...
@@ -263,7 +263,7 @@ must match the language portion of the files in the directory, e.g., app.go.en.j
 
 ## rewrite-package
 
-The general usage for `-rewrite-package` command is:
+The general usage for `-c rewrite-package` command is:
 
 ```
   ...
@@ -360,10 +360,10 @@ The general usage for `-c create-translations` command is:
 
 ```
 
-The command `-create-translations` generates copies of the `-source-language` file, one per language specified in the `-languages` flag (seperated by comma).
+The command `-c create-translations` generates copies of the `-source-language` file, one per language specified in the `-languages` flag (seperated by comma).
 
 ```
-$ i18n4go -create-translations -v -f tmp/cli/i18n/app/en.all.json -source-language en -languages "en_US,fr_FR,es_ES,de_DE" -o tmp/cli/i18n/app/
+$ i18n4go -c create-translations -v -f tmp/cli/i18n/app/en.all.json -source-language en -languages "en_US,fr_FR,es_ES,de_DE" -o tmp/cli/i18n/app/
 
 i18n4go: creating translation files for: tmp/cli/i18n/app/en.all.json
 
@@ -405,7 +405,7 @@ The general usage for `-c verify-strings` command is:
 
 ```
 
-The command `-verify-strings` assures that combined language files have exactly the same keys.
+The command `-c verify-strings` assures that combined language files have exactly the same keys.
 
 For instance, in the example in `merge-strings` we created a combined language file called `./tmp/cli/i18n/app/en.all.json` and if we also
 had a `./tmp/cli/i18n/app/fr.all.json` for French and that file had missing strings then running the `verify-strings` would generate a
@@ -425,7 +425,7 @@ Similarly, `verify-strings` will make sure that no additonal strings are added. 
 running `verify-strings` would include a `tmp/cli/i18n/app/de.all.json.extra.diff.json`.
 
 ```
-$ i18n4go -v -verify-strings -f tmp/cli/i18n/app/en.all.json -languages "fr,de"
+$ i18n4go -c -verify-strings -v -f tmp/cli/i18n/app/en.all.json -languages "fr,de"
 
 targetFilenames: [tmp/cli/i18n/app/fr.all.json tmp/cli/i18n/app/de.all.json]
 i18n4go: ERROR input file does not match target file: tmp/cli/i18n/app/fr.all.json
