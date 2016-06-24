@@ -18,9 +18,7 @@ Two additional ways, besides Gitter or Slack chat above, to contact us:
 ### Overview Presentations, Talks, Blogs
 ----------------------------------------
 
-* Talk at [GoSF Meetup](http://www.meetup.com/golangsf/events/220603955/) on April, 2015. Slides ([PDF](https://github.com/maximilien/presentations/blob/master/2015/i18n4go-gosf-meetup/releases/i18n4go-v0.4.1.pdf) and [PPTX](https://github.com/maximilien/presentations/blob/master/2015/i18n4go-gosf-meetup/releases/i18n4go-v0.4.1.pptx)), [video](https://www.youtube.com/watch?v=S_NdzSj1syg), [demo](https://github.com/maximilien/i18n4go/tree/master/examples/demo1)
-
-[![GoSF Meetup Talk on i18n4go on April, 2015](http://img.youtube.com/vi/S_NdzSj1syg/0.jpg)](https://www.youtube.com/watch?v=S_NdzSj1syg)
+* Talk at [GoSF Meetup](http://www.meetup.com/golangsf/events/220603955/) on April, 2015. Slides ([PDF](https://github.com/maximilien/presentations/blob/master/2015/i18n4go-gosf-meetup/releases/i18n4go-v0.4.1.pdf) and [PPTX](https://github.com/maximilien/presentations/blob/master/2015/i18n4go-gosf-meetup/releases/i18n4go-v0.4.1.pptx)), [demo](https://github.com/maximilien/i18n4go/tree/master/examples/demo1)
 
 * Blog post on July, 2015 at IBM's developerWorks: [i18n4go: Taking your Golang Projects Global for Fun or Profits](https://developer.ibm.com/open/2015/07/18/i18n4go-taking-golang-projects-global-fun-profits/)
 
