@@ -84,12 +84,6 @@ func (fix *Fixup) Run() error {
 			foreignStringInfos, _ := fix.findI18nStrings(i18nFile[0])
 			foreignAdditionalTranslations := getAdditionalForeignTranslations(englishStringInfos, foreignStringInfos)
 
-			foreignMissingTranslations := getMissingForeignTranslations(englishStringInfos, foreignStringInfos)
-
-			if len(foreignMissingTranslations) > 0 {
-				addTranslations(foreignStringInfos, i18nFile[0], foreignMissingTranslations)
-			}
-
 			if len(foreignAdditionalTranslations) > 0 {
 				removeTranslations(foreignStringInfos, i18nFile[0], foreignAdditionalTranslations)
 			}
@@ -173,11 +167,21 @@ func (fix *Fixup) Run() error {
 		}
 
 		if len(updatedTranslations) > 0 {
-			updateTranslations(translatedStrings, i18nFiles[0], locale, updatedTranslations)
+			if locale == "en-us" {
+				updateTranslations(translatedStrings, i18nFiles[0], locale, updatedTranslations)
+			} else {
+				var newTranslationsToRemove []string
+				for _, v := range additionalTranslations {
+					newTranslationsToRemove = append(newTranslationsToRemove, v)
+				}
+				removeTranslations(translatedStrings, i18nFiles[0], newTranslationsToRemove)
+			}
 		}
 
 		if len(additionalTranslations) > 0 {
-			addTranslations(translatedStrings, i18nFiles[0], additionalTranslations)
+			if locale == "en-us" {
+				addTranslations(translatedStrings, i18nFiles[0], additionalTranslations)
+			}
 		}
 
 		if len(removedTranslations) > 0 {
@@ -307,7 +311,7 @@ func writeStringInfoMapToJSON(localeMap map[string]common.I18nStringInfo, locale
 
 	sort.Sort(array(localeArray))
 
-	encodedLocale, err := json.MarshalIndent(localeArray, "", "   ")
+	encodedLocale, err := json.MarshalIndent(localeArray, "", "  ")
 	if err != nil {
 		return err
 	}
@@ -348,9 +352,8 @@ func updateTranslations(localMap map[string]common.I18nStringInfo, localeFile st
 
 		if locale == "en-us" {
 			localMap[value] = common.I18nStringInfo{ID: value, Translation: value}
-		} else {
-			localMap[value] = common.I18nStringInfo{ID: value, Translation: localMap[key].Translation, Modified: true}
 		}
+
 		delete(localMap, key)
 	}
 }
