@@ -171,8 +171,8 @@ func (fix *Fixup) Run() error {
 				updateTranslations(translatedStrings, i18nFiles[0], locale, updatedTranslations)
 			} else {
 				var newTranslationsToRemove []string
-				for _, v := range additionalTranslations {
-					newTranslationsToRemove = append(newTranslationsToRemove, v)
+				for k, _ := range updatedTranslations {
+					newTranslationsToRemove = append(newTranslationsToRemove, k)
 				}
 				removeTranslations(translatedStrings, i18nFiles[0], newTranslationsToRemove)
 			}
