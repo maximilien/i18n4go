@@ -86,16 +86,16 @@ var _ = Describe("checkup", func() {
 			output := string(session.Out.Contents())
 
 			// strings wrapped in T() in the code that don't have corresponding keys in the translation files
-			Ω(output).Should(ContainSubstring("\"Heal the world\" exists in the code, but not in en_US"))
+			Ω(output).Should(ContainSubstring("\"Heal the world\" exists in the code, but not in en-us"))
 
 			// keys in the translations that don't have corresponding strings wrapped in T() in the code
-			Ω(output).Should(ContainSubstring("\"Make it a better place\" exists in en_US, but not in the code"))
+			Ω(output).Should(ContainSubstring("\"Make it a better place\" exists in en-us, but not in the code"))
 
 			// keys in non-english translations that don't exist in the english translation
-			Ω(output).Should(ContainSubstring("\"For you and for me\" exists in zh_CN, but not in en_US"))
+			Ω(output).Should(ContainSubstring("\"For you and for me\" exists in zh-cn, but not in en-us"))
 
 			// keys that exist in the english translation but are missing in non-english translations
-			Ω(output).Should(ContainSubstring("\"And the entire human race\" exists in en_US, but not in zh_CN"))
+			Ω(output).Should(ContainSubstring("\"And the entire human race\" exists in en-us, but not in zh-cn"))
 
 			Ω(session.ExitCode()).Should(Equal(1))
 		})

@@ -59,10 +59,10 @@ func (cu *Checkup) Run() error {
 
 	locales := findTranslationFiles(".")
 
-	englishFiles := locales["en_US"]
+	englishFiles := locales["en-us"]
 	if englishFiles == nil {
-		cu.Println("Could not find an i18n file for locale: en_US")
-		return errors.New("Could not find an i18n file for locale: en_US")
+		cu.Println("Could not find an i18n file for locale: en-us")
+		return errors.New("Could not find an i18n file for locale: en-us")
 	}
 
 	englishStrings, err := cu.findI18nStrings(englishFiles)
@@ -72,10 +72,10 @@ func (cu *Checkup) Run() error {
 		return err
 	}
 
-	err = cu.diffStrings("the code", "en_US", sourceStrings, englishStrings)
+	err = cu.diffStrings("the code", "en-us", sourceStrings, englishStrings)
 
 	for locale, i18nFiles := range locales {
-		if locale == "en_US" {
+		if locale == "en-us" {
 			continue
 		}
 
@@ -86,7 +86,7 @@ func (cu *Checkup) Run() error {
 			return err
 		}
 
-		err = cu.diffStrings("en_US", locale, englishStrings, translatedStrings)
+		err = cu.diffStrings("en-us", locale, englishStrings, translatedStrings)
 	}
 
 	if err == nil {

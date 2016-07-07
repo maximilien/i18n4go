@@ -46,7 +46,7 @@ var _ = Describe("merge-strings -d dirName", func() {
 				)
 			})
 
-			It("creates an en.all.json for which the translation strings order are stable", func() {
+			FIt("creates an en.all.json for which the translation strings order are stable", func() {
 				expectedFilePath := GetFilePath(expectedFilesPath, "en.all.json")
 				actualFilePath := GetFilePath(inputFilesPath, "en.all.json")
 
@@ -59,6 +59,7 @@ var _ = Describe("merge-strings -d dirName", func() {
 				Ω(actualBytes).ShouldNot(BeNil())
 
 				Ω(string(expectedBytes)).Should(Equal(string(actualBytes)))
+				// Ω(expectedBytes).Should(MatchJSON(actualBytes))
 			})
 		})
 

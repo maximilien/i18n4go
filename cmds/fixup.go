@@ -65,10 +65,10 @@ func (fix *Fixup) Run() error {
 
 	locales := findTranslationFiles(".")
 
-	englishFile := locales["en_US"][0]
+	englishFile := locales["en-us"][0]
 	if englishFile == "" {
-		fmt.Println("Could not find an i18n file for locale: en_US")
-		return errors.New("Could not find an i18n file for locale: en_US")
+		fmt.Println("Could not find an i18n file for locale: en-us")
+		return errors.New("Could not find an i18n file for locale: en-us")
 	}
 
 	englishStringInfos, err := fix.findI18nStrings(englishFile)
@@ -80,15 +80,9 @@ func (fix *Fixup) Run() error {
 
 	//Check english to all other files before source
 	for locale, i18nFile := range locales {
-		if locale != "en_US" {
+		if locale != "en-us" {
 			foreignStringInfos, _ := fix.findI18nStrings(i18nFile[0])
 			foreignAdditionalTranslations := getAdditionalForeignTranslations(englishStringInfos, foreignStringInfos)
-
-			foreignMissingTranslations := getMissingForeignTranslations(englishStringInfos, foreignStringInfos)
-
-			if len(foreignMissingTranslations) > 0 {
-				addTranslations(foreignStringInfos, i18nFile[0], foreignMissingTranslations)
-			}
 
 			if len(foreignAdditionalTranslations) > 0 {
 				removeTranslations(foreignStringInfos, i18nFile[0], foreignAdditionalTranslations)
@@ -173,11 +167,21 @@ func (fix *Fixup) Run() error {
 		}
 
 		if len(updatedTranslations) > 0 {
-			updateTranslations(translatedStrings, i18nFiles[0], locale, updatedTranslations)
+			if locale == "en-us" {
+				updateTranslations(translatedStrings, i18nFiles[0], locale, updatedTranslations)
+			} else {
+				var newTranslationsToRemove []string
+				for k, _ := range updatedTranslations {
+					newTranslationsToRemove = append(newTranslationsToRemove, k)
+				}
+				removeTranslations(translatedStrings, i18nFiles[0], newTranslationsToRemove)
+			}
 		}
 
 		if len(additionalTranslations) > 0 {
-			addTranslations(translatedStrings, i18nFiles[0], additionalTranslations)
+			if locale == "en-us" {
+				addTranslations(translatedStrings, i18nFiles[0], additionalTranslations)
+			}
 		}
 
 		if len(removedTranslations) > 0 {
@@ -307,7 +311,7 @@ func writeStringInfoMapToJSON(localeMap map[string]common.I18nStringInfo, locale
 
 	sort.Sort(array(localeArray))
 
-	encodedLocale, err := json.MarshalIndent(localeArray, "", "   ")
+	encodedLocale, err := json.MarshalIndent(localeArray, "", "  ")
 	if err != nil {
 		return err
 	}
@@ -346,11 +350,10 @@ func updateTranslations(localMap map[string]common.I18nStringInfo, localeFile st
 	for key, value := range updTranslations {
 		fmt.Println("\t", key)
 
-		if locale == "en_US" {
+		if locale == "en-us" {
 			localMap[value] = common.I18nStringInfo{ID: value, Translation: value}
-		} else {
-			localMap[value] = common.I18nStringInfo{ID: value, Translation: localMap[key].Translation, Modified: true}
 		}
+
 		delete(localMap, key)
 	}
 }

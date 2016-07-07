@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/pivotal-cf-experimental/jibber_jabber"
+	"github.com/cloudfoundry-attic/jibber_jabber"
 
 	goi18n "github.com/nicksnyder/go-i18n/i18n"
 )

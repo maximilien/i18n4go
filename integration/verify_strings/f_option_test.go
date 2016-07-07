@@ -25,7 +25,7 @@ var _ = Describe("verify-strings -f fileName --languages \"[lang,?]+\"", func() 
 		Context("using --source-language", func() {
 			Context("passes verifications", func() {
 				BeforeEach(func() {
-					session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"fr,zh_CN\"", "-o", expectedFilesPath, "--source-language", "en")
+					session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"fr,zh-cn\"", "-o", expectedFilesPath, "--source-language", "en")
 					Ω(session.ExitCode()).Should(Equal(0))
 				})
 
@@ -42,7 +42,7 @@ var _ = Describe("verify-strings -f fileName --languages \"[lang,?]+\"", func() 
 		Context("not using --source-language", func() {
 			Context("passes verifications", func() {
 				BeforeEach(func() {
-					session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"fr,zh_CN\"", "-o", expectedFilesPath)
+					session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"fr,zh-cn\"", "-o", expectedFilesPath)
 					Ω(session.ExitCode()).Should(Equal(0))
 				})
 
@@ -53,10 +53,10 @@ var _ = Describe("verify-strings -f fileName --languages \"[lang,?]+\"", func() 
 					_, err = os.Stat(GetFilePath(inputFilesPath, "quota.go.fr.json.missing.diff.json"))
 					Ω(os.IsNotExist(err)).Should(Equal(true))
 
-					_, err = os.Stat(GetFilePath(inputFilesPath, "quota.go.zh_CN.json.extra.diff.json"))
+					_, err = os.Stat(GetFilePath(inputFilesPath, "quota.go.zh-cn.json.extra.diff.json"))
 					Ω(os.IsNotExist(err)).Should(Equal(true))
 
-					_, err = os.Stat(GetFilePath(inputFilesPath, "quota.go.zh_CN.json.extra.diff.json"))
+					_, err = os.Stat(GetFilePath(inputFilesPath, "quota.go.zh-cn.json.extra.diff.json"))
 					Ω(os.IsNotExist(err)).Should(Equal(true))
 				})
 			})

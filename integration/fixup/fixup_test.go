@@ -137,7 +137,7 @@ var _ = Describe("fixup", func() {
 		})
 	})
 
-	Context("When there are brand new strings in the code that don't exist in en_US", func() {
+	Context("When there are brand new strings in the code that don't exist in en-us", func() {
 		BeforeEach(func() {
 			fixturesPath = filepath.Join("..", "..", "test_fixtures", "fixup", "notsogood", "add")
 		})
@@ -149,11 +149,11 @@ var _ = Describe("fixup", func() {
 			exitCode := cmd.Wait()
 			Ω(exitCode).Should(BeNil())
 
-			file, err := ioutil.ReadFile(filepath.Join(".", "translations", "en_US.all.json"))
+			file, err := ioutil.ReadFile(filepath.Join(".", "translations", "en-us.all.json"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(file).Should(ContainSubstring("\"Heal the world\""))
 
-			chineseFile, err := ioutil.ReadFile(filepath.Join(".", "translations", "zh_CN.all.json"))
+			chineseFile, err := ioutil.ReadFile(filepath.Join(".", "translations", "zh-cn.all.json"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(chineseFile).Should(ContainSubstring("\"Heal the world\""))
 		})
@@ -171,11 +171,11 @@ var _ = Describe("fixup", func() {
 			exitCode := cmd.Wait()
 			Ω(exitCode).Should(BeNil())
 
-			file, err := ioutil.ReadFile(filepath.Join(".", "translations", "en_US.all.json"))
+			file, err := ioutil.ReadFile(filepath.Join(".", "translations", "en-us.all.json"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(file).ShouldNot(ContainSubstring("\"Heal the world\""))
 
-			chineseFile, err := ioutil.ReadFile(filepath.Join(".", "translations", "zh_CN.all.json"))
+			chineseFile, err := ioutil.ReadFile(filepath.Join(".", "translations", "zh-cn.all.json"))
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(chineseFile).ShouldNot(ContainSubstring("\"Heal the world\""))
 		})
@@ -220,14 +220,14 @@ var _ = Describe("fixup", func() {
 			It("Updates the keys for all translation files", func() {
 				cmd.Wait()
 
-				translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "en_US.all.json"))
+				translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "en-us.all.json"))
 				Ω(err).ShouldNot(HaveOccurred())
 				mappedTranslations, err := common.CreateI18nStringInfoMap(translations)
 				Ω(err).ShouldNot(HaveOccurred())
 				Ω(mappedTranslations["I like bananas."]).Should(Equal(common.I18nStringInfo{}))
 				Ω(mappedTranslations["I like apples."]).ShouldNot(Equal(common.I18nStringInfo{}))
 
-				translations, err = common.LoadI18nStringInfos(filepath.Join(".", "translations", "zh_CN.all.json"))
+				translations, err = common.LoadI18nStringInfos(filepath.Join(".", "translations", "zh-cn.all.json"))
 				Ω(err).ShouldNot(HaveOccurred())
 				mappedTranslations, err = common.CreateI18nStringInfoMap(translations)
 				Ω(err).ShouldNot(HaveOccurred())
@@ -238,7 +238,7 @@ var _ = Describe("fixup", func() {
 			It("Updates all the translation", func() {
 				cmd.Wait()
 
-				translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "en_US.all.json"))
+				translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "en-us.all.json"))
 				Ω(err).ShouldNot(HaveOccurred())
 				mappedTranslations, err := common.CreateI18nStringInfoMap(translations)
 				Ω(err).ShouldNot(HaveOccurred())
@@ -248,19 +248,18 @@ var _ = Describe("fixup", func() {
 			It("marks the foreign language translations as updated", func() {
 				cmd.Wait()
 
-				translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "zh_CN.all.json"))
+				translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "zh-cn.all.json"))
 				Ω(err).ShouldNot(HaveOccurred())
 				mappedTranslations, err := common.CreateI18nStringInfoMap(translations)
 				Ω(err).ShouldNot(HaveOccurred())
 
-				Ω(mappedTranslations["I like apples."].Modified).Should(BeTrue())
 				Ω(mappedTranslations["I like apples."].Translation).ShouldNot(Equal("I like apples."))
 			})
 		})
 
 		Context("When the user says the translation is new", func() {
 			var (
-				apple = common.I18nStringInfo{ID: "I like apples.", Translation: "I like apples.", Modified: false}
+				apple = common.I18nStringInfo{ID: "I like apples.", Translation: "I like apples."}
 			)
 
 			JustBeforeEach(func() {
@@ -271,14 +270,14 @@ var _ = Describe("fixup", func() {
 			It("adds the new translation and deletes the old translation from all translation files", func() {
 				cmd.Wait()
 
-				translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "en_US.all.json"))
+				translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "en-us.all.json"))
 				Ω(err).ShouldNot(HaveOccurred())
 				mappedTranslations, err := common.CreateI18nStringInfoMap(translations)
 				Ω(err).ShouldNot(HaveOccurred())
 				Ω(mappedTranslations["I like bananas."]).Should(Equal(common.I18nStringInfo{}))
 				Ω(mappedTranslations["I like apples."]).Should(Equal(apple))
 
-				translations, err = common.LoadI18nStringInfos(filepath.Join(".", "translations", "zh_CN.all.json"))
+				translations, err = common.LoadI18nStringInfos(filepath.Join(".", "translations", "zh-cn.all.json"))
 				Ω(err).ShouldNot(HaveOccurred())
 				mappedTranslations, err = common.CreateI18nStringInfoMap(translations)
 				Ω(err).ShouldNot(HaveOccurred())
@@ -296,12 +295,12 @@ var _ = Describe("fixup", func() {
 		It("adds the extra translation", func() {
 			cmd.Wait()
 
-			translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "zh_CN.all.json"))
+			translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "zh-cn.all.json"))
 			Ω(err).ShouldNot(HaveOccurred())
 			mappedTranslations, err := common.CreateI18nStringInfoMap(translations)
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(mappedTranslations["I'm the extra key"]).Should(Equal(
-				common.I18nStringInfo{ID: "I'm the extra key", Translation: "I'm the extra key", Modified: false},
+				common.I18nStringInfo{ID: "I'm the extra key", Translation: "I'm the extra key"},
 			))
 		})
 	})
@@ -314,7 +313,7 @@ var _ = Describe("fixup", func() {
 		It("removes the extra translation", func() {
 			cmd.Wait()
 
-			translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "zh_CN.all.json"))
+			translations, err := common.LoadI18nStringInfos(filepath.Join(".", "translations", "zh-cn.all.json"))
 			Ω(err).ShouldNot(HaveOccurred())
 			mappedTranslations, err := common.CreateI18nStringInfoMap(translations)
 			Ω(err).ShouldNot(HaveOccurred())
