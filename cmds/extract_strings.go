@@ -33,6 +33,9 @@ type extractStrings struct {
 	FilteredStrings  map[string]string
 	FilteredRegexps  []*regexp.Regexp
 
+	SubstringRegexpsFile string
+	SubstringRegexps     []*regexp.Regexp
+
 	TotalStringsDir int
 	TotalStrings    int
 	TotalFiles      int
@@ -56,10 +59,12 @@ func NewExtractStrings(options common.Options) extractStrings {
 		ExtractedStrings: nil,
 		FilteredStrings:  nil,
 		FilteredRegexps:  nil,
+		SubstringRegexps: nil,
 		TotalStringsDir:  0,
 		TotalStrings:     0,
 		TotalFiles:       0,
-		IgnoreRegexp:     compiledRegexp}
+		IgnoreRegexp:     compiledRegexp,
+	}
 }
 
 func (es *extractStrings) Options() common.Options {
@@ -148,6 +153,15 @@ func (es *extractStrings) InspectFile(filename string) error {
 		return err
 	}
 	es.Println(fmt.Sprintf("Loaded %d excluded regexps", len(es.FilteredRegexps)))
+
+	if es.options.SubstringFilenameFlag != "" {
+		err := es.loadSubstringRegexps()
+		if err != nil {
+			es.Println(err)
+			return err
+		}
+		es.Println(fmt.Sprintf("Loaded %d substring regexps", len(es.FilteredRegexps)))
+	}
 
 	es.excludeImports(astFile)
 
@@ -406,6 +420,44 @@ func (es *extractStrings) loadExcludedRegexps() error {
 	return nil
 }
 
+type CaptureGroupSubstrings struct {
+	RegexpsStrings []string `json:"captureGroupSubstrings"`
+}
+
+func (es *extractStrings) loadSubstringRegexps() error {
+	_, err := os.Stat(es.options.SubstringFilenameFlag)
+	if os.IsNotExist(err) {
+		es.Println("Could not find:", es.options.SubstringFilenameFlag)
+		return nil
+	}
+
+	es.Println("Capturing substrings in file:", es.options.SubstringFilenameFlag)
+
+	content, err := ioutil.ReadFile(es.options.SubstringFilenameFlag)
+	if err != nil {
+		fmt.Print(err)
+		return err
+	}
+
+	var captureGroupStrings CaptureGroupSubstrings
+	err = json.Unmarshal(content, &captureGroupStrings)
+	if err != nil {
+		fmt.Print(err)
+		return err
+	}
+
+	for _, regexpString := range captureGroupStrings.RegexpsStrings {
+		compiledRegexp, err := regexp.Compile(regexpString)
+		if err != nil {
+			fmt.Println("WARNING error compiling regexp:", regexpString)
+		}
+
+		es.SubstringRegexps = append(es.SubstringRegexps, compiledRegexp)
+	}
+
+	return nil
+}
+
 func (es *extractStrings) extractString(f *ast.File, fset *token.FileSet) error {
 	shouldProcessBasicLit := true
 	ast.Inspect(f, func(n ast.Node) bool {
@@ -433,6 +485,25 @@ func (es *extractStrings) extractString(f *ast.File, fset *token.FileSet) error 
 }
 
 func (es *extractStrings) processBasicLit(basicLit *ast.BasicLit, n ast.Node, fset *token.FileSet) {
+	for _, compiledRegexp := range es.SubstringRegexps {
+		if compiledRegexp.MatchString(basicLit.Value) {
+			submatches := compiledRegexp.FindStringSubmatch(basicLit.Value)
+			if submatches == nil {
+				es.Println(fmt.Sprintf("WARNING No capturing group found in %s", compiledRegexp.String()))
+				return
+			}
+			captureGroup := submatches[1]
+			position := fset.Position(n.Pos())
+			stringInfo := common.StringInfo{Value: captureGroup,
+				Filename: position.Filename,
+				Offset:   position.Offset,
+				Line:     position.Line,
+				Column:   position.Column}
+			es.ExtractedStrings[captureGroup] = stringInfo
+			return
+		}
+	}
+
 	s, _ := strconv.Unquote(basicLit.Value)
 	if len(s) > 0 && basicLit.Kind == token.STRING && s != "\t" && s != "\n" && s != " " && !es.filter(s) { //TODO: fix to remove these: s != "\\t" && s != "\\n" && s != " "
 		position := fset.Position(n.Pos())
