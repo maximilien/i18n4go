@@ -20,9 +20,10 @@ type Options struct {
 	OutputMatchPackageFlag bool
 	OutputFlatFlag         bool
 
-	ExcludedFilenameFlag string
-	FilenameFlag         string
-	DirnameFlag          string
+	ExcludedFilenameFlag  string
+	SubstringFilenameFlag string
+	FilenameFlag          string
+	DirnameFlag           string
 
 	RecurseFlag bool
 

@@ -146,6 +146,7 @@ The general usage for `-c extract-strings` command is:
   -c extract-strings         the extract strings command
 
   -e                         [optional] the JSON file with strings to be excluded, defaults to excluded.json if present
+	-s												 [optional] the JSON file with regexp that specify a capturing group to be extracted instead of the full string matching the regexp
 
   --po                       to generate standard .po files for translation
   --meta                     [optional] create a *.extracted.json file with metadata such as: filename, directory, and positions of the strings in source file

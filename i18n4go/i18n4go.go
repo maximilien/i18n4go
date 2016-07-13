@@ -227,6 +227,8 @@ func init() {
 
 	flag.StringVar(&options.ExcludedFilenameFlag, "e", "excluded.json", "[optional] the excluded JSON file name, all strings there will be excluded")
 
+	flag.StringVar(&options.SubstringFilenameFlag, "s", "capturing_group.json", "[optional] the substring capturing JSON file name, all strings there will only have their first capturing group saved as a translation")
+
 	flag.StringVar(&options.OutputDirFlag, "o", "", "output directory where the translation files will be placed")
 
 	flag.BoolVar(&options.OutputFlatFlag, "output-flat", true, "generated files are created in the specified output directory")
@@ -281,6 +283,7 @@ usage: i18n4go -c checkup
 
   --po                       to generate standard .po files for translation
   -e                         [optional] the JSON file with strings to be excluded, defaults to excluded.json if present
+	-s												 [optional] the JSON file with regexp that specify a capturing group to be extracted instead of the full string matching the regexp
   --meta                     [optional] create a *.extracted.json file with metadata such as: filename, directory, and positions of the strings in source file
   --dry-run                  [optional] prevents any output files from being created
 
