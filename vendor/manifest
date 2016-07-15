@@ -1,0 +1,47 @@
+{
+	"version": 0,
+	"dependencies": [
+		{
+			"importpath": "github.com/golang/protobuf/proto",
+			"repository": "https://github.com/golang/protobuf",
+			"vcs": "git",
+			"revision": "3852dcfda249c2097355a6aabb199a28d97b30df",
+			"branch": "master",
+			"path": "/proto",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/nicksnyder/go-i18n/i18n",
+			"repository": "https://github.com/nicksnyder/go-i18n",
+			"vcs": "git",
+			"revision": "37e5c2de3e03e4b82693e3fcb4a6aa2cc4eb07e3",
+			"branch": "master",
+			"path": "/i18n",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/onsi/ginkgo",
+			"repository": "https://github.com/onsi/ginkgo",
+			"vcs": "git",
+			"revision": "16c38793d41b07a5f9ae77d573af7836a994bf27",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/onsi/gomega",
+			"repository": "https://github.com/onsi/gomega",
+			"vcs": "git",
+			"revision": "82a02eccf12c018071eef42fbb701c0db6f1e3db",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "gopkg.in/yaml.v2",
+			"repository": "https://gopkg.in/yaml.v2",
+			"vcs": "git",
+			"revision": "a83829b6f1293c91addabc89d0571c246397bbf4",
+			"branch": "v2",
+			"notests": true
+		}
+	]
+}
