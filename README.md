@@ -585,14 +585,12 @@ Optionally, you can use `bin/run` to compile and run the executable in one step.
 ## Managing dependencies
 -------------------------
 
-* All dependencies managed via [Godep](https://github.com/tools/godep). See [Godeps/_workspace](https://github.com/maximilien/i18n4go/tree/master/Godeps/_workspace) directory on master
+* All dependencies managed via [gvt](https://github.com/FiloSottile/gvt)
 
-### Short `godep` Guide
-* If you ever import a new package `foo/bar` (after you `go get foo/bar`, so that foo/bar is in `$GOPATH`), you can type `godep save ./...` to add it to the `Godeps` directory.
-* To restore dependencies from the `Godeps` directory, simply use `godep restore`. `restore` is the opposite of `save`.
-* If you ever remove a dependency or a link becomes deprecated, the easiest way is probably to remove your entire `Godeps` directory and run `godep save ./...` again, after making sure all your dependencies are in your `$GOPATH`. Don't manually edit `Godeps.json`!
-* To update an existing dependency, you can use `godep update foo/bar` or `godep update foo/...` (where `...` is a wildcard)
-* The godep project [readme](https://github.com/tools/godep/README.md) is a pretty good resource: [https://github.com/tools/godep](https://github.com/tools/godep)
+### Short `gvt` Guide
+* If you ever import a new package `foo/bar` (after you `go get foo/bar`, so that foo/bar is in `$GOPATH`), you can type `gvt get `foo/bar` ` to add it to the `vendor` directory.
+* If you ever remove a dependency or a link becomes deprecated, the easiest way is probably to remove your entire `vendors/foo/bar` directory
+* To update an existing dependency, you can use `gvt update foo/bar`
 
 ## Current conventions
 -----------------------
