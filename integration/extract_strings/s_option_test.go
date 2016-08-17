@@ -1,10 +1,12 @@
 package extract_strings_test
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 
+	"github.com/maximilien/i18n4go/common"
 	. "github.com/maximilien/i18n4go/integration/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -55,7 +57,21 @@ var _ = Describe("extract-strings -s filePath", func() {
 			Ω(err).Should(BeNil())
 			Ω(actualBytes).ShouldNot(BeNil())
 
-			Ω(string(expectedBytes)).Should(MatchJSON(string(actualBytes)))
+			var translations []common.I18nStringInfo
+			err = json.Unmarshal(actualBytes, &translations)
+			Ω(err).Should(BeNil())
+
+			Ω(translations).To(ContainElement(common.I18nStringInfo{
+				ID:          "a string",
+				Translation: "a string",
+				Modified:    false,
+			}))
+
+			Ω(translations).To(ContainElement(common.I18nStringInfo{
+				ID:          "show the app details",
+				Translation: "show the app details",
+				Modified:    false,
+			}))
 		})
 	})
 })
