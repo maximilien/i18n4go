@@ -5,7 +5,7 @@
 			"importpath": "github.com/golang/protobuf/proto",
 			"repository": "https://github.com/golang/protobuf",
 			"vcs": "git",
-			"revision": "3852dcfda249c2097355a6aabb199a28d97b30df",
+			"revision": "f592bd283e9ef86337a432eb50e592278c3d534d",
 			"branch": "master",
 			"path": "/proto",
 			"notests": true
@@ -23,7 +23,7 @@
 			"importpath": "github.com/onsi/ginkgo",
 			"repository": "https://github.com/onsi/ginkgo",
 			"vcs": "git",
-			"revision": "16c38793d41b07a5f9ae77d573af7836a994bf27",
+			"revision": "43e2af1f01ace55adbb6d7d0f30416476db1baae",
 			"branch": "master",
 			"notests": true
 		},
@@ -31,7 +31,7 @@
 			"importpath": "github.com/onsi/gomega",
 			"repository": "https://github.com/onsi/gomega",
 			"vcs": "git",
-			"revision": "82a02eccf12c018071eef42fbb701c0db6f1e3db",
+			"revision": "9ed8da19f2156b87a803a8fdf6d126f627a12db1",
 			"branch": "master",
 			"notests": true
 		},
