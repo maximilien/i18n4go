@@ -64,8 +64,13 @@ func (fix *Fixup) Run() error {
 	}
 
 	locales := findTranslationFiles(".")
+	englishFiles, ok := locales["en_US"]
+	if !ok {
+		fmt.Println("Unable to find english translation files")
+		return errors.New("Unable to find english translation files")
+	}
 
-	englishFile := locales["en_US"][0]
+	englishFile := englishFiles[0]
 	if englishFile == "" {
 		fmt.Println("Could not find an i18n file for locale: en_US")
 		return errors.New("Could not find an i18n file for locale: en_US")
