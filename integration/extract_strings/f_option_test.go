@@ -124,4 +124,25 @@ var _ = Describe("extract-strings -f fileName", func() {
 			Ω(files).Should(BeEmpty())
 		})
 	})
+
+	Context("GitHub issue #45: Extract Strings should extract strings string embedded inside a func, inside a func in a return", func() {
+		BeforeEach(func() {
+			session := Runi18n("-c", "extract-strings", "-v", "-f", filepath.Join(inputFilesPath, "issue45.go"))
+			Ω(session.ExitCode()).Should(Equal(0))
+		})
+
+		AfterEach(func() {
+			RemoveAllFiles(
+				GetFilePath(inputFilesPath, "issue45.go.en.json"),
+			)
+		})
+
+		It("generates issue45.go.en.json correctly", func() {
+			CompareExpectedToGeneratedTraslationJson(
+				GetFilePath(expectedFilesPath, "issue45.go.en.json"),
+				GetFilePath(inputFilesPath, "issue45.go.en.json"),
+			)
+		})
+	})
+
 })
