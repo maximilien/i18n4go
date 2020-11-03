@@ -33,7 +33,7 @@ jobs:
       run: go fmt ./...
 
     - name: Build
-      run: go build -o $(dirname $0)/../out/i18n4go ./i18n4go/i18n4go.go
+      run: ./bin/build
 
     - name: Test
-      run: go test -v .
+      run: ./bin/test
