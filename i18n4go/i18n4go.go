@@ -212,7 +212,7 @@ func init() {
 	flag.StringVar(&options.CommandFlag, "c", "", "the command, one of: extract-strings, create-translations, rewrite-package, verify-strings, merge-strings, checkup, fixup")
 
 	flag.BoolVar(&options.HelpFlag, "h", false, "prints the usage")
-	flag.BoolVar(&options.LongHelpFlag, "-help", false, "prints the usage")
+	flag.BoolVar(&options.LongHelpFlag, "help", false, "prints the usage")
 
 	flag.StringVar(&options.SourceLanguageFlag, "source-language", "en", "the source language of the file, typically also part of the file name, e.g., \"en_US\"")
 	flag.StringVar(&options.LanguagesFlag, "languages", "", "a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"")
