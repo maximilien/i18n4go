@@ -1,6 +1,6 @@
 module github.com/maximilien/i18n4go
 
-go 1.17
+go 1.18
 
 require (
 	github.com/nicksnyder/go-i18n v1.4.0
