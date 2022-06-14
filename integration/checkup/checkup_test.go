@@ -73,6 +73,24 @@ var _ = Describe("checkup", func() {
 		})
 	})
 
+	Context("When the translation files is in format all.<lang>.json", func() {
+		BeforeEach(func() {
+			fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "fileformat")
+			err = os.Chdir(fixturesPath)
+			Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
+
+			session = Runi18n("-c", "checkup", "-v")
+		})
+
+		It("returns 0", func() {
+			Ω(session.ExitCode()).Should(Equal(0))
+		})
+
+		It("prints a reassuring message", func() {
+			Ω(session).Should(Say("OK"))
+		})
+	})
+
 	Context("When there are problems", func() {
 		BeforeEach(func() {
 			fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "notsogood")
