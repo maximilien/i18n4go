@@ -36,4 +36,6 @@ jobs:
       run: ./bin/build
 
     - name: Test
-      run: ./bin/test
+      run: |
+        export GOPATH=$(go env GOPATH)/bin
+        ./bin/test
