@@ -192,7 +192,8 @@ func getI18nFile(locale, dir string) (filePath string) {
 		if !fileInfo.IsDir() {
 			name := fileInfo.Name()
 
-			if strings.HasSuffix(name, locale+".all.json") {
+			// assume the file path is a json file and the path contains the locale
+			if strings.HasSuffix(name, ".json") && strings.Contains(name, fmt.Sprintf("%s.", locale)) {
 				filePath = filepath.Join(dir, fileInfo.Name())
 				break
 			}
@@ -216,8 +217,15 @@ func findTranslationFiles(dir string) (locales map[string][]string) {
 		if !fileInfo.IsDir() {
 			name := fileInfo.Name()
 
-			if strings.HasSuffix(name, ".all.json") {
-				locale := strings.Split(name, ".")[0]
+			if strings.HasSuffix(name, ".json") {
+				parts := strings.Split(name, ".")
+				var locale string
+
+				for _, part := range parts {
+					if !strings.Contains(part, "json") && !strings.Contains(part, "all") {
+						locale = part
+					}
+				}
 
 				if locales[locale] == nil {
 					locales[locale] = []string{}
