@@ -12,7 +12,10 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-
+    - name: Setup env 
+      run: |
+        echo "::set-env name=GOPATH::$(go env GOPATH)"
+        echo "::add-path::$(go env GOPATH)/bin"
     - name: Set up Go 1.x
       uses: actions/setup-go@v2
       with:
