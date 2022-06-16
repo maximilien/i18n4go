@@ -14,8 +14,8 @@ jobs:
     steps:
     - name: Setup env 
       run: |
-        echo "::set-env name=GOPATH::$(go env GOPATH)"
-        echo "::add-path::$(go env GOPATH)/bin"
+        echo "GOPATH=$(go env GOPATH)" >> $GOPATH
+        echo "$(go env GOPATH)/bin" >> $PATH
     - name: Set up Go 1.x
       uses: actions/setup-go@v2
       with:
