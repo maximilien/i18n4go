@@ -3,7 +3,6 @@ module github.com/maximilien/i18n4go
 go 1.18
 
 require (
-	github.com/nicksnyder/go-i18n v1.4.0
 	github.com/onsi/ginkgo v1.2.1-0.20160817190735-43e2af1f01ac
 	github.com/onsi/gomega v0.0.0-20160718190435-9ed8da19f215
 	github.com/pivotal-cf-experimental/jibber_jabber v0.0.0-20151120183258-bcc4c8345a21
