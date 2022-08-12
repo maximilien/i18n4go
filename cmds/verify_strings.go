@@ -5,6 +5,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/spf13/cobra"
+	
 	"github.com/maximilien/i18n4go/common"
 )
 
@@ -30,6 +32,21 @@ func NewVerifyStrings(options common.Options) verifyStrings {
 		Languages:         languages,
 		SourceLanguage:    options.SourceLanguageFlag,
 	}
+}
+
+// NewVerifyStringsCommand implements 'i18n verify-strings' command
+func NewVerifyStringsCommand(p *cobra.Params, options common.Options) *cobra.Command {
+	verifyStringsCmd := &cobra.Command{
+		Use:   "verify-strings",
+		Short: "Verify strings in translations",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return NewVerifyStrings(options).Run()
+		},
+	}
+
+	// TODO: setup options and params for Cobra command here using common.Options
+	
+	return verifyStringsCmd
 }
 
 func (vs *verifyStrings) Options() common.Options {
