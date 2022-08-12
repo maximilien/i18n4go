@@ -30,7 +30,7 @@ func NewCheckup(options common.Options) Checkup {
 	}
 }
 
-// NewVersionCommand implements 'i18n checkup' command
+// NewCheckupCommand implements 'i18n checkup' command
 func NewCheckupCommand(p *cobra.Params, options common.Options) *cobra.Command {
 	checkupCmd := &cobra.Command{
 		Use:   "checkup",
