@@ -7,6 +7,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/maximilien/i18n4go/common"
 )
 
@@ -28,6 +30,21 @@ func NewMergeStrings(options common.Options) MergeStrings {
 		SourceLanguage:  options.SourceLanguageFlag,
 		Directory:       options.DirnameFlag,
 	}
+}
+
+// NewMergeStringsCommand implements 'i18n merge-strings' command
+func NewMergeStringsCommand(p *cobra.Params, options common.Options) *cobra.Command {
+	mergeStringsCmd := &cobra.Command{
+		Use:   "merge-strings",
+		Short: "Merge translation strings",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return NewMergeStrings(options).Run()
+		},
+	}
+
+	// TODO: setup options and params for Cobra command here using common.Options
+	
+	return mergeStringsCmd
 }
 
 func (ms *MergeStrings) Options() common.Options {
