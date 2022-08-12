@@ -10,6 +10,8 @@ import (
 	"net/http"
 	"net/url"
 	"path/filepath"
+	
+	"github.com/spf13/cobra"
 
 	"github.com/maximilien/i18n4go/common"
 )
@@ -52,6 +54,21 @@ func NewCreateTranslations(options common.Options) createTranslations {
 		Languages:      languages,
 		TotalStrings:   0,
 		TotalFiles:     0}
+}
+
+// NewVersionCommand implements 'i18n checkup' command
+func NewCreateTranslationsCommand(p *cobra.Params, options common.Options) *cobra.Command {
+	createTranslationsCmd := &cobra.Command{
+		Use:   "create-translations",
+		Short: "Creates the transation files",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return NewCreateTranslations(options).Run()
+		},
+	}
+
+	// TODO: setup options and params for Cobra command here using common.Options
+	
+	return createTranslationsCmd
 }
 
 func (ct *createTranslations) Options() common.Options {
