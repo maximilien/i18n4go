@@ -14,6 +14,8 @@ import (
 	"go/parser"
 	"go/token"
 
+	"github.com/spf13/cobra"
+	
 	"github.com/maximilien/i18n4go/common"
 )
 
@@ -31,6 +33,23 @@ func NewFixup(options common.Options) Fixup {
 		options:         options,
 		I18nStringInfos: []common.I18nStringInfo{},
 	}
+}
+
+"github.com/spf13/cobra"
+
+// NewFixupCommand implements 'i18n fixup' command
+func NewFixupCommand(p *cobra.Params, options common.Options) *cobra.Command {
+	fixupCmd := &cobra.Command{
+		Use:   "fixup",
+		Short: "Fixup the transation files",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return NewFixup(options).Run()
+		},
+	}
+
+	// TODO: setup options and params for Cobra command here using common.Options
+	
+	return fixupCmd
 }
 
 func (fix *Fixup) Options() common.Options {
