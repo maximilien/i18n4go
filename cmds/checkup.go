@@ -31,7 +31,7 @@ func NewCheckup(options common.Options) Checkup {
 }
 
 // NewVersionCommand implements 'i18n checkup' command
-func NewVersionCommand(p *cobra.Params, options common.Options) *cobra.Command {
+func NewCheckupCommand(p *cobra.Params, options common.Options) *cobra.Command {
 	checkupCmd := &cobra.Command{
 		Use:   "checkup",
 		Short: "Checks the transated files",
