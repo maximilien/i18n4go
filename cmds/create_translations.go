@@ -56,7 +56,7 @@ func NewCreateTranslations(options common.Options) createTranslations {
 		TotalFiles:     0}
 }
 
-// NewCreateTranslationsCommand implements 'i18n checkup' command
+// NewCreateTranslationsCommand implements 'i18n create-translations' command
 func NewCreateTranslationsCommand(p *cobra.Params, options common.Options) *cobra.Command {
 	createTranslationsCmd := &cobra.Command{
 		Use:   "create-translations",
