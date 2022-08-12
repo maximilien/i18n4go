@@ -11,6 +11,8 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
+	
+	"github.com/spf13/cobra"
 
 	"github.com/maximilien/i18n4go/common"
 )
@@ -31,6 +33,21 @@ func NewShowMissingStrings(options common.Options) ShowMissingStrings {
 		I18nStringsFilename: options.I18nStringsFilenameFlag,
 		TranslatedStrings:   []string{},
 	}
+}
+
+// NewShowMissingStringsCommand implements 'i18n show-missing-strings' command
+func NewShowMissingStringsCommand(p *cobra.Params, options common.Options) *cobra.Command {
+	showMissingStringsCmd := &cobra.Command{
+		Use:   "show-missing-strings",
+		Short: "Shows missing strings in translations",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return NewShowMissingStrings(options).Run()
+		},
+	}
+
+	// TODO: setup options and params for Cobra command here using common.Options
+	
+	return showMissingStringsCmd
 }
 
 func (sms *ShowMissingStrings) Options() common.Options {
