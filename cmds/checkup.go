@@ -12,6 +12,8 @@ import (
 	"go/parser"
 	"go/token"
 
+	"github.com/spf13/cobra"
+	
 	"github.com/maximilien/i18n4go/common"
 )
 
@@ -26,6 +28,21 @@ func NewCheckup(options common.Options) Checkup {
 		options:         options,
 		I18nStringInfos: []common.I18nStringInfo{},
 	}
+}
+
+// NewVersionCommand implements 'i18n checkup' command
+func NewVersionCommand(p *cobra.Params, options common.Options) *cobra.Command {
+	checkupCmd := &cobra.Command{
+		Use:   "checkup",
+		Short: "Checks the transated files",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return NewCheckup(options).Run()
+		},
+	}
+
+	// TODO: setup options and params for Cobra command here using common.Options
+	
+	return checkupCmd
 }
 
 func (cu *Checkup) Options() common.Options {
