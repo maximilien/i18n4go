@@ -14,6 +14,8 @@ import (
 	"io/ioutil"
 
 	"github.com/maximilien/i18n4go/common"
+	
+	"github.com/spf13/cobra"
 
 	"path/filepath"
 	"strconv"
@@ -86,6 +88,21 @@ func NewRewritePackage(options common.Options) rewritePackage {
 		Recurse:      options.RecurseFlag,
 		IgnoreRegexp: compiledRegexp,
 	}
+}
+
+// NewRewritePackageCommand implements 'i18n rewrite-package' command
+func NewRewritePackageCommand(p *cobra.Params, options common.Options) *cobra.Command {
+	rewritePackageCmd := &cobra.Command{
+		Use:   "rewrite-package",
+		Short: "Rewrite translated packages",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return NewRewritePackage(options).Run()
+		},
+	}
+
+	// TODO: setup options and params for Cobra command here using common.Options
+	
+	return rewritePackageCmd
 }
 
 func (rp *rewritePackage) Options() common.Options {
