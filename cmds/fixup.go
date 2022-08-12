@@ -35,8 +35,6 @@ func NewFixup(options common.Options) Fixup {
 	}
 }
 
-"github.com/spf13/cobra"
-
 // NewFixupCommand implements 'i18n fixup' command
 func NewFixupCommand(p *cobra.Params, options common.Options) *cobra.Command {
 	fixupCmd := &cobra.Command{
