@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 
@@ -19,12 +20,14 @@ type Checkup struct {
 	options common.Options
 
 	I18nStringInfos []common.I18nStringInfo
+	IgnoreRegexp    *regexp.Regexp
 }
 
 func NewCheckup(options common.Options) Checkup {
 	return Checkup{
 		options:         options,
 		I18nStringInfos: []common.I18nStringInfo{},
+		IgnoreRegexp:    common.GetIgnoreRegexp(options.IgnoreRegexpFlag),
 	}
 }
 
@@ -57,7 +60,7 @@ func (cu *Checkup) Run() error {
 		return err
 	}
 
-	locales := findTranslationFiles(".")
+	locales := findTranslationFiles(".", cu.IgnoreRegexp, false)
 
 	englishFiles := locales["en_US"]
 	if englishFiles == nil {
@@ -114,7 +117,25 @@ func getGoFiles(dir string) (files []string) {
 	return
 }
 
+func inspectForReassignedStmts(rootNode ast.Node, definedVarName string, callback func(assignStmVal string)) {
+	ast.Inspect(rootNode, func(n ast.Node) bool {
+		switch x := n.(type) {
+		case *ast.AssignStmt:
+			assignedVarName := x.Lhs[0].(*ast.Ident).Name
+			// if find matching variable names and the var is using the `=` token
+			// we can assume that the variable was reassigned to another value
+			if definedVarName == assignedVarName && x.Tok == token.ASSIGN {
+				strVarVal := x.Rhs[0].(*ast.BasicLit).Value
+				callback(strVarVal)
+			}
+		}
+
+		return true
+	})
+}
+
 func (cu *Checkup) inspectFile(file string) (translatedStrings []string, err error) {
+	var currFuncDecl ast.Node
 	fset := token.NewFileSet()
 	astFile, err := parser.ParseFile(fset, file, nil, parser.AllErrors)
 	if err != nil {
@@ -124,19 +145,49 @@ func (cu *Checkup) inspectFile(file string) (translatedStrings []string, err err
 
 	ast.Inspect(astFile, func(n ast.Node) bool {
 		switch x := n.(type) {
+		case *ast.FuncDecl:
+			// Save a ref to the current function declaration node
+			// in case we need to retraverse the subtree (e.g reassigned statements)
+			currFuncDecl = n
 		case *ast.CallExpr:
 			switch x.Fun.(type) {
 			case *ast.Ident:
 				funName := x.Fun.(*ast.Ident).Name
 
 				if funName == "T" || funName == "t" {
-					if stringArg, ok := x.Args[0].(*ast.BasicLit); ok {
+					if stringArg, okStr := x.Args[0].(*ast.BasicLit); okStr {
 						translatedString, err := strconv.Unquote(stringArg.Value)
 						if err != nil {
 							panic(err.Error())
 						}
 						translatedStrings = append(translatedStrings, translatedString)
 					}
+					if idt, okIdt := x.Args[0].(*ast.Ident); okIdt {
+						if obj := idt.Obj; obj != nil {
+							if stmtArg, okStmt := obj.Decl.(*ast.AssignStmt); okStmt {
+								if strStmtArg, okStrStmt := stmtArg.Rhs[0].(*ast.BasicLit); okStrStmt {
+									varName := stmtArg.Lhs[0].(*ast.Ident).Name
+									translatedString, err := strconv.Unquote(strStmtArg.Value)
+									if err != nil {
+										panic(err.Error())
+									}
+									translatedStrings = append(translatedStrings, translatedString)
+									if stmtArg.Tok == token.DEFINE {
+										// check if the variable was reassigned to another translation string
+										inspectForReassignedStmts(currFuncDecl, varName, func(val string) {
+											translatedString, err := strconv.Unquote(val)
+											if err != nil {
+												panic(err.Error())
+											}
+											translatedStrings = append(translatedStrings, translatedString)
+
+										})
+									}
+								}
+							}
+						}
+					}
+
 				}
 			case *ast.SelectorExpr:
 				expr := x.Fun.(*ast.SelectorExpr)
@@ -209,7 +260,7 @@ func getI18nFile(locale, dir string) (filePath string) {
 	return
 }
 
-func findTranslationFiles(dir string) (locales map[string][]string) {
+func findTranslationFiles(dir string, ignoreRegexp *regexp.Regexp, verbose bool) (locales map[string][]string) {
 	locales = make(map[string][]string)
 	contents, _ := ioutil.ReadDir(dir)
 
@@ -222,9 +273,15 @@ func findTranslationFiles(dir string) (locales map[string][]string) {
 				var locale string
 
 				for _, part := range parts {
-					if !strings.Contains(part, "json") && !strings.Contains(part, "all") {
+					invalidLangRegexp, _ := regexp.Compile("excluded|json|all")
+					if !invalidLangRegexp.MatchString(part) {
 						locale = part
 					}
+				}
+
+				// No locale found so skipping
+				if locale == "" {
+					continue
 				}
 
 				if locales[locale] == nil {
@@ -234,7 +291,12 @@ func findTranslationFiles(dir string) (locales map[string][]string) {
 				locales[locale] = append(locales[locale], filepath.Join(dir, fileInfo.Name()))
 			}
 		} else {
-			for locale, files := range findTranslationFiles(filepath.Join(dir, fileInfo.Name())) {
+			if ignoreRegexp != nil {
+				if ignoreRegexp.MatchString(filepath.Join(dir, fileInfo.Name())) {
+					continue
+				}
+			}
+			for locale, files := range findTranslationFiles(filepath.Join(dir, fileInfo.Name()), ignoreRegexp, verbose) {
 				if locales[locale] == nil {
 					locales[locale] = []string{}
 				}
