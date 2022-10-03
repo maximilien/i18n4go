@@ -117,25 +117,8 @@ func getGoFiles(dir string) (files []string) {
 	return
 }
 
-func inspectForReassignedStmts(rootNode ast.Node, definedVarName string, callback func(assignStmVal string)) {
-	ast.Inspect(rootNode, func(n ast.Node) bool {
-		switch x := n.(type) {
-		case *ast.AssignStmt:
-			assignedVarName := x.Lhs[0].(*ast.Ident).Name
-			// if find matching variable names and the var is using the `=` token
-			// we can assume that the variable was reassigned to another value
-			if definedVarName == assignedVarName && x.Tok == token.ASSIGN {
-				strVarVal := x.Rhs[0].(*ast.BasicLit).Value
-				callback(strVarVal)
-			}
-		}
-
-		return true
-	})
-}
-
 func (cu *Checkup) inspectFile(file string) (translatedStrings []string, err error) {
-	var currFuncDecl ast.Node
+	defineAssignStmtMap := make(map[string][]ast.AssignStmt)
 	fset := token.NewFileSet()
 	astFile, err := parser.ParseFile(fset, file, nil, parser.AllErrors)
 	if err != nil {
@@ -145,10 +128,18 @@ func (cu *Checkup) inspectFile(file string) (translatedStrings []string, err err
 
 	ast.Inspect(astFile, func(n ast.Node) bool {
 		switch x := n.(type) {
-		case *ast.FuncDecl:
-			// Save a ref to the current function declaration node
-			// in case we need to retraverse the subtree (e.g reassigned statements)
-			currFuncDecl = n
+		case *ast.AssignStmt:
+			// use a hashmap for defined variables to a list of reassigned variables sharing the same var name
+			if assignStmt, okIdent := x.Lhs[0].(*ast.Ident); okIdent {
+				varName := assignStmt.Name
+				if x.Tok == token.DEFINE {
+					defineAssignStmtMap[varName] = []ast.AssignStmt{}
+				} else if x.Tok == token.ASSIGN {
+					if _, exists := defineAssignStmtMap[varName]; exists {
+						defineAssignStmtMap[varName] = append(defineAssignStmtMap[varName], *x)
+					}
+				}
+			}
 		case *ast.CallExpr:
 			switch x.Fun.(type) {
 			case *ast.Ident:
@@ -172,16 +163,17 @@ func (cu *Checkup) inspectFile(file string) (translatedStrings []string, err err
 										panic(err.Error())
 									}
 									translatedStrings = append(translatedStrings, translatedString)
-									if stmtArg.Tok == token.DEFINE {
-										// check if the variable was reassigned to another translation string
-										inspectForReassignedStmts(currFuncDecl, varName, func(val string) {
-											translatedString, err := strconv.Unquote(val)
+									// apply all translation ids from reassigned variables
+									if _, exists := defineAssignStmtMap[varName]; exists {
+										for _, assignStmt := range defineAssignStmtMap[varName] {
+											strVarVal := assignStmt.Rhs[0].(*ast.BasicLit).Value
+											translatedString, err := strconv.Unquote(strVarVal)
 											if err != nil {
 												panic(err.Error())
 											}
 											translatedStrings = append(translatedStrings, translatedString)
 
-										})
+										}
 									}
 								}
 							}
