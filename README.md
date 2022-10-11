@@ -5,7 +5,7 @@ i18n Tooling for the Go Language [![Build Status](https://travis-ci.org/maximili
 
 This is a general purpose internationalization (i18n) tooling for Go language (Golang) programs. It allows you to prepare Go language code for internationalization and localization (l10n). You can also use it to help maintain the resulting i18n-enabled Golang code so that it remains internationalized. This tool was extracted while we worked on enabling the [Cloud Foundry CLI](https://github.com/cloudfoundry/cli) with i18n support.
 
-This tool is licensed under the [Apache 2.0 OSS license](https://github.com/maximilien/i18n4go/blob/master/LICENSE). We'd love to hear from you if you are using, attempting to use, or planning to use this tool. 
+This tool is licensed under the [Apache 2.0 OSS license](https://github.com/maximilien/i18n4go/blob/master/LICENSE). We'd love to hear from you if you are using, attempting to use, or planning to use this tool.
 
 Two additional ways, besides Gitter or Slack chat above, to contact us:
 
@@ -452,6 +452,8 @@ The general usage for `-c checkup` command is:
 
 
   -q                    the qualifier to use when calling the T(...), defaults to empty but can be used to set to something like i18n for example, such that, i18n.T(...) is used for T(...) function
+
+  --ignore-regexp       [optional] a perl-style regular expression for files to ignore, e.g., ".*test.*"
 
 ```
 

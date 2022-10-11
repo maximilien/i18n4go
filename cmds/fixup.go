@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -24,12 +25,14 @@ type Fixup struct {
 	English         []common.I18nStringInfo
 	Source          map[string]int
 	Locales         map[string]map[string]string
+	IgnoreRegexp    *regexp.Regexp
 }
 
 func NewFixup(options common.Options) Fixup {
 	return Fixup{
 		options:         options,
 		I18nStringInfos: []common.I18nStringInfo{},
+		IgnoreRegexp:    common.GetIgnoreRegexp(options.IgnoreRegexpFlag),
 	}
 }
 
@@ -63,7 +66,7 @@ func (fix *Fixup) Run() error {
 		return err
 	}
 
-	locales := findTranslationFiles(".")
+	locales := findTranslationFiles(".", fix.IgnoreRegexp, fix.options.VerboseFlag)
 	englishFiles, ok := locales["en_US"]
 	if !ok {
 		fmt.Println("Unable to find english translation files")

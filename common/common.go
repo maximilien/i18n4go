@@ -360,3 +360,14 @@ func getInterpolatedStringRegexp() (*regexp.Regexp, error) {
 
 	return interpolatedStringRegexp, err
 }
+
+func GetIgnoreRegexp(ignoreRegexp string) (compiledRegexp *regexp.Regexp) {
+	if ignoreRegexp != "" {
+		reg, err := regexp.Compile(ignoreRegexp)
+		if err != nil {
+			fmt.Println("WARNING: fail to compile ignore-regexp:", err)
+		}
+		compiledRegexp = reg
+	}
+	return
+}
