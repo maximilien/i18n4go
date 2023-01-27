@@ -14,7 +14,7 @@ import (
 	"io/ioutil"
 
 	"github.com/maximilien/i18n4go/common"
-	
+
 	"github.com/spf13/cobra"
 
 	"path/filepath"
@@ -62,7 +62,7 @@ type rewritePackage struct {
 	IgnoreRegexp *regexp.Regexp
 }
 
-func NewRewritePackage(options common.Options) rewritePackage {
+func NewRewritePackage(options common.Options) *rewritePackage {
 	var compiledRegexp *regexp.Regexp
 	if options.IgnoreRegexpFlag != "" {
 		compiledReg, err := regexp.Compile(options.IgnoreRegexpFlag)
@@ -72,7 +72,7 @@ func NewRewritePackage(options common.Options) rewritePackage {
 		compiledRegexp = compiledReg
 	}
 
-	return rewritePackage{options: options,
+	return &rewritePackage{options: options,
 		Filename:                options.FilenameFlag,
 		OutputDirname:           options.OutputDirFlag,
 		I18nStringsFilename:     options.I18nStringsFilenameFlag,
@@ -91,7 +91,7 @@ func NewRewritePackage(options common.Options) rewritePackage {
 }
 
 // NewRewritePackageCommand implements 'i18n rewrite-package' command
-func NewRewritePackageCommand(p *cobra.Params, options common.Options) *cobra.Command {
+func NewRewritePackageCommand(p *I18NParams, options common.Options) *cobra.Command {
 	rewritePackageCmd := &cobra.Command{
 		Use:   "rewrite-package",
 		Short: "Rewrite translated packages",
@@ -101,7 +101,7 @@ func NewRewritePackageCommand(p *cobra.Params, options common.Options) *cobra.Co
 	}
 
 	// TODO: setup options and params for Cobra command here using common.Options
-	
+
 	return rewritePackageCmd
 }
 

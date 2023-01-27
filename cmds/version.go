@@ -11,7 +11,7 @@ var BuildDate string
 var GitRevision string
 
 // NewVersionCommand implements 'i18n version' command
-func NewVersionCommand(p *cobra.Params) *cobra.Command {
+func NewVersionCommand(p *I18NParams) *cobra.Command {
 	versionCmd := &cobra.Command{
 		Use:   "version",
 		Short: "Show the version of the i18n client",
@@ -22,6 +22,5 @@ func NewVersionCommand(p *cobra.Params) *cobra.Command {
 			return nil
 		},
 	}
-
-  return versionCmd
+	return versionCmd
 }

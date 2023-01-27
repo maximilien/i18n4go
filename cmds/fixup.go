@@ -16,11 +16,11 @@ import (
 	"go/token"
 
 	"github.com/spf13/cobra"
-	
+
 	"github.com/maximilien/i18n4go/common"
 )
 
-type Fixup struct {
+type fixup struct {
 	options common.Options
 
 	I18nStringInfos []common.I18nStringInfo
@@ -30,8 +30,8 @@ type Fixup struct {
 	IgnoreRegexp    *regexp.Regexp
 }
 
-func NewFixup(options common.Options) Fixup {
-	return Fixup{
+func NewFixup(options common.Options) *fixup {
+	return &fixup{
 		options:         options,
 		I18nStringInfos: []common.I18nStringInfo{},
 		IgnoreRegexp:    common.GetIgnoreRegexp(options.IgnoreRegexpFlag),
@@ -39,7 +39,7 @@ func NewFixup(options common.Options) Fixup {
 }
 
 // NewFixupCommand implements 'i18n fixup' command
-func NewFixupCommand(p *cobra.Params, options common.Options) *cobra.Command {
+func NewFixupCommand(p *I18NParams, options common.Options) *cobra.Command {
 	fixupCmd := &cobra.Command{
 		Use:   "fixup",
 		Short: "Fixup the transation files",
@@ -49,15 +49,15 @@ func NewFixupCommand(p *cobra.Params, options common.Options) *cobra.Command {
 	}
 
 	// TODO: setup options and params for Cobra command here using common.Options
-	
+
 	return fixupCmd
 }
 
-func (fix *Fixup) Options() common.Options {
+func (fix *fixup) Options() common.Options {
 	return fix.options
 }
 
-func (fix *Fixup) Println(a ...interface{}) (int, error) {
+func (fix *fixup) Println(a ...interface{}) (int, error) {
 	if fix.options.VerboseFlag {
 		return fmt.Println(a...)
 	}
@@ -65,7 +65,7 @@ func (fix *Fixup) Println(a ...interface{}) (int, error) {
 	return 0, nil
 }
 
-func (fix *Fixup) Printf(msg string, a ...interface{}) (int, error) {
+func (fix *fixup) Printf(msg string, a ...interface{}) (int, error) {
 	if fix.options.VerboseFlag {
 		return fmt.Printf(msg, a...)
 	}
@@ -73,7 +73,7 @@ func (fix *Fixup) Printf(msg string, a ...interface{}) (int, error) {
 	return 0, nil
 }
 
-func (fix *Fixup) Run() error {
+func (fix *fixup) Run() error {
 	//FIND PROBLEMS HERE AND RETURN AN ERROR
 	source, err := fix.findSourceStrings()
 	fix.Source = source
@@ -219,7 +219,7 @@ func (fix *Fixup) Run() error {
 	return err
 }
 
-func (fix *Fixup) inspectFile(file string) (translatedStrings []string, err error) {
+func (fix *fixup) inspectFile(file string) (translatedStrings []string, err error) {
 	fset := token.NewFileSet()
 	astFile, err := parser.ParseFile(fset, file, nil, parser.AllErrors)
 	if err != nil {
@@ -253,7 +253,7 @@ func (fix *Fixup) inspectFile(file string) (translatedStrings []string, err erro
 	return
 }
 
-func (fix *Fixup) findSourceStrings() (sourceStrings map[string]int, err error) {
+func (fix *fixup) findSourceStrings() (sourceStrings map[string]int, err error) {
 	sourceStrings = make(map[string]int)
 	files := getGoFiles(".")
 
@@ -272,7 +272,7 @@ func (fix *Fixup) findSourceStrings() (sourceStrings map[string]int, err error) 
 	return
 }
 
-func (fix *Fixup) findI18nStrings(i18nFile string) (i18nStrings map[string]common.I18nStringInfo, err error) {
+func (fix *fixup) findI18nStrings(i18nFile string) (i18nStrings map[string]common.I18nStringInfo, err error) {
 	i18nStrings = make(map[string]common.I18nStringInfo)
 
 	stringInfos, err := common.LoadI18nStringInfos(i18nFile)

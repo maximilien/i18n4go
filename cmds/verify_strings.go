@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
-	
+
 	"github.com/maximilien/i18n4go/common"
 )
 
@@ -21,11 +21,11 @@ type verifyStrings struct {
 	Languages         []string
 }
 
-func NewVerifyStrings(options common.Options) verifyStrings {
+func NewVerifyStrings(options common.Options) *verifyStrings {
 	languageFilenames := common.ParseStringList(options.LanguageFilesFlag, ",")
 	languages := common.ParseStringList(options.LanguagesFlag, ",")
 
-	return verifyStrings{options: options,
+	return &verifyStrings{options: options,
 		InputFilename:     options.FilenameFlag,
 		OutputDirname:     options.OutputDirFlag,
 		LanguageFilenames: languageFilenames,
@@ -35,7 +35,7 @@ func NewVerifyStrings(options common.Options) verifyStrings {
 }
 
 // NewVerifyStringsCommand implements 'i18n verify-strings' command
-func NewVerifyStringsCommand(p *cobra.Params, options common.Options) *cobra.Command {
+func NewVerifyStringsCommand(p *I18NParams, options common.Options) *cobra.Command {
 	verifyStringsCmd := &cobra.Command{
 		Use:   "verify-strings",
 		Short: "Verify strings in translations",
@@ -45,7 +45,7 @@ func NewVerifyStringsCommand(p *cobra.Params, options common.Options) *cobra.Com
 	}
 
 	// TODO: setup options and params for Cobra command here using common.Options
-	
+
 	return verifyStringsCmd
 }
 
