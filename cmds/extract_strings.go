@@ -46,14 +46,6 @@ type extractStrings struct {
 }
 
 func NewExtractStrings(options common.Options) extractStrings {
-	var compiledRegexp *regexp.Regexp
-	if options.IgnoreRegexpFlag != "" {
-		compiledReg, err := regexp.Compile(options.IgnoreRegexpFlag)
-		if err != nil {
-			fmt.Println("WARNING compiling ignore-regexp:", err)
-		}
-		compiledRegexp = compiledReg
-	}
 
 	return extractStrings{options: options,
 		Filename:         "extracted_strings.json",
@@ -65,7 +57,7 @@ func NewExtractStrings(options common.Options) extractStrings {
 		TotalStringsDir:  0,
 		TotalStrings:     0,
 		TotalFiles:       0,
-		IgnoreRegexp:     compiledRegexp,
+		IgnoreRegexp:     common.GetIgnoreRegexp(options.IgnoreRegexpFlag),
 	}
 }
 

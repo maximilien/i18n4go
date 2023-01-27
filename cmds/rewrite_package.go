@@ -281,6 +281,10 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 
 func (rp *rewritePackage) determineImportPath(filePath string) (string, error) {
 	dirName := filepath.Dir(filePath)
+	var (
+		pkgImportPath      string
+		otherPkgImportPath string
+	)
 	if rp.options.RootPathFlag == "" {
 		rp.Println("i18n4go: using the PWD as the rootPath:", os.Getenv("PWD"))
 		rp.RootPath = os.Getenv("PWD")
@@ -291,17 +295,31 @@ func (rp *rewritePackage) determineImportPath(filePath string) (string, error) {
 		rp.Println("i18n4go: error getting root path import:", err.Error())
 		return "", err
 	}
-	rp.Println("i18n4go: got a root pkg with import path:", pkg.ImportPath)
+
+	if build.IsLocalImport(pkg.ImportPath) {
+		pkgImportPath = pkg.Dir
+		rp.Printf("i18n4go: got a local import %s so using %s instead for root pkg", pkg.ImportPath, pkg.Dir)
+	} else {
+		pkgImportPath = pkg.ImportPath
+		rp.Println("i18n4go: got a root pkg with import path:", pkg.ImportPath)
+	}
 
 	otherPkg, err := build.Default.ImportDir(dirName, build.ImportMode(0))
 	if err != nil {
 		rp.Println("i18n4go: error getting root path import:", err.Error())
 		return "", err
 	}
-	rp.Println("i18n4go: got a pkg with import:", otherPkg.ImportPath)
 
-	importPath := otherPkg.ImportPath
-	importPath = strings.Replace(importPath, pkg.ImportPath, "", 1)
+	if build.IsLocalImport(otherPkg.ImportPath) {
+		otherPkgImportPath = otherPkg.Dir
+		rp.Printf("i18n4go: got a local import %s so using %s instead for pkg", otherPkg.ImportPath, otherPkg.Dir)
+	} else {
+		otherPkgImportPath = otherPkg.ImportPath
+		rp.Println("i18n4go: got a pkg with import:", otherPkg.ImportPath)
+	}
+
+	importPath := otherPkgImportPath
+	importPath = strings.Replace(importPath, pkgImportPath, "", 1)
 	if strings.HasPrefix(importPath, "/") {
 		importPath = strings.TrimLeft(importPath, "/")
 	}

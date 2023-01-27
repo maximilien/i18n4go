@@ -118,4 +118,22 @@ var _ = Describe("checkup", func() {
 			Ω(session.ExitCode()).Should(Equal(1))
 		})
 	})
+
+	Context("When translation IDs are (re)assigned to variables", func() {
+		BeforeEach(func() {
+			fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "variable")
+			err = os.Chdir(fixturesPath)
+			Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
+
+			session = Runi18n("-c", "checkup", "-v")
+		})
+
+		It("returns 0", func() {
+			Ω(session.ExitCode()).Should(Equal(0))
+		})
+
+		It("prints a reassuring message", func() {
+			Ω(session).Should(Say("OK"))
+		})
+	})
 })
