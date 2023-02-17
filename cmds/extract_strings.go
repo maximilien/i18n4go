@@ -60,17 +60,35 @@ func NewExtractStrings(options common.Options) *extractStrings {
 	}
 }
 
-// NewExtractStringsCommand implements 'i18n extract-translations' command
-func NewExtractStringsCommand(p *I18NParams, options common.Options) *cobra.Command {
+// NewExtractStringsCommand implements 'i18n extract-strings' command
+func NewExtractStringsCommand(options common.Options) *cobra.Command {
 	extractTranslationsCmd := &cobra.Command{
-		Use:   "extract-translations",
-		Short: "Extract the transation files",
+		Use:   "extract-strings",
+		Short: "Extract the translation strings from go source files",
+		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
+			// TODO: -f is better suited as an argument since it is required to run the cmd
+			// Need to remove FilenameFlag on refactor
+			options.FilenameFlag = args[0]
 			return NewExtractStrings(options).Run()
 		},
 	}
 
-	// TODO: setup options and params for Cobra command here using common.Options
+	extractTranslationsCmd.Flags().BoolVar(&options.PoFlag, "po", false, "generate standard .po file for translation")
+	// NOTE: To keep existing behavior we are leaving the default value ".*test.*"
+	// but optional flags not used should have default values other than empty or false (for clarity)
+	extractTranslationsCmd.Flags().StringVarP(&options.ExcludedFilenameFlag, "exclude", "e", "excluded.json", "the JSON file with strings to be excluded, defaults to excluded.json if present")
+	extractTranslationsCmd.Flags().BoolVarP(&options.MetaFlag, "meta", "m", false, "[optional] create a *.extracted.json file with metadata such as: filename, directory, and positions of the strings in source file")
+	extractTranslationsCmd.Flags().BoolVar(&options.DryRunFlag, "dry-run", false, "prevents any output files from being created")
+	// TODO: Optional flag that defaults to true is not best practice
+	// We should rename this flag to have the default be fault
+	extractTranslationsCmd.Flags().BoolVar(&options.OutputFlatFlag, "output-flat", true, "generated files are created in the specified output directory")
+	extractTranslationsCmd.Flags().BoolVar(&options.OutputMatchPackageFlag, "output-match-package", false, "generated files are created in directory to match the package name")
+	extractTranslationsCmd.Flags().StringVarP(&options.OutputDirFlag, "output", "o", "", "output directory where the translation files will be placed")
+	extractTranslationsCmd.Flags().StringVarP(&options.DirnameFlag, "directory", "d", "", "the dir name for which all .go files will have their strings extracted")
+	extractTranslationsCmd.Flags().BoolVarP(&options.RecurseFlag, "recursive", "r", false, "recursively extract strings from all files in the same directory as filename or dirName")
+	// Same as NOTE in L78-79
+	extractTranslationsCmd.Flags().StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", ".*test.*", "recursively extract strings from all files in the same directory as filename or dirName")
 
 	return extractTranslationsCmd
 }
