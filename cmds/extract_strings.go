@@ -17,6 +17,8 @@ import (
 	"encoding/json"
 	"io/ioutil"
 
+	"github.com/spf13/cobra"
+
 	"github.com/maximilien/i18n4go/common"
 )
 
@@ -43,9 +45,8 @@ type extractStrings struct {
 	IgnoreRegexp *regexp.Regexp
 }
 
-func NewExtractStrings(options common.Options) extractStrings {
-
-	return extractStrings{options: options,
+func NewExtractStrings(options common.Options) *extractStrings {
+	return &extractStrings{options: options,
 		Filename:         "extracted_strings.json",
 		OutputDirname:    options.OutputDirFlag,
 		ExtractedStrings: nil,
@@ -57,6 +58,21 @@ func NewExtractStrings(options common.Options) extractStrings {
 		TotalFiles:       0,
 		IgnoreRegexp:     common.GetIgnoreRegexp(options.IgnoreRegexpFlag),
 	}
+}
+
+// NewExtractStringsCommand implements 'i18n extract-translations' command
+func NewExtractStringsCommand(p *I18NParams, options common.Options) *cobra.Command {
+	extractTranslationsCmd := &cobra.Command{
+		Use:   "extract-translations",
+		Short: "Extract the transation files",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return NewExtractStrings(options).Run()
+		},
+	}
+
+	// TODO: setup options and params for Cobra command here using common.Options
+
+	return extractTranslationsCmd
 }
 
 func (es *extractStrings) Options() common.Options {

@@ -12,10 +12,12 @@ import (
 	"go/parser"
 	"go/token"
 
+	"github.com/spf13/cobra"
+
 	"github.com/maximilien/i18n4go/common"
 )
 
-type ShowMissingStrings struct {
+type showMissingStrings struct {
 	options common.Options
 
 	I18nStringInfos     []common.I18nStringInfo
@@ -24,8 +26,8 @@ type ShowMissingStrings struct {
 	Directory           string
 }
 
-func NewShowMissingStrings(options common.Options) ShowMissingStrings {
-	return ShowMissingStrings{
+func NewShowMissingStrings(options common.Options) *showMissingStrings {
+	return &showMissingStrings{
 		options:             options,
 		Directory:           options.DirnameFlag,
 		I18nStringsFilename: options.I18nStringsFilenameFlag,
@@ -33,11 +35,26 @@ func NewShowMissingStrings(options common.Options) ShowMissingStrings {
 	}
 }
 
-func (sms *ShowMissingStrings) Options() common.Options {
+// NewShowMissingStringsCommand implements 'i18n show-missing-strings' command
+func NewShowMissingStringsCommand(p *I18NParams, options common.Options) *cobra.Command {
+	showMissingStringsCmd := &cobra.Command{
+		Use:   "show-missing-strings",
+		Short: "Shows missing strings in translations",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return NewShowMissingStrings(options).Run()
+		},
+	}
+
+	// TODO: setup options and params for Cobra command here using common.Options
+
+	return showMissingStringsCmd
+}
+
+func (sms *showMissingStrings) Options() common.Options {
 	return sms.options
 }
 
-func (sms *ShowMissingStrings) Println(a ...interface{}) (int, error) {
+func (sms *showMissingStrings) Println(a ...interface{}) (int, error) {
 	if sms.options.VerboseFlag {
 		return fmt.Println(a...)
 	}
@@ -45,7 +62,7 @@ func (sms *ShowMissingStrings) Println(a ...interface{}) (int, error) {
 	return 0, nil
 }
 
-func (sms *ShowMissingStrings) Printf(msg string, a ...interface{}) (int, error) {
+func (sms *showMissingStrings) Printf(msg string, a ...interface{}) (int, error) {
 	if sms.options.VerboseFlag {
 		return fmt.Printf(msg, a...)
 	}
@@ -53,11 +70,11 @@ func (sms *ShowMissingStrings) Printf(msg string, a ...interface{}) (int, error)
 	return 0, nil
 }
 
-func (sms *ShowMissingStrings) Run() error {
+func (sms *showMissingStrings) Run() error {
 	return sms.showMissingStrings()
 }
 
-func (sms *ShowMissingStrings) showMissingStrings() error {
+func (sms *showMissingStrings) showMissingStrings() error {
 
 	//Load en_US.all.json
 
@@ -83,7 +100,7 @@ func (sms *ShowMissingStrings) showMissingStrings() error {
 	return sms.showExtraStrings()
 }
 
-func (sms *ShowMissingStrings) parseFiles() error {
+func (sms *showMissingStrings) parseFiles() error {
 	sourceFiles, _ := getFilesAndDir(sms.Directory)
 	for _, sourceFile := range sourceFiles {
 		err := sms.inspectFile(sourceFile)
@@ -94,7 +111,7 @@ func (sms *ShowMissingStrings) parseFiles() error {
 
 	return nil
 }
-func (sms *ShowMissingStrings) inspectFile(filename string) error {
+func (sms *showMissingStrings) inspectFile(filename string) error {
 	fset := token.NewFileSet()
 
 	var absFilePath = filename
@@ -121,7 +138,7 @@ func (sms *ShowMissingStrings) inspectFile(filename string) error {
 	return sms.extractString(astFile, fset, filename)
 }
 
-func (sms *ShowMissingStrings) extractString(f *ast.File, fset *token.FileSet, filename string) error {
+func (sms *showMissingStrings) extractString(f *ast.File, fset *token.FileSet, filename string) error {
 	ast.Inspect(f, func(n ast.Node) bool {
 		switch x := n.(type) {
 		case *ast.CallExpr:
@@ -150,7 +167,7 @@ func (sms *ShowMissingStrings) extractString(f *ast.File, fset *token.FileSet, f
 	return nil
 }
 
-func (sms *ShowMissingStrings) showMissingTranslatedStrings() error {
+func (sms *showMissingStrings) showMissingTranslatedStrings() error {
 	missingStrings := false
 	for _, codeString := range sms.TranslatedStrings {
 		if !sms.stringInStringInfos(codeString, sms.I18nStringInfos) {
@@ -171,7 +188,7 @@ func splitFilePathAndString(str string) (string, string) {
 	return splitFileStr[0], splitFileStr[1]
 }
 
-func (sms *ShowMissingStrings) stringInStringInfos(str string, list []common.I18nStringInfo) bool {
+func (sms *showMissingStrings) stringInStringInfos(str string, list []common.I18nStringInfo) bool {
 	_, translatedStr := splitFilePathAndString(str)
 	for _, stringInfo := range list {
 		if translatedStr == stringInfo.ID {
@@ -184,7 +201,7 @@ func (sms *ShowMissingStrings) stringInStringInfos(str string, list []common.I18
 }
 
 // Compares translated strings with strings in codebase.
-func (sms *ShowMissingStrings) showExtraStrings() error {
+func (sms *showMissingStrings) showExtraStrings() error {
 	additionalStrings := false
 	for _, stringInfo := range sms.I18nStringInfos {
 		if !stringInTranslatedStrings(stringInfo.ID, sms.TranslatedStrings) {

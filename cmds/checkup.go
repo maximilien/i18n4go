@@ -13,6 +13,8 @@ import (
 	"go/parser"
 	"go/token"
 
+	"github.com/spf13/cobra"
+
 	"github.com/maximilien/i18n4go/common"
 )
 
@@ -23,12 +25,27 @@ type Checkup struct {
 	IgnoreRegexp    *regexp.Regexp
 }
 
-func NewCheckup(options common.Options) Checkup {
-	return Checkup{
+func NewCheckup(options common.Options) *Checkup {
+	return &Checkup{
 		options:         options,
 		I18nStringInfos: []common.I18nStringInfo{},
 		IgnoreRegexp:    common.GetIgnoreRegexp(options.IgnoreRegexpFlag),
 	}
+}
+
+// NewCheckupCommand implements 'i18n checkup' command
+func NewCheckupCommand(p *I18NParams, options common.Options) *cobra.Command {
+	checkupCmd := &cobra.Command{
+		Use:   "checkup",
+		Short: "Checks the transated files",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return NewCheckup(options).Run()
+		},
+	}
+
+	// TODO: setup options and params for Cobra command here using common.Options
+
+	return checkupCmd
 }
 
 func (cu *Checkup) Options() common.Options {

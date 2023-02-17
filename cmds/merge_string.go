@@ -7,10 +7,12 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/spf13/cobra"
+
 	"github.com/maximilien/i18n4go/common"
 )
 
-type MergeStrings struct {
+type mergeStrings struct {
 	options common.Options
 
 	I18nStringInfos []common.I18nStringInfo
@@ -20,8 +22,8 @@ type MergeStrings struct {
 	Directory      string
 }
 
-func NewMergeStrings(options common.Options) MergeStrings {
-	return MergeStrings{
+func NewMergeStrings(options common.Options) *mergeStrings {
+	return &mergeStrings{
 		options:         options,
 		I18nStringInfos: []common.I18nStringInfo{},
 		Recurse:         options.RecurseFlag,
@@ -30,11 +32,26 @@ func NewMergeStrings(options common.Options) MergeStrings {
 	}
 }
 
-func (ms *MergeStrings) Options() common.Options {
+// NewMergeStringsCommand implements 'i18n merge-strings' command
+func NewMergeStringsCommand(p *I18NParams, options common.Options) *cobra.Command {
+	mergeStringsCmd := &cobra.Command{
+		Use:   "merge-strings",
+		Short: "Merge translation strings",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return NewMergeStrings(options).Run()
+		},
+	}
+
+	// TODO: setup options and params for Cobra command here using common.Options
+
+	return mergeStringsCmd
+}
+
+func (ms *mergeStrings) Options() common.Options {
 	return ms.options
 }
 
-func (ms *MergeStrings) Println(a ...interface{}) (int, error) {
+func (ms *mergeStrings) Println(a ...interface{}) (int, error) {
 	if ms.options.VerboseFlag {
 		return fmt.Println(a...)
 	}
@@ -42,7 +59,7 @@ func (ms *MergeStrings) Println(a ...interface{}) (int, error) {
 	return 0, nil
 }
 
-func (ms *MergeStrings) Printf(msg string, a ...interface{}) (int, error) {
+func (ms *mergeStrings) Printf(msg string, a ...interface{}) (int, error) {
 	if ms.options.VerboseFlag {
 		return fmt.Printf(msg, a...)
 	}
@@ -50,11 +67,11 @@ func (ms *MergeStrings) Printf(msg string, a ...interface{}) (int, error) {
 	return 0, nil
 }
 
-func (ms *MergeStrings) Run() error {
+func (ms *mergeStrings) Run() error {
 	return ms.combineStringInfosPerDirectory(ms.Directory)
 }
 
-func (ms *MergeStrings) combineStringInfosPerDirectory(directory string) error {
+func (ms *mergeStrings) combineStringInfosPerDirectory(directory string) error {
 	files, directories := getFilesAndDir(directory)
 	fileList := ms.matchFileToSourceLanguage(files, ms.SourceLanguage)
 
@@ -99,7 +116,7 @@ func getFilesAndDir(dir string) (files []string, dirs []string) {
 	return
 }
 
-func (ms MergeStrings) matchFileToSourceLanguage(files []string, lang string) (list []string) {
+func (ms mergeStrings) matchFileToSourceLanguage(files []string, lang string) (list []string) {
 	languageMatcher := "go." + lang + ".json"
 	for _, file := range files {
 		if strings.Contains(file, languageMatcher) {
@@ -120,15 +137,15 @@ func combineStringInfo(stringInfoList []common.I18nStringInfo, combinedMap map[s
 
 // sort.Interface methods
 
-func (ms *MergeStrings) Len() int {
+func (ms *mergeStrings) Len() int {
 	return len(ms.I18nStringInfos)
 }
 
-func (ms *MergeStrings) Less(i, j int) bool {
+func (ms *mergeStrings) Less(i, j int) bool {
 	return ms.I18nStringInfos[i].ID < ms.I18nStringInfos[j].ID
 }
 
-func (ms *MergeStrings) Swap(i, j int) {
+func (ms *mergeStrings) Swap(i, j int) {
 	tmpI18nStringInfo := ms.I18nStringInfos[i]
 	ms.I18nStringInfos[i] = ms.I18nStringInfos[j]
 	ms.I18nStringInfos[j] = tmpI18nStringInfo

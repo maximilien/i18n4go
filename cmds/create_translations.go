@@ -11,6 +11,8 @@ import (
 	"net/url"
 	"path/filepath"
 
+	"github.com/spf13/cobra"
+
 	"github.com/maximilien/i18n4go/common"
 )
 
@@ -42,16 +44,31 @@ type GoogleTranslateTranslation struct {
 	DetectedSourceLanguage string `json:"detectedSourceLanguage"`
 }
 
-func NewCreateTranslations(options common.Options) createTranslations {
+func NewCreateTranslations(options common.Options) *createTranslations {
 	languages := common.ParseStringList(options.LanguagesFlag, ",")
 
-	return createTranslations{options: options,
+	return &createTranslations{options: options,
 		Filename:       options.FilenameFlag,
 		OutputDirname:  options.OutputDirFlag,
 		SourceLanguage: options.SourceLanguageFlag,
 		Languages:      languages,
 		TotalStrings:   0,
 		TotalFiles:     0}
+}
+
+// NewCreateTranslationsCommand implements 'i18n create-translations' command
+func NewCreateTranslationsCommand(p *I18NParams, options common.Options) *cobra.Command {
+	createTranslationsCmd := &cobra.Command{
+		Use:   "create-translations",
+		Short: "Creates the transation files",
+		RunE: func(cmd *cobra.Command, args []string) error {
+			return NewCreateTranslations(options).Run()
+		},
+	}
+
+	// TODO: setup options and params for Cobra command here using common.Options
+
+	return createTranslationsCmd
 }
 
 func (ct *createTranslations) Options() common.Options {
