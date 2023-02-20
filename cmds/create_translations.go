@@ -45,7 +45,12 @@ type GoogleTranslateTranslation struct {
 }
 
 func NewCreateTranslations(options common.Options) *createTranslations {
-	languages := common.ParseStringList(options.LanguagesFlag, ",")
+	var languages []string
+	if options.LanguagesFlag == "" {
+		languages = options.LanguagesArrayFlag
+	} else {
+		languages = common.ParseStringList(options.LanguagesFlag, ",")
+	}
 
 	return &createTranslations{options: options,
 		Filename:       options.FilenameFlag,
@@ -56,8 +61,8 @@ func NewCreateTranslations(options common.Options) *createTranslations {
 		TotalFiles:     0}
 }
 
-// NewCreateTranslationsCommand implements 'i18n create-translations' command
-func NewCreateTranslationsCommand(p *I18NParams, options common.Options) *cobra.Command {
+// NewCreateTranslationsCommand implements 'i18n4go create-translations' command
+func NewCreateTranslationsCommand(options common.Options) *cobra.Command {
 	createTranslationsCmd := &cobra.Command{
 		Use:   "create-translations",
 		Short: "Creates the transation files",
@@ -66,9 +71,15 @@ func NewCreateTranslationsCommand(p *I18NParams, options common.Options) *cobra.
 		},
 	}
 
-	// TODO: setup options and params for Cobra command here using common.Options
+	// TODO: --google-translate-api-key is too long of an optional flag
+	// might want to shorten it or add an alias for usability
+	createTranslationsCmd.Flags().StringVar(&options.GoogleTranslateApiKeyFlag, "google-translate-api-key", "", "[optional] your public Google Translate API key which is used to generate translations (charge is applicable)")
+	createTranslationsCmd.Flags().StringVarP(&options.SourceLanguageFlag, "source-language", "s", "en", "the source language of the file, typically also part of the file name, e.g., \"en_US\"")
+	createTranslationsCmd.Flags().StringVarP(&options.FilenameFlag, "file", "f", "", "the source translation file")
+	createTranslationsCmd.Flags().StringSliceVarP(&options.LanguagesArrayFlag, "languages", "l", []string{}, "a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"")
 
 	return createTranslationsCmd
+
 }
 
 func (ct *createTranslations) Options() common.Options {
