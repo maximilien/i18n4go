@@ -53,16 +53,17 @@ func NewFixup(options common.Options) *fixup {
 }
 
 // NewFixupCommand implements 'i18n fixup' command
-func NewFixupCommand(p *I18NParams, options common.Options) *cobra.Command {
+func NewFixupCommand(options common.Options) *cobra.Command {
 	fixupCmd := &cobra.Command{
 		Use:   "fixup",
+		Long:  "Add, update, or remove translation keys from source files and resources files",
 		Short: "Fixup the transation files",
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return NewFixup(options).Run()
 		},
 	}
 
-	// TODO: setup options and params for Cobra command here using common.Options
+	fixupCmd.Flags().StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", ".*test.*", "recursively extract strings from all files in the same directory as filename or dirName")
 
 	return fixupCmd
 }
