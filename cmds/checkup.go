@@ -47,8 +47,8 @@ func NewCheckup(options common.Options) *Checkup {
 	}
 }
 
-// NewCheckupCommand implements 'i18n checkup' command
-func NewCheckupCommand(p *I18NParams, options common.Options) *cobra.Command {
+// NewCheckupCommand implements 'i18n4go checkup' command
+func NewCheckupCommand(options common.Options) *cobra.Command {
 	checkupCmd := &cobra.Command{
 		Use:   "checkup",
 		Short: "Checks the transated files",
@@ -57,8 +57,9 @@ func NewCheckupCommand(p *I18NParams, options common.Options) *cobra.Command {
 		},
 	}
 
-	// TODO: setup options and params for Cobra command here using common.Options
-
+	checkupCmd.Flags().StringVarP(&options.QualifierFlag, "qualifier", "q", "", "[optional] the qualifier string that is used when using the T(...) function, default to nothing but could be set to `i18n` so that all calls would be: i18n.T(...)")
+	// TODO: Optional flags shouldn't have set defaults. We should look into removing the default
+	checkupCmd.Flags().StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", ".*test.*", "recursively extract strings from all files in the same directory as filename or dirName")
 	return checkupCmd
 }
 
