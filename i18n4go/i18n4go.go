@@ -71,7 +71,7 @@ func rootCobraCmd(opts common.Options) {
 
 	cmd.PersistentFlags().BoolVarP(&opts.VerboseFlag, "verbose", "v", false, "verbose mode where lots of output is generated during execution")
 
-	cmd.AddCommand(cmds.NewCheckupCommand(opts))
+	cmd.AddCommand(cmds.NewCheckupCommand(&opts))
 
 	if err := cmd.Execute(); err != nil {
 		fmt.Println(err.Error())
@@ -206,7 +206,7 @@ func checkupCmd() {
 		return
 	}
 
-	checkup := cmds.NewCheckup(options)
+	checkup := cmds.NewCheckup(&options)
 
 	startTime := time.Now()
 

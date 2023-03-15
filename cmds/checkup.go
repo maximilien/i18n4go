@@ -39,16 +39,16 @@ type Checkup struct {
 	IgnoreRegexp    *regexp.Regexp
 }
 
-func NewCheckup(options common.Options) *Checkup {
+func NewCheckup(options *common.Options) *Checkup {
 	return &Checkup{
-		options:         options,
+		options:         *options,
 		I18nStringInfos: []common.I18nStringInfo{},
 		IgnoreRegexp:    common.GetIgnoreRegexp(options.IgnoreRegexpFlag),
 	}
 }
 
 // NewCheckupCommand implements 'i18n4go checkup' command
-func NewCheckupCommand(options common.Options) *cobra.Command {
+func NewCheckupCommand(options *common.Options) *cobra.Command {
 	checkupCmd := &cobra.Command{
 		Use:   "checkup",
 		Short: "Checks the transated files",
