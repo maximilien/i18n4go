@@ -58,10 +58,8 @@ func main() {
 	case "fixup":
 		fixupCmd()
 	default:
-		usage()
 		rootCobraCmd(options)
 	}
-
 }
 
 func rootCobraCmd(opts common.Options) {
@@ -70,9 +68,10 @@ func rootCobraCmd(opts common.Options) {
 		Long: "General purpose tool for i18n",
 	}
 
-	cmd.PersistentFlags().Bool("verbose", false, "verbose mode where lots of output is generated during execution")
+	cmd.PersistentFlags().BoolVarP(&opts.VerboseFlag, "verbose", "v", false, "verbose mode where lots of output is generated during execution")
 
-	cmd.AddCommand(cmds.NewFixupCommand(opts))
+	cmd.AddCommand(cmds.NewCheckupCommand(&opts))
+	cmd.AddCommand(cmds.NewFixupCommand(&opts))
 
 	if err := cmd.Execute(); err != nil {
 		fmt.Println(err.Error())
@@ -207,7 +206,7 @@ func checkupCmd() {
 		return
 	}
 
-	checkup := cmds.NewCheckup(options)
+	checkup := cmds.NewCheckup(&options)
 
 	startTime := time.Now()
 
@@ -227,7 +226,7 @@ func fixupCmd() {
 		return
 	}
 
-	fixup := cmds.NewFixup(options)
+	fixup := cmds.NewFixup(&options)
 
 	startTime := time.Now()
 

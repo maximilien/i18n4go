@@ -44,16 +44,16 @@ type fixup struct {
 	IgnoreRegexp    *regexp.Regexp
 }
 
-func NewFixup(options common.Options) *fixup {
+func NewFixup(options *common.Options) *fixup {
 	return &fixup{
-		options:         options,
+		options:         *options,
 		I18nStringInfos: []common.I18nStringInfo{},
 		IgnoreRegexp:    common.GetIgnoreRegexp(options.IgnoreRegexpFlag),
 	}
 }
 
 // NewFixupCommand implements 'i18n fixup' command
-func NewFixupCommand(options common.Options) *cobra.Command {
+func NewFixupCommand(options *common.Options) *cobra.Command {
 	fixupCmd := &cobra.Command{
 		Use:   "fixup",
 		Long:  "Add, update, or remove translation keys from source files and resources files",
