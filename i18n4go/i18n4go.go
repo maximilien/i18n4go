@@ -69,14 +69,14 @@ func rootCobraCmd(opts common.Options) {
 	}
 
 	cmd.PersistentFlags().BoolVarP(&opts.VerboseFlag, "verbose", "v", false, "verbose mode where lots of output is generated during execution")
-	
-  cmd.AddCommand(cmds.NewCreateTranslationsCommand(&opts))
+
+	cmd.AddCommand(cmds.NewCreateTranslationsCommand(&opts))
 	cmd.AddCommand(cmds.NewCheckupCommand(&opts))
 	cmd.AddCommand(cmds.NewExtractStringsCommand(&opts))
 	cmd.AddCommand(cmds.NewRewritePackageCommand(&opts))
 	cmd.AddCommand(cmds.NewVerifyStringsCommand(&opts))
 	cmd.AddCommand(cmds.NewFixupCommand(&opts))
-  
+
 	if err := cmd.Execute(); err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
