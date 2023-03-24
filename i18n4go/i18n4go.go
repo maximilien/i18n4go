@@ -71,6 +71,7 @@ func rootCobraCmd(opts common.Options) {
 	cmd.PersistentFlags().BoolVarP(&opts.VerboseFlag, "verbose", "v", false, "verbose mode where lots of output is generated during execution")
 
 	cmd.AddCommand(cmds.NewCheckupCommand(&opts))
+	cmd.AddCommand(cmds.NewVerifyStringsCommand(&opts))
 	cmd.AddCommand(cmds.NewFixupCommand(&opts))
 
 	if err := cmd.Execute(); err != nil {
@@ -125,7 +126,7 @@ func verifyStringsCmd() {
 		return
 	}
 
-	cmd := cmds.NewVerifyStrings(options)
+	cmd := cmds.NewVerifyStrings(&options)
 
 	startTime := time.Now()
 
