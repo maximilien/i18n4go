@@ -69,7 +69,7 @@ func rootCobraCmd(opts common.Options) {
 	}
 
 	cmd.PersistentFlags().BoolVarP(&opts.VerboseFlag, "verbose", "v", false, "verbose mode where lots of output is generated during execution")
-
+	cmd.AddCommand(cmds.NewCreateTranslationsCommand(&opts))
 	cmd.AddCommand(cmds.NewCheckupCommand(&opts))
 	cmd.AddCommand(cmds.NewRewritePackageCommand(&opts))
 	cmd.AddCommand(cmds.NewVerifyStringsCommand(&opts))
@@ -108,7 +108,7 @@ func createTranslationsCmd() {
 		return
 	}
 
-	cmd := cmds.NewCreateTranslations(options)
+	cmd := cmds.NewCreateTranslations(&options)
 
 	startTime := time.Now()
 
