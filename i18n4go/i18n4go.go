@@ -59,7 +59,6 @@ func main() {
 		fixupCmd()
 	default:
 		rootCobraCmd(options)
-
 	}
 }
 
@@ -73,7 +72,8 @@ func rootCobraCmd(opts common.Options) {
 
 	cmd.AddCommand(cmds.NewCheckupCommand(&opts))
 	cmd.AddCommand(cmds.NewRewritePackageCommand(&opts))
-
+	cmd.AddCommand(cmds.NewFixupCommand(&opts))
+  
 	if err := cmd.Execute(); err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
@@ -228,7 +228,7 @@ func fixupCmd() {
 		return
 	}
 
-	fixup := cmds.NewFixup(options)
+	fixup := cmds.NewFixup(&options)
 
 	startTime := time.Now()
 
