@@ -35,11 +35,11 @@ type verifyStrings struct {
 	Languages         []string
 }
 
-func NewVerifyStrings(options common.Options) *verifyStrings {
+func NewVerifyStrings(options *common.Options) *verifyStrings {
 	languageFilenames := common.ParseStringList(options.LanguageFilesFlag, ",")
 	languages := common.ParseStringList(options.LanguagesFlag, ",")
 
-	return &verifyStrings{options: options,
+	return &verifyStrings{options: *options,
 		InputFilename:     options.FilenameFlag,
 		OutputDirname:     options.OutputDirFlag,
 		LanguageFilenames: languageFilenames,
@@ -48,8 +48,8 @@ func NewVerifyStrings(options common.Options) *verifyStrings {
 	}
 }
 
-// NewVerifyStringsCommand implements 'i18n verify-strings' command
-func NewVerifyStringsCommand(p *I18NParams, options common.Options) *cobra.Command {
+// NewVerifyStringsCommand implements 'i18n4go verify-strings' command
+func NewVerifyStringsCommand(options *common.Options) *cobra.Command {
 	verifyStringsCmd := &cobra.Command{
 		Use:   "verify-strings",
 		Short: "Verify strings in translations",
@@ -58,7 +58,7 @@ func NewVerifyStringsCommand(p *I18NParams, options common.Options) *cobra.Comma
 		},
 	}
 
-	// TODO: setup options and params for Cobra command here using common.Options
+	verifyStringsCmd.Flags().StringVarP(&options.SourceLanguageFlag, "source-language", "s", "en", "the source language of the file, typically also part of the file name, e.g., \"en_US\"")
 
 	return verifyStringsCmd
 }

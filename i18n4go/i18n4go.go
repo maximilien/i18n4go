@@ -72,6 +72,7 @@ func rootCobraCmd(opts common.Options) {
 
 	cmd.AddCommand(cmds.NewCheckupCommand(&opts))
 	cmd.AddCommand(cmds.NewRewritePackageCommand(&opts))
+	cmd.AddCommand(cmds.NewVerifyStringsCommand(&opts))
 	cmd.AddCommand(cmds.NewFixupCommand(&opts))
   
 	if err := cmd.Execute(); err != nil {
@@ -127,7 +128,7 @@ func verifyStringsCmd() {
 		return
 	}
 
-	cmd := cmds.NewVerifyStrings(options)
+	cmd := cmds.NewVerifyStrings(&options)
 
 	startTime := time.Now()
 
