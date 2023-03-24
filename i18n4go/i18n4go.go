@@ -25,6 +25,7 @@ import (
 
 	"github.com/maximilien/i18n4go/cmds"
 	"github.com/maximilien/i18n4go/common"
+	"github.com/spf13/cobra"
 )
 
 const VERSION = "v1.4.0"
@@ -57,7 +58,24 @@ func main() {
 	case "fixup":
 		fixupCmd()
 	default:
-		usage()
+		rootCobraCmd(options)
+
+	}
+}
+
+func rootCobraCmd(opts common.Options) {
+	cmd := &cobra.Command{
+		Use:  "i18n4go",
+		Long: "General purpose tool for i18n",
+	}
+
+	cmd.PersistentFlags().BoolVarP(&opts.VerboseFlag, "verbose", "v", false, "verbose mode where lots of output is generated during execution")
+
+	cmd.AddCommand(cmds.NewCheckupCommand(&opts))
+
+	if err := cmd.Execute(); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
 	}
 }
 
@@ -188,7 +206,7 @@ func checkupCmd() {
 		return
 	}
 
-	checkup := cmds.NewCheckup(options)
+	checkup := cmds.NewCheckup(&options)
 
 	startTime := time.Now()
 
