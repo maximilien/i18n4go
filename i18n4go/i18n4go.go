@@ -59,7 +59,6 @@ func main() {
 		fixupCmd()
 	default:
 		rootCobraCmd(options)
-
 	}
 }
 
@@ -72,6 +71,7 @@ func rootCobraCmd(opts common.Options) {
 	cmd.PersistentFlags().BoolVarP(&opts.VerboseFlag, "verbose", "v", false, "verbose mode where lots of output is generated during execution")
 
 	cmd.AddCommand(cmds.NewCheckupCommand(&opts))
+	cmd.AddCommand(cmds.NewFixupCommand(&opts))
 
 	if err := cmd.Execute(); err != nil {
 		fmt.Println(err.Error())
@@ -226,7 +226,7 @@ func fixupCmd() {
 		return
 	}
 
-	fixup := cmds.NewFixup(options)
+	fixup := cmds.NewFixup(&options)
 
 	startTime := time.Now()
 
