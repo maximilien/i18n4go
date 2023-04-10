@@ -7,7 +7,7 @@ require (
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.27.6
 	github.com/pivotal-cf-experimental/jibber_jabber v0.0.0-20151120183258-bcc4c8345a21
-	github.com/spf13/cobra v1.6.1
+	github.com/spf13/cobra v1.7.0
 )
 
 require (
@@ -15,7 +15,7 @@ require (
 	github.com/cloudfoundry/jibber_jabber v0.0.0-20151120183258-bcc4c8345a21 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
-	github.com/inconshreveable/mousetrap v1.0.1 // indirect
+	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/nxadm/tail v1.4.8 // indirect
 	github.com/pelletier/go-toml v1.2.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
