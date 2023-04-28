@@ -109,21 +109,22 @@ func NewRewritePackageCommand(options *common.Options) *cobra.Command {
 	rewritePackageCmd := &cobra.Command{
 		Use:   "rewrite-package",
 		Short: "Rewrite translated packages from go source files",
-		Args:  cobra.ExactArgs(0),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			options.FilenameFlag = args[0]
 			return NewRewritePackage(options).Run()
 		},
 	}
 
 	rewritePackageCmd.Flags().BoolVar(&options.PoFlag, "po", false, "generate standard .po file for translation")
 	rewritePackageCmd.Flags().BoolVarP(&options.RecurseFlag, "recursive", "r", false, "recursively rewrite packages from all files in the same directory as filename or dirName")
+
+	rewritePackageCmd.Flags().StringVarP(&options.FilenameFlag, "file", "f", "", "the source go file to be rewritten")
 	rewritePackageCmd.Flags().StringVarP(&options.DirnameFlag, "directory", "d", "", "the dir name for which all .go files will have their strings extracted")
 	rewritePackageCmd.Flags().StringVar(&options.I18nStringsFilenameFlag, "i18n-strings-filename", "", "a JSON file with the strings that should be i18n enabled, typically the output of the extract-strings command")
 	rewritePackageCmd.Flags().StringVar(&options.I18nStringsDirnameFlag, "i18n-strings-dirname", "", "a directory with the extracted JSON files, using -output-match-package with extract-strings command this directory should match the input files package name")
 	rewritePackageCmd.Flags().StringVarP(&options.OutputDirFlag, "output", "o", "", "output directory where the translation files will be placed")
 	rewritePackageCmd.Flags().StringVar(&options.RootPathFlag, "root-path", "", "the root path to the Go source files whose packages are being rewritten, defaults to working directory, if not specified")
 	rewritePackageCmd.Flags().StringVar(&options.InitCodeSnippetFilenameFlag, "init-code-snippet-filename", "", "[optional] the path to a file containing the template snippet for the code that is used for go-i18n initialization")
+	rewritePackageCmd.Flags().StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", ".*test.*", "a perl-style regular expression for files to ignore, e.g., \".*test.*\"")
 	return rewritePackageCmd
 }
 

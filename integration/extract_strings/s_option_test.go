@@ -52,40 +52,83 @@ var _ = Describe("extract-strings -s filePath", func() {
 		os.RemoveAll(outputPath)
 	})
 
-	Context("When i18n4go4go is run with the -s flag", func() {
-		BeforeEach(func() {
-			session := Runi18n("-c", "extract-strings", "-v", "-f", inputFilesPath, "-o", outputPath, "-s", matchingGroupFilePath)
+	Context("Using legacy commands", func() {
+		Context("When i18n4go4go is run with the -s flag", func() {
+			BeforeEach(func() {
+				session := Runi18n("-c", "extract-strings", "-v", "-f", inputFilesPath, "-o", outputPath, "-s", matchingGroupFilePath)
 
-			Ω(session.ExitCode()).Should(Equal(0))
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
+
+			It("use the regexFile to parse substring", func() {
+				expectedFilePath := filepath.Join(expectedFilesPath, "app.go.en.json")
+				actualFilePath := filepath.Join(outputPath, "app.go.en.json")
+
+				expectedBytes, err := ioutil.ReadFile(expectedFilePath)
+				Ω(err).Should(BeNil())
+				Ω(expectedBytes).ShouldNot(BeNil())
+
+				actualBytes, err := ioutil.ReadFile(actualFilePath)
+				Ω(err).Should(BeNil())
+				Ω(actualBytes).ShouldNot(BeNil())
+
+				var translations []common.I18nStringInfo
+				err = json.Unmarshal(actualBytes, &translations)
+				Ω(err).Should(BeNil())
+
+				Ω(translations).To(ContainElement(common.I18nStringInfo{
+					ID:          "a string",
+					Translation: "a string",
+					Modified:    false,
+				}))
+
+				Ω(translations).To(ContainElement(common.I18nStringInfo{
+					ID:          "show the app details",
+					Translation: "show the app details",
+					Modified:    false,
+				}))
+			})
 		})
 
-		It("use the regexFile to parse substring", func() {
-			expectedFilePath := filepath.Join(expectedFilesPath, "app.go.en.json")
-			actualFilePath := filepath.Join(outputPath, "app.go.en.json")
+	})
 
-			expectedBytes, err := ioutil.ReadFile(expectedFilePath)
-			Ω(err).Should(BeNil())
-			Ω(expectedBytes).ShouldNot(BeNil())
+	Context("Using cobra commands", func() {
+		Context("When i18n4go4go is run with the -s flag", func() {
+			BeforeEach(func() {
+				session := Runi18n("extract-strings", "-v", "-f", inputFilesPath, "-o", outputPath, "-s", matchingGroupFilePath)
 
-			actualBytes, err := ioutil.ReadFile(actualFilePath)
-			Ω(err).Should(BeNil())
-			Ω(actualBytes).ShouldNot(BeNil())
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
 
-			var translations []common.I18nStringInfo
-			err = json.Unmarshal(actualBytes, &translations)
-			Ω(err).Should(BeNil())
+			It("use the regexFile to parse substring", func() {
+				expectedFilePath := filepath.Join(expectedFilesPath, "app.go.en.json")
+				actualFilePath := filepath.Join(outputPath, "app.go.en.json")
 
-			Ω(translations).To(ContainElement(common.I18nStringInfo{
-				ID:          "a string",
-				Translation: "a string",
-				Modified:    false,
-			}))
+				expectedBytes, err := ioutil.ReadFile(expectedFilePath)
+				Ω(err).Should(BeNil())
+				Ω(expectedBytes).ShouldNot(BeNil())
 
-			Ω(translations).To(ContainElement(common.I18nStringInfo{
-				ID:          "show the app details",
-				Translation: "show the app details",
-				Modified:    false,
-			}))
+				actualBytes, err := ioutil.ReadFile(actualFilePath)
+				Ω(err).Should(BeNil())
+				Ω(actualBytes).ShouldNot(BeNil())
+
+				var translations []common.I18nStringInfo
+				err = json.Unmarshal(actualBytes, &translations)
+				Ω(err).Should(BeNil())
+
+				Ω(translations).To(ContainElement(common.I18nStringInfo{
+					ID:          "a string",
+					Translation: "a string",
+					Modified:    false,
+				}))
+
+				Ω(translations).To(ContainElement(common.I18nStringInfo{
+					ID:          "show the app details",
+					Translation: "show the app details",
+					Modified:    false,
+				}))
+			})
 		})
+
 	})
 })

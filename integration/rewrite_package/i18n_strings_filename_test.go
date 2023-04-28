@@ -38,138 +38,279 @@ var _ = Describe("rewrite-package --i18n-strings-filename some-file", func() {
 		Ω(err).ShouldNot(HaveOccurred())
 	})
 
-	Context("input file only contains simple strings", func() {
-		BeforeEach(func() {
-			dir, err := os.Getwd()
-			Ω(err).ShouldNot(HaveOccurred())
-			rootPath = filepath.Join(dir, "..", "..")
+	Context("Using legacy commands", func() {
 
-			outputDir, err = ioutil.TempDir(rootPath, "i18n4go_integration")
-			Ω(err).ShouldNot(HaveOccurred())
+		Context("input file only contains simple strings", func() {
+			BeforeEach(func() {
+				dir, err := os.Getwd()
+				Ω(err).ShouldNot(HaveOccurred())
+				rootPath = filepath.Join(dir, "..", "..")
 
-			fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
-			inputFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "input_files")
-			expectedFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "expected_output")
+				outputDir, err = ioutil.TempDir(rootPath, "i18n4go_integration")
+				Ω(err).ShouldNot(HaveOccurred())
 
-			session := Runi18n("-c",
-				"rewrite-package",
-				"-f", filepath.Join(inputFilesPath, "test.go"),
-				"-o", outputDir,
-				"--i18n-strings-filename", filepath.Join(inputFilesPath, "strings.json"),
-				"-v",
-			)
+				fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
+				inputFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "input_files")
+				expectedFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "expected_output")
 
-			Ω(session.ExitCode()).Should(Equal(0))
+				session := Runi18n("-c",
+					"rewrite-package",
+					"-f", filepath.Join(inputFilesPath, "test.go"),
+					"-o", outputDir,
+					"--i18n-strings-filename", filepath.Join(inputFilesPath, "strings.json"),
+					"-v",
+				)
+
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
+
+			It("rewrites the input file with T() wrappers around the strings specified in the --i18n-strings-filename flag", func() {
+				expectedOutputFile := filepath.Join(expectedFilesPath, "test.go")
+				bytes, err := ioutil.ReadFile(expectedOutputFile)
+				Ω(err).ShouldNot(HaveOccurred())
+
+				expectedOutput := string(bytes)
+
+				generatedOutputFile := filepath.Join(outputDir, "test.go")
+				bytes, err = ioutil.ReadFile(generatedOutputFile)
+				Ω(err).ShouldNot(HaveOccurred())
+
+				actualOutput := string(bytes)
+
+				Ω(actualOutput).Should(Equal(expectedOutput))
+			})
 		})
 
-		It("rewrites the input file with T() wrappers around the strings specified in the --i18n-strings-filename flag", func() {
-			expectedOutputFile := filepath.Join(expectedFilesPath, "test.go")
-			bytes, err := ioutil.ReadFile(expectedOutputFile)
-			Ω(err).ShouldNot(HaveOccurred())
+		Context("input file contains some templated strings", func() {
+			BeforeEach(func() {
+				dir, err := os.Getwd()
+				Ω(err).ShouldNot(HaveOccurred())
+				rootPath = filepath.Join(dir, "..", "..")
 
-			expectedOutput := string(bytes)
+				outputDir, err = ioutil.TempDir(rootPath, "i18n4go_integration")
+				Ω(err).ShouldNot(HaveOccurred())
 
-			generatedOutputFile := filepath.Join(outputDir, "test.go")
-			bytes, err = ioutil.ReadFile(generatedOutputFile)
-			Ω(err).ShouldNot(HaveOccurred())
+				fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
+				inputFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "input_files")
+				expectedFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "expected_output")
 
-			actualOutput := string(bytes)
+				session := Runi18n("-c",
+					"rewrite-package",
+					"-f", filepath.Join(inputFilesPath, "test_templated_strings.go"),
+					"-o", outputDir,
+					"--i18n-strings-filename", filepath.Join(inputFilesPath, "test_templated_strings.go.en.json"),
+					"-v",
+				)
 
-			Ω(actualOutput).Should(Equal(expectedOutput))
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
+
+			It("rewrites the input file with T() wrappers around the strings (templated and not) specified in the --i18n-strings-filename flag", func() {
+				expectedOutputFile := filepath.Join(expectedFilesPath, "test_templated_strings.go")
+				bytes, err := ioutil.ReadFile(expectedOutputFile)
+				Ω(err).ShouldNot(HaveOccurred())
+
+				expectedOutput := string(bytes)
+
+				generatedOutputFile := filepath.Join(outputDir, "test_templated_strings.go")
+				bytes, err = ioutil.ReadFile(generatedOutputFile)
+				Ω(err).ShouldNot(HaveOccurred())
+
+				actualOutput := string(bytes)
+
+				Ω(actualOutput).Should(Equal(expectedOutput))
+			})
 		})
+
+		Context("input file contains some interpolated strings", func() {
+			BeforeEach(func() {
+				dir, err := os.Getwd()
+				Ω(err).ShouldNot(HaveOccurred())
+				rootPath = filepath.Join(dir, "..", "..")
+
+				outputDir, err = ioutil.TempDir(rootPath, "i18n4go_integration")
+				Ω(err).ShouldNot(HaveOccurred())
+
+				fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
+				inputFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "input_files")
+				expectedFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "expected_output")
+
+				CopyFile(filepath.Join(inputFilesPath, "_test_interpolated_strings.go.en.json"), filepath.Join(inputFilesPath, "test_interpolated_strings.go.en.json"))
+
+				session := Runi18n("-c",
+					"rewrite-package",
+					"-f", filepath.Join(inputFilesPath, "test_interpolated_strings.go"),
+					"-o", outputDir,
+					"--i18n-strings-filename", filepath.Join(inputFilesPath, "test_interpolated_strings.go.en.json"),
+					"-v",
+				)
+
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
+
+			AfterEach(func() {
+				CopyFile(filepath.Join(inputFilesPath, "_test_interpolated_strings.go.en.json"), filepath.Join(inputFilesPath, "test_interpolated_strings.go.en.json"))
+			})
+
+			It("converts interpolated strings to templated and rewrites the input file with T() wrappers around the strings (templated and not) specified in the --i18n-strings-filename flag", func() {
+				expectedOutputFile := filepath.Join(expectedFilesPath, "test_interpolated_strings.go")
+				bytes, err := ioutil.ReadFile(expectedOutputFile)
+				Ω(err).ShouldNot(HaveOccurred())
+
+				expectedOutput := string(bytes)
+
+				generatedOutputFile := filepath.Join(outputDir, "test_interpolated_strings.go")
+				bytes, err = ioutil.ReadFile(generatedOutputFile)
+				Ω(err).ShouldNot(HaveOccurred())
+
+				actualOutput := string(bytes)
+
+				Ω(actualOutput).Should(Equal(expectedOutput))
+			})
+
+			It("updates the i18n strings JSON file with the converted interpolated JSON strings", func() {
+				expectedOutputFile := filepath.Join(expectedFilesPath, "test_interpolated_strings.go.en.json")
+				generatedOutputFile := filepath.Join(inputFilesPath, "test_interpolated_strings.go.en.json")
+				CompareExpectedToGeneratedTraslationJson(expectedOutputFile, generatedOutputFile)
+			})
+		})
+
 	})
 
-	Context("input file contains some templated strings", func() {
-		BeforeEach(func() {
-			dir, err := os.Getwd()
-			Ω(err).ShouldNot(HaveOccurred())
-			rootPath = filepath.Join(dir, "..", "..")
+	Context("Using cobra commands", func() {
 
-			outputDir, err = ioutil.TempDir(rootPath, "i18n4go_integration")
-			Ω(err).ShouldNot(HaveOccurred())
+		Context("input file only contains simple strings", func() {
+			BeforeEach(func() {
+				dir, err := os.Getwd()
+				Ω(err).ShouldNot(HaveOccurred())
+				rootPath = filepath.Join(dir, "..", "..")
 
-			fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
-			inputFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "input_files")
-			expectedFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "expected_output")
+				outputDir, err = ioutil.TempDir(rootPath, "i18n4go_integration")
+				Ω(err).ShouldNot(HaveOccurred())
 
-			session := Runi18n("-c",
-				"rewrite-package",
-				"-f", filepath.Join(inputFilesPath, "test_templated_strings.go"),
-				"-o", outputDir,
-				"--i18n-strings-filename", filepath.Join(inputFilesPath, "test_templated_strings.go.en.json"),
-				"-v",
-			)
+				fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
+				inputFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "input_files")
+				expectedFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "expected_output")
 
-			Ω(session.ExitCode()).Should(Equal(0))
+				session := Runi18n("rewrite-package",
+					"-f", filepath.Join(inputFilesPath, "test.go"),
+					"-o", outputDir,
+					"--i18n-strings-filename", filepath.Join(inputFilesPath, "strings.json"),
+					"-v",
+				)
+
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
+
+			It("rewrites the input file with T() wrappers around the strings specified in the --i18n-strings-filename flag", func() {
+				expectedOutputFile := filepath.Join(expectedFilesPath, "test.go")
+				bytes, err := ioutil.ReadFile(expectedOutputFile)
+				Ω(err).ShouldNot(HaveOccurred())
+
+				expectedOutput := string(bytes)
+
+				generatedOutputFile := filepath.Join(outputDir, "test.go")
+				bytes, err = ioutil.ReadFile(generatedOutputFile)
+				Ω(err).ShouldNot(HaveOccurred())
+
+				actualOutput := string(bytes)
+
+				Ω(actualOutput).Should(Equal(expectedOutput))
+			})
 		})
 
-		It("rewrites the input file with T() wrappers around the strings (templated and not) specified in the --i18n-strings-filename flag", func() {
-			expectedOutputFile := filepath.Join(expectedFilesPath, "test_templated_strings.go")
-			bytes, err := ioutil.ReadFile(expectedOutputFile)
-			Ω(err).ShouldNot(HaveOccurred())
+		Context("input file contains some templated strings", func() {
+			BeforeEach(func() {
+				dir, err := os.Getwd()
+				Ω(err).ShouldNot(HaveOccurred())
+				rootPath = filepath.Join(dir, "..", "..")
 
-			expectedOutput := string(bytes)
+				outputDir, err = ioutil.TempDir(rootPath, "i18n4go_integration")
+				Ω(err).ShouldNot(HaveOccurred())
 
-			generatedOutputFile := filepath.Join(outputDir, "test_templated_strings.go")
-			bytes, err = ioutil.ReadFile(generatedOutputFile)
-			Ω(err).ShouldNot(HaveOccurred())
+				fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
+				inputFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "input_files")
+				expectedFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "expected_output")
 
-			actualOutput := string(bytes)
+				session := Runi18n("-c",
+					"rewrite-package",
+					"-f", filepath.Join(inputFilesPath, "test_templated_strings.go"),
+					"-o", outputDir,
+					"--i18n-strings-filename", filepath.Join(inputFilesPath, "test_templated_strings.go.en.json"),
+					"-v",
+				)
 
-			Ω(actualOutput).Should(Equal(expectedOutput))
-		})
-	})
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
 
-	Context("input file contains some interpolated strings", func() {
-		BeforeEach(func() {
-			dir, err := os.Getwd()
-			Ω(err).ShouldNot(HaveOccurred())
-			rootPath = filepath.Join(dir, "..", "..")
+			It("rewrites the input file with T() wrappers around the strings (templated and not) specified in the --i18n-strings-filename flag", func() {
+				expectedOutputFile := filepath.Join(expectedFilesPath, "test_templated_strings.go")
+				bytes, err := ioutil.ReadFile(expectedOutputFile)
+				Ω(err).ShouldNot(HaveOccurred())
 
-			outputDir, err = ioutil.TempDir(rootPath, "i18n4go_integration")
-			Ω(err).ShouldNot(HaveOccurred())
+				expectedOutput := string(bytes)
 
-			fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
-			inputFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "input_files")
-			expectedFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "expected_output")
+				generatedOutputFile := filepath.Join(outputDir, "test_templated_strings.go")
+				bytes, err = ioutil.ReadFile(generatedOutputFile)
+				Ω(err).ShouldNot(HaveOccurred())
 
-			CopyFile(filepath.Join(inputFilesPath, "_test_interpolated_strings.go.en.json"), filepath.Join(inputFilesPath, "test_interpolated_strings.go.en.json"))
+				actualOutput := string(bytes)
 
-			session := Runi18n("-c",
-				"rewrite-package",
-				"-f", filepath.Join(inputFilesPath, "test_interpolated_strings.go"),
-				"-o", outputDir,
-				"--i18n-strings-filename", filepath.Join(inputFilesPath, "test_interpolated_strings.go.en.json"),
-				"-v",
-			)
-
-			Ω(session.ExitCode()).Should(Equal(0))
+				Ω(actualOutput).Should(Equal(expectedOutput))
+			})
 		})
 
-		AfterEach(func() {
-			CopyFile(filepath.Join(inputFilesPath, "_test_interpolated_strings.go.en.json"), filepath.Join(inputFilesPath, "test_interpolated_strings.go.en.json"))
+		Context("input file contains some interpolated strings", func() {
+			BeforeEach(func() {
+				dir, err := os.Getwd()
+				Ω(err).ShouldNot(HaveOccurred())
+				rootPath = filepath.Join(dir, "..", "..")
+
+				outputDir, err = ioutil.TempDir(rootPath, "i18n4go_integration")
+				Ω(err).ShouldNot(HaveOccurred())
+
+				fixturesPath = filepath.Join("..", "..", "test_fixtures", "rewrite_package")
+				inputFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "input_files")
+				expectedFilesPath = filepath.Join(fixturesPath, "i18n_strings_filename_option", "expected_output")
+
+				CopyFile(filepath.Join(inputFilesPath, "_test_interpolated_strings.go.en.json"), filepath.Join(inputFilesPath, "test_interpolated_strings.go.en.json"))
+
+				session := Runi18n("rewrite-package",
+					"-f", filepath.Join(inputFilesPath, "test_interpolated_strings.go"),
+					"-o", outputDir,
+					"--i18n-strings-filename", filepath.Join(inputFilesPath, "test_interpolated_strings.go.en.json"),
+					"-v",
+				)
+
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
+
+			AfterEach(func() {
+				CopyFile(filepath.Join(inputFilesPath, "_test_interpolated_strings.go.en.json"), filepath.Join(inputFilesPath, "test_interpolated_strings.go.en.json"))
+			})
+
+			It("converts interpolated strings to templated and rewrites the input file with T() wrappers around the strings (templated and not) specified in the --i18n-strings-filename flag", func() {
+				expectedOutputFile := filepath.Join(expectedFilesPath, "test_interpolated_strings.go")
+				bytes, err := ioutil.ReadFile(expectedOutputFile)
+				Ω(err).ShouldNot(HaveOccurred())
+
+				expectedOutput := string(bytes)
+
+				generatedOutputFile := filepath.Join(outputDir, "test_interpolated_strings.go")
+				bytes, err = ioutil.ReadFile(generatedOutputFile)
+				Ω(err).ShouldNot(HaveOccurred())
+
+				actualOutput := string(bytes)
+
+				Ω(actualOutput).Should(Equal(expectedOutput))
+			})
+
+			It("updates the i18n strings JSON file with the converted interpolated JSON strings", func() {
+				expectedOutputFile := filepath.Join(expectedFilesPath, "test_interpolated_strings.go.en.json")
+				generatedOutputFile := filepath.Join(inputFilesPath, "test_interpolated_strings.go.en.json")
+				CompareExpectedToGeneratedTraslationJson(expectedOutputFile, generatedOutputFile)
+			})
 		})
 
-		It("converts interpolated strings to templated and rewrites the input file with T() wrappers around the strings (templated and not) specified in the --i18n-strings-filename flag", func() {
-			expectedOutputFile := filepath.Join(expectedFilesPath, "test_interpolated_strings.go")
-			bytes, err := ioutil.ReadFile(expectedOutputFile)
-			Ω(err).ShouldNot(HaveOccurred())
-
-			expectedOutput := string(bytes)
-
-			generatedOutputFile := filepath.Join(outputDir, "test_interpolated_strings.go")
-			bytes, err = ioutil.ReadFile(generatedOutputFile)
-			Ω(err).ShouldNot(HaveOccurred())
-
-			actualOutput := string(bytes)
-
-			Ω(actualOutput).Should(Equal(expectedOutput))
-		})
-
-		It("updates the i18n strings JSON file with the converted interpolated JSON strings", func() {
-			expectedOutputFile := filepath.Join(expectedFilesPath, "test_interpolated_strings.go.en.json")
-			generatedOutputFile := filepath.Join(inputFilesPath, "test_interpolated_strings.go.en.json")
-			CompareExpectedToGeneratedTraslationJson(expectedOutputFile, generatedOutputFile)
-		})
 	})
 })
