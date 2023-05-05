@@ -297,15 +297,15 @@ func usage() {
 usage: i18n4go -c extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -f <fileName>
    or: i18n4go -c extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -d <dirName> [-r] [--ignore-regexp <fileNameRegexp>]
 
-usage: i18n4go -c rewrite-package [-v] [-r] -d <dirName> [--i18n-strings-filename <fileName> | --i18n-strings-dirname <dirName>] [--init-code-snippet-filename <fileName>]
-   or: i18n4go -c rewrite-package [-v] [-r] -f <fileName> --i18n-strings-filename <fileName> [--init-code-snippet-filename <fileName>]
+usage: i18n4go -c rewrite-package [-v] [-r] -d <dirName> [--i18n-strings-filename <fileName> | --i18n-strings-dirname <dirName>] [--init-code-snippet-filename <fileName>] [--ignore-regexp <fileNameRegexp>]
+   or: i18n4go -c rewrite-package [-v] [-r] -f <fileName> --i18n-strings-filename <fileName> [--init-code-snippet-filename <fileName>] [--ignore-regexp <fileNameRegexp>]
 
 usage: i18n4go -c create-translations [-v] [--google-translate-api-key <api key>] [--source-language <language>] -f <fileName> --languages <lang1,lang2,...> -o <outputDir>
 
 usage: i18n4go -c merge-strings [-v] [-r] [--source-language <language>] -d <dirName>
 
-usage: i18n4go -c verify-strings [-v] [--source-language <language>] -f <sourceFileName> --language-files <language files>
-   or: i18n4go -c verify-strings [-v] [--source-language <language>] -f <sourceFileName> --languages <lang1,lang2,...>
+usage: i18n4go -c verify-strings [-v] [--source-language <language>] -f <sourceFileName> --language-files <language files> [-o <outputDir>]
+   or: i18n4go -c verify-strings [-v] [--source-language <language>] -f <sourceFileName> --languages <lang1,lang2,...> [-o <outputDir>]
 
 usage: i18n4go -c show-missing-strings [-v] -d <dirName> --i18n-strings-filename <language file>
 
@@ -349,6 +349,8 @@ usage: i18n4go -c checkup
   --init-code-snippet-filename [optional] the path to a file containing the template snippet for the code that is used for go-i18n initialization"
   -o                           [optional] output diretory for rewritten file. If not specified, the original file will be overwritten
 
+  --ignore-regexp		[optional] a perl-style regular expression for files to ignore, e.g., ".*test.*"
+
   MERGE STRINGS:
 
   -c merge-strings           the merge strings command which merges multiple <filename>.go.<language>.json files into a <language>.all.json
@@ -380,6 +382,8 @@ usage: i18n4go -c checkup
   --language-files           a comma separated list of target files for different languages to compare, e.g., "en, en_US, fr_FR, es"
                              if not specified then the languages flag is used to find target files in same directory as source
   --languages                a comma separated list of valid languages with optional territory, e.g., "en, en_US, fr_FR, es"
+
+  -o                         the output directory where the missing translation keys will be placed
 
   SHOW-MISSING-STRINGS:
 
