@@ -50,55 +50,111 @@ var _ = Describe("extract-strings -f fileName -o outputDir", func() {
 	AfterEach(func() {
 		os.RemoveAll(outputPath)
 	})
+	Context("Using legacy commands", func() {
+		Context("-o outputDir --output-flat (default)", func() {
+			BeforeEach(func() {
+				session := Runi18n("-c", "extract-strings", "-v", "--po", "--meta", "-f", filepath.Join(inputFilesPath, "app.go"), "-o", outputPath)
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
 
-	Context("-o outputDir --output-flat (default)", func() {
-		BeforeEach(func() {
-			session := Runi18n("-c", "extract-strings", "-v", "--po", "--meta", "-f", filepath.Join(inputFilesPath, "app.go"), "-o", outputPath)
-			Ω(session.ExitCode()).Should(Equal(0))
+			It("Walks input directory and compares each group of generated output to expected output", func() {
+
+				CompareExpectedToGeneratedTraslationJson(
+					filepath.Join(expectedFilesPath, "app.go.en.json"),
+					filepath.Join(outputPath, "app.go.en.json"),
+				)
+
+				CompareExpectedToGeneratedExtendedJson(
+					filepath.Join(expectedFilesPath, "app.go.extracted.json"),
+					filepath.Join(outputPath, "app.go.extracted.json"),
+				)
+
+				CompareExpectedToGeneratedPo(
+					filepath.Join(expectedFilesPath, "app.go.en.po"),
+					filepath.Join(outputPath, "app.go.en.po"),
+				)
+			})
 		})
 
-		It("Walks input directory and compares each group of generated output to expected output", func() {
+		Context("-o outputDir --output-match-package", func() {
+			BeforeEach(func() {
+				session := Runi18n("-c", "extract-strings", "-v", "--po", "--meta", "-f", filepath.Join(inputFilesPath, "app.go"), "-o", outputPath, "--output-match-package")
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
 
-			CompareExpectedToGeneratedTraslationJson(
-				filepath.Join(expectedFilesPath, "app.go.en.json"),
-				filepath.Join(outputPath, "app.go.en.json"),
-			)
+			It("Walks input directory and compares each group of generated output to expected output and package subdirectories", func() {
+				expectedFilesPath = filepath.Join(expectedFilesPath, "app")
+				outputPath = filepath.Join(outputPath, "app")
+				CompareExpectedToGeneratedTraslationJson(
+					filepath.Join(expectedFilesPath, "app.go.en.json"),
+					filepath.Join(outputPath, "app.go.en.json"),
+				)
 
-			CompareExpectedToGeneratedExtendedJson(
-				filepath.Join(expectedFilesPath, "app.go.extracted.json"),
-				filepath.Join(outputPath, "app.go.extracted.json"),
-			)
+				CompareExpectedToGeneratedExtendedJson(
+					filepath.Join(expectedFilesPath, "app.go.extracted.json"),
+					filepath.Join(outputPath, "app.go.extracted.json"),
+				)
 
-			CompareExpectedToGeneratedPo(
-				filepath.Join(expectedFilesPath, "app.go.en.po"),
-				filepath.Join(outputPath, "app.go.en.po"),
-			)
+				CompareExpectedToGeneratedPo(
+					filepath.Join(expectedFilesPath, "app.go.en.po"),
+					filepath.Join(outputPath, "app.go.en.po"),
+				)
+			})
 		})
+
 	})
 
-	Context("-o outputDir --output-match-package", func() {
-		BeforeEach(func() {
-			session := Runi18n("-c", "extract-strings", "-v", "--po", "--meta", "-f", filepath.Join(inputFilesPath, "app.go"), "-o", outputPath, "--output-match-package")
-			Ω(session.ExitCode()).Should(Equal(0))
+	Context("Using cobra commands", func() {
+		Context("-o outputDir --output-flat (default)", func() {
+			BeforeEach(func() {
+				session := Runi18n("extract-strings", "-v", "--po", "--meta", "-f", filepath.Join(inputFilesPath, "app.go"), "-o", outputPath)
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
+
+			It("Walks input directory and compares each group of generated output to expected output", func() {
+
+				CompareExpectedToGeneratedTraslationJson(
+					filepath.Join(expectedFilesPath, "app.go.en.json"),
+					filepath.Join(outputPath, "app.go.en.json"),
+				)
+
+				CompareExpectedToGeneratedExtendedJson(
+					filepath.Join(expectedFilesPath, "app.go.extracted.json"),
+					filepath.Join(outputPath, "app.go.extracted.json"),
+				)
+
+				CompareExpectedToGeneratedPo(
+					filepath.Join(expectedFilesPath, "app.go.en.po"),
+					filepath.Join(outputPath, "app.go.en.po"),
+				)
+			})
 		})
 
-		It("Walks input directory and compares each group of generated output to expected output and package subdirectories", func() {
-			expectedFilesPath = filepath.Join(expectedFilesPath, "app")
-			outputPath = filepath.Join(outputPath, "app")
-			CompareExpectedToGeneratedTraslationJson(
-				filepath.Join(expectedFilesPath, "app.go.en.json"),
-				filepath.Join(outputPath, "app.go.en.json"),
-			)
+		Context("-o outputDir --output-match-package", func() {
+			BeforeEach(func() {
+				session := Runi18n("extract-strings", "-v", "--po", "--meta", "-f", filepath.Join(inputFilesPath, "app.go"), "-o", outputPath, "--output-match-package")
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
 
-			CompareExpectedToGeneratedExtendedJson(
-				filepath.Join(expectedFilesPath, "app.go.extracted.json"),
-				filepath.Join(outputPath, "app.go.extracted.json"),
-			)
+			It("Walks input directory and compares each group of generated output to expected output and package subdirectories", func() {
+				expectedFilesPath = filepath.Join(expectedFilesPath, "app")
+				outputPath = filepath.Join(outputPath, "app")
+				CompareExpectedToGeneratedTraslationJson(
+					filepath.Join(expectedFilesPath, "app.go.en.json"),
+					filepath.Join(outputPath, "app.go.en.json"),
+				)
 
-			CompareExpectedToGeneratedPo(
-				filepath.Join(expectedFilesPath, "app.go.en.po"),
-				filepath.Join(outputPath, "app.go.en.po"),
-			)
+				CompareExpectedToGeneratedExtendedJson(
+					filepath.Join(expectedFilesPath, "app.go.extracted.json"),
+					filepath.Join(outputPath, "app.go.extracted.json"),
+				)
+
+				CompareExpectedToGeneratedPo(
+					filepath.Join(expectedFilesPath, "app.go.en.po"),
+					filepath.Join(outputPath, "app.go.en.po"),
+				)
+			})
 		})
+
 	})
 })

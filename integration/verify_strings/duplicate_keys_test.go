@@ -41,12 +41,24 @@ var _ = Describe("verify-strings -f fileName", func() {
 		inputFilesPath = filepath.Join(fixturesPath, "duplicate_keys", "input_files")
 		expectedFilesPath = filepath.Join(fixturesPath, "duplicate_keys", "expected_output")
 	})
-
-	Context("checks for duplicate keys", func() {
-		It("should error", func() {
-			session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"fr\"", "-o", expectedFilesPath, "--source-language", "en")
-			Ω(session.ExitCode()).Should(Equal(1))
-			Ω(session).Should(gbytes.Say("Duplicated key found: Show quota info"))
+	Context("Using legacy commands", func() {
+		Context("checks for duplicate keys", func() {
+			It("should error", func() {
+				session := Runi18n("-c", "verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"fr\"", "-o", expectedFilesPath, "--source-language", "en")
+				Ω(session.ExitCode()).Should(Equal(1))
+				Ω(session).Should(gbytes.Say("Duplicated key found: Show quota info"))
+			})
 		})
 	})
+
+	Context("Using cobra commands", func() {
+		Context("checks for duplicate keys", func() {
+			It("should error", func() {
+				session := Runi18n("verify-strings", "-v", "-f", filepath.Join(inputFilesPath, "quota.go.en.json"), "--languages", "\"fr\"", "-o", expectedFilesPath, "--source-language", "en")
+				Ω(session.ExitCode()).Should(Equal(1))
+				Ω(session).Should(gbytes.Say("Duplicated key found: Show quota info"))
+			})
+		})
+	})
+
 })

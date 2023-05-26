@@ -59,12 +59,7 @@ type GoogleTranslateTranslation struct {
 }
 
 func NewCreateTranslations(options *common.Options) *createTranslations {
-	var languages []string
-	if options.LanguagesFlag == "" {
-		languages = options.LanguagesArrayFlag
-	} else {
-		languages = common.ParseStringList(options.LanguagesFlag, ",")
-	}
+	languages := common.ParseStringList(options.LanguagesFlag, ",")
 
 	return &createTranslations{options: *options,
 		Filename:       options.FilenameFlag,
@@ -90,7 +85,8 @@ func NewCreateTranslationsCommand(options *common.Options) *cobra.Command {
 	createTranslationsCmd.Flags().StringVar(&options.GoogleTranslateApiKeyFlag, "google-translate-api-key", "", "[optional] your public Google Translate API key which is used to generate translations (charge is applicable)")
 	createTranslationsCmd.Flags().StringVarP(&options.SourceLanguageFlag, "source-language", "s", "en", "the source language of the file, typically also part of the file name, e.g., \"en_US\"")
 	createTranslationsCmd.Flags().StringVarP(&options.FilenameFlag, "file", "f", "", "the source translation file")
-	createTranslationsCmd.Flags().StringSliceVarP(&options.LanguagesArrayFlag, "languages", "l", []string{}, "a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"")
+	createTranslationsCmd.Flags().StringVarP(&options.LanguagesFlag, "languages", "l", "", "a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"")
+	createTranslationsCmd.Flags().StringVarP(&options.OutputDirFlag, "output", "o", "", "the output directory where the newly created translation files will be placed")
 
 	return createTranslationsCmd
 

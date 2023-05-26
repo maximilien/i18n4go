@@ -50,104 +50,213 @@ var _ = Describe("checkup", func() {
 		}
 	})
 
-	Context("When there are no problems", func() {
-		BeforeEach(func() {
-			fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "allgood")
-			err = os.Chdir(fixturesPath)
-			Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
+	Context("Using legacy commands", func() {
 
-			session = Runi18n("-c", "checkup", "-v")
+		Context("When there are no problems", func() {
+			BeforeEach(func() {
+				fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "allgood")
+				err = os.Chdir(fixturesPath)
+				Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
+
+				session = Runi18n("-c", "checkup", "-v")
+			})
+
+			It("returns 0", func() {
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
+
+			It("prints a reassuring message", func() {
+				Ω(session).Should(Say("OK"))
+			})
 		})
 
-		It("returns 0", func() {
-			Ω(session.ExitCode()).Should(Equal(0))
+		Context("when the i18n package is fully qualified", func() {
+			BeforeEach(func() {
+				fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "qualified")
+				err = os.Chdir(fixturesPath)
+				Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
+
+				session = Runi18n("-c", "checkup", "-v", "-q", "i18n")
+			})
+
+			It("returns 0", func() {
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
+
+			It("prints a reassuring message", func() {
+				session = Runi18n("-c", "checkup", "-v", "-q", "i18n")
+				Ω(session).Should(Say("OK"))
+			})
 		})
 
-		It("prints a reassuring message", func() {
-			Ω(session).Should(Say("OK"))
+		Context("When the translation files is in format all.<lang>.json", func() {
+			BeforeEach(func() {
+				fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "fileformat")
+				err = os.Chdir(fixturesPath)
+				Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
+
+				session = Runi18n("-c", "checkup", "-v")
+			})
+
+			It("returns 0", func() {
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
+
+			It("prints a reassuring message", func() {
+				Ω(session).Should(Say("OK"))
+			})
 		})
+
+		Context("When there are problems", func() {
+			BeforeEach(func() {
+				fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "notsogood")
+				err = os.Chdir(fixturesPath)
+				Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
+
+				session = Runi18n("-c", "checkup", "-v")
+			})
+
+			It("shows all inconsistent strings and returns 1", func() {
+				output := string(session.Out.Contents())
+
+				// strings wrapped in T() in the code that don't have corresponding keys in the translation files
+				Ω(output).Should(ContainSubstring("\"Heal the world\" exists in the code, but not in en_US"))
+
+				// keys in the translations that don't have corresponding strings wrapped in T() in the code
+				Ω(output).Should(ContainSubstring("\"Make it a better place\" exists in en_US, but not in the code"))
+
+				// keys in non-english translations that don't exist in the english translation
+				Ω(output).Should(ContainSubstring("\"For you and for me\" exists in zh_CN, but not in en_US"))
+
+				// keys that exist in the english translation but are missing in non-english translations
+				Ω(output).Should(ContainSubstring("\"And the entire human race\" exists in en_US, but not in zh_CN"))
+
+				Ω(session.ExitCode()).Should(Equal(1))
+			})
+		})
+
+		Context("When translation IDs are (re)assigned to variables", func() {
+			BeforeEach(func() {
+				fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "variable")
+				err = os.Chdir(fixturesPath)
+				Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
+
+				session = Runi18n("-c", "checkup", "-v")
+			})
+
+			It("returns 0", func() {
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
+
+			It("prints a reassuring message", func() {
+				Ω(session).Should(Say("OK"))
+			})
+		})
+
 	})
 
-	Context("when the i18n package is fully qualified", func() {
-		BeforeEach(func() {
-			fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "qualified")
-			err = os.Chdir(fixturesPath)
-			Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
+	Context("Using cobra commands", func() {
 
-			session = Runi18n("-c", "checkup", "-v", "-q", "i18n")
+		Context("When there are no problems", func() {
+			BeforeEach(func() {
+				fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "allgood")
+				err = os.Chdir(fixturesPath)
+				Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
+
+				session = Runi18n("checkup", "-v")
+			})
+
+			It("returns 0", func() {
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
+
+			It("prints a reassuring message", func() {
+				Ω(session).Should(Say("OK"))
+			})
 		})
 
-		It("returns 0", func() {
-			Ω(session.ExitCode()).Should(Equal(0))
+		Context("when the i18n package is fully qualified", func() {
+			BeforeEach(func() {
+				fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "qualified")
+				err = os.Chdir(fixturesPath)
+				Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
+
+				session = Runi18n("-c", "checkup", "-v", "-q", "i18n")
+			})
+
+			It("returns 0", func() {
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
+
+			It("prints a reassuring message", func() {
+				session = Runi18n("-c", "checkup", "-v", "-q", "i18n")
+				Ω(session).Should(Say("OK"))
+			})
 		})
 
-		It("prints a reassuring message", func() {
-			session = Runi18n("-c", "checkup", "-v", "-q", "i18n")
-			Ω(session).Should(Say("OK"))
-		})
-	})
+		Context("When the translation files is in format all.<lang>.json", func() {
+			BeforeEach(func() {
+				fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "fileformat")
+				err = os.Chdir(fixturesPath)
+				Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
 
-	Context("When the translation files is in format all.<lang>.json", func() {
-		BeforeEach(func() {
-			fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "fileformat")
-			err = os.Chdir(fixturesPath)
-			Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
+				session = Runi18n("-c", "checkup", "-v")
+			})
 
-			session = Runi18n("-c", "checkup", "-v")
-		})
+			It("returns 0", func() {
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
 
-		It("returns 0", func() {
-			Ω(session.ExitCode()).Should(Equal(0))
-		})
-
-		It("prints a reassuring message", func() {
-			Ω(session).Should(Say("OK"))
-		})
-	})
-
-	Context("When there are problems", func() {
-		BeforeEach(func() {
-			fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "notsogood")
-			err = os.Chdir(fixturesPath)
-			Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
-
-			session = Runi18n("-c", "checkup", "-v")
+			It("prints a reassuring message", func() {
+				Ω(session).Should(Say("OK"))
+			})
 		})
 
-		It("shows all inconsistent strings and returns 1", func() {
-			output := string(session.Out.Contents())
+		Context("When there are problems", func() {
+			BeforeEach(func() {
+				fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "notsogood")
+				err = os.Chdir(fixturesPath)
+				Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
 
-			// strings wrapped in T() in the code that don't have corresponding keys in the translation files
-			Ω(output).Should(ContainSubstring("\"Heal the world\" exists in the code, but not in en_US"))
+				session = Runi18n("-c", "checkup", "-v")
+			})
 
-			// keys in the translations that don't have corresponding strings wrapped in T() in the code
-			Ω(output).Should(ContainSubstring("\"Make it a better place\" exists in en_US, but not in the code"))
+			It("shows all inconsistent strings and returns 1", func() {
+				output := string(session.Out.Contents())
 
-			// keys in non-english translations that don't exist in the english translation
-			Ω(output).Should(ContainSubstring("\"For you and for me\" exists in zh_CN, but not in en_US"))
+				// strings wrapped in T() in the code that don't have corresponding keys in the translation files
+				Ω(output).Should(ContainSubstring("\"Heal the world\" exists in the code, but not in en_US"))
 
-			// keys that exist in the english translation but are missing in non-english translations
-			Ω(output).Should(ContainSubstring("\"And the entire human race\" exists in en_US, but not in zh_CN"))
+				// keys in the translations that don't have corresponding strings wrapped in T() in the code
+				Ω(output).Should(ContainSubstring("\"Make it a better place\" exists in en_US, but not in the code"))
 
-			Ω(session.ExitCode()).Should(Equal(1))
-		})
-	})
+				// keys in non-english translations that don't exist in the english translation
+				Ω(output).Should(ContainSubstring("\"For you and for me\" exists in zh_CN, but not in en_US"))
 
-	Context("When translation IDs are (re)assigned to variables", func() {
-		BeforeEach(func() {
-			fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "variable")
-			err = os.Chdir(fixturesPath)
-			Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
+				// keys that exist in the english translation but are missing in non-english translations
+				Ω(output).Should(ContainSubstring("\"And the entire human race\" exists in en_US, but not in zh_CN"))
 
-			session = Runi18n("-c", "checkup", "-v")
-		})
-
-		It("returns 0", func() {
-			Ω(session.ExitCode()).Should(Equal(0))
+				Ω(session.ExitCode()).Should(Equal(1))
+			})
 		})
 
-		It("prints a reassuring message", func() {
-			Ω(session).Should(Say("OK"))
+		Context("When translation IDs are (re)assigned to variables", func() {
+			BeforeEach(func() {
+				fixturesPath = filepath.Join("..", "..", "test_fixtures", "checkup", "variable")
+				err = os.Chdir(fixturesPath)
+				Ω(err).ToNot(HaveOccurred(), "Could not change to fixtures directory")
+
+				session = Runi18n("-c", "checkup", "-v")
+			})
+
+			It("returns 0", func() {
+				Ω(session.ExitCode()).Should(Equal(0))
+			})
+
+			It("prints a reassuring message", func() {
+				Ω(session).Should(Say("OK"))
+			})
 		})
+
 	})
 })

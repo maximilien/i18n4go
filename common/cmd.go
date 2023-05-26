@@ -25,10 +25,8 @@ type Options struct {
 	PoFlag      bool
 	MetaFlag    bool
 
-	SourceLanguageFlag string
-	// @deprecated use LanguagesArrayFlag
+	SourceLanguageFlag        string
 	LanguagesFlag             string
-	LanguagesArrayFlag        []string
 	GoogleTranslateApiKeyFlag string
 
 	OutputDirFlag          string

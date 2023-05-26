@@ -79,11 +79,7 @@ func NewExtractStringsCommand(options *common.Options) *cobra.Command {
 	extractTranslationsCmd := &cobra.Command{
 		Use:   "extract-strings",
 		Short: "Extract the translation strings from go source files",
-		Args:  cobra.ExactArgs(1),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			// TODO: -f is better suited as an argument since it is required to run the cmd
-			// Need to remove FilenameFlag on refactor
-			options.FilenameFlag = args[0]
 			return NewExtractStrings(options).Run()
 		},
 	}
@@ -91,7 +87,9 @@ func NewExtractStringsCommand(options *common.Options) *cobra.Command {
 	extractTranslationsCmd.Flags().BoolVar(&options.PoFlag, "po", false, "generate standard .po file for translation")
 	// NOTE: To keep existing behavior we are leaving the default value ".*test.*"
 	// but optional flags not used should have default values other than empty or false (for clarity)
+	extractTranslationsCmd.Flags().StringVarP(&options.FilenameFlag, "file", "f", "", "the file name for which strings are extracted")
 	extractTranslationsCmd.Flags().StringVarP(&options.ExcludedFilenameFlag, "exclude", "e", "excluded.json", "the JSON file with strings to be excluded, defaults to excluded.json if present")
+	extractTranslationsCmd.Flags().StringVarP(&options.SubstringFilenameFlag, "substring-file", "s", "capturing_group.json", "the substring capturing JSON file name, all strings there will only have their first capturing group saved as a translation")
 	extractTranslationsCmd.Flags().BoolVarP(&options.MetaFlag, "meta", "m", false, "[optional] create a *.extracted.json file with metadata such as: filename, directory, and positions of the strings in source file")
 	extractTranslationsCmd.Flags().BoolVar(&options.DryRunFlag, "dry-run", false, "prevents any output files from being created")
 	// TODO: Optional flag that defaults to true is not best practice

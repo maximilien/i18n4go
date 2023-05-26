@@ -59,7 +59,10 @@ func NewVerifyStringsCommand(options *common.Options) *cobra.Command {
 	}
 
 	verifyStringsCmd.Flags().StringVarP(&options.SourceLanguageFlag, "source-language", "s", "en", "the source language of the file, typically also part of the file name, e.g., \"en_US\"")
-
+	verifyStringsCmd.Flags().StringVar(&options.LanguagesFlag, "languages", "", "a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"")
+	verifyStringsCmd.Flags().StringVar(&options.LanguageFilesFlag, "language-files", "", `a comma separated list of target files for different languages to compare,  e.g., \"en, en_US, fr_FR, es\"	                                                                  if not specified then the languages flag is used to find target files in same directory as source`)
+	verifyStringsCmd.Flags().StringVarP(&options.OutputDirFlag, "output", "o", "", "the output directory where the missing translation keys will be placed")
+	verifyStringsCmd.Flags().StringVarP(&options.FilenameFlag, "file", "f", "", "the source translation file")
 	return verifyStringsCmd
 }
 
