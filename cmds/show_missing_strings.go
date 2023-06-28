@@ -40,9 +40,9 @@ type showMissingStrings struct {
 	Directory           string
 }
 
-func NewShowMissingStrings(options common.Options) *showMissingStrings {
+func NewShowMissingStrings(options *common.Options) *showMissingStrings {
 	return &showMissingStrings{
-		options:             options,
+		options:             *options,
 		Directory:           options.DirnameFlag,
 		I18nStringsFilename: options.I18nStringsFilenameFlag,
 		TranslatedStrings:   []string{},
@@ -50,7 +50,7 @@ func NewShowMissingStrings(options common.Options) *showMissingStrings {
 }
 
 // NewShowMissingStringsCommand implements 'i18n show-missing-strings' command
-func NewShowMissingStringsCommand(p *I18NParams, options common.Options) *cobra.Command {
+func NewShowMissingStringsCommand(options *common.Options) *cobra.Command {
 	showMissingStringsCmd := &cobra.Command{
 		Use:   "show-missing-strings",
 		Short: "Shows missing strings in translations",
@@ -58,6 +58,9 @@ func NewShowMissingStringsCommand(p *I18NParams, options common.Options) *cobra.
 			return NewShowMissingStrings(options).Run()
 		},
 	}
+
+	showMissingStringsCmd.Flags().StringVarP(&options.DirnameFlag, "directory", "d", "", "the directory containing the go files to validate")
+	showMissingStringsCmd.Flags().StringVar(&options.I18nStringsFilenameFlag, "i18n-strings-filename", "", "a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command")
 
 	// TODO: setup options and params for Cobra command here using common.Options
 
