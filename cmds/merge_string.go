@@ -36,9 +36,9 @@ type mergeStrings struct {
 	Directory      string
 }
 
-func NewMergeStrings(options common.Options) *mergeStrings {
+func NewMergeStrings(options *common.Options) *mergeStrings {
 	return &mergeStrings{
-		options:         options,
+		options:         *options,
 		I18nStringInfos: []common.I18nStringInfo{},
 		Recurse:         options.RecurseFlag,
 		SourceLanguage:  options.SourceLanguageFlag,
@@ -46,8 +46,8 @@ func NewMergeStrings(options common.Options) *mergeStrings {
 	}
 }
 
-// NewMergeStringsCommand implements 'i18n merge-strings' command
-func NewMergeStringsCommand(p *I18NParams, options common.Options) *cobra.Command {
+// NewMergeStringsCommand implements 'i18n4go merge-strings' command
+func NewMergeStringsCommand(options *common.Options) *cobra.Command {
 	mergeStringsCmd := &cobra.Command{
 		Use:   "merge-strings",
 		Short: "Merge translation strings",
@@ -55,8 +55,10 @@ func NewMergeStringsCommand(p *I18NParams, options common.Options) *cobra.Comman
 			return NewMergeStrings(options).Run()
 		},
 	}
+	mergeStringsCmd.Flags().BoolVarP(&options.RecurseFlag, "recursive", "r", false, "recursively extract strings from all files in the same directory as filename or dirName")
+	mergeStringsCmd.Flags().StringVarP(&options.SourceLanguageFlag, "source-language", "s", "en", "the source language of the file, typically also part of the file name, e.g., \"en_US\"")
 
-	// TODO: setup options and params for Cobra command here using common.Options
+	mergeStringsCmd.Flags().StringVarP(&options.DirnameFlag, "directory", "d", "", "the dir name for which all .go files will have their strings extracted")
 
 	return mergeStringsCmd
 }

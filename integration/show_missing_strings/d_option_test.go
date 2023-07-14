@@ -40,45 +40,93 @@ var _ = Describe("show-missing-strings -d dirName", func() {
 		inputFilesPath = filepath.Join(fixturesPath, "d_option", "input_files")
 	})
 
-	Context("When all the translated strings are in the json resource", func() {
-		BeforeEach(func() {
-			languageFilePath := filepath.Join(inputFilesPath, "no_missing_strings", "app.go.en.json")
-			codeDirPath := filepath.Join(inputFilesPath, "no_missing_strings", "code")
-			session = Runi18n("-c", "show-missing-strings", "-d", codeDirPath, "--i18n-strings-filename", languageFilePath)
+	Context("Using legacy commands", func() {
 
-			Eventually(session.ExitCode()).Should(Equal(0))
+		Context("When all the translated strings are in the json resource", func() {
+			BeforeEach(func() {
+				languageFilePath := filepath.Join(inputFilesPath, "no_missing_strings", "app.go.en.json")
+				codeDirPath := filepath.Join(inputFilesPath, "no_missing_strings", "code")
+				session = Runi18n("-c", "show-missing-strings", "-d", codeDirPath, "--i18n-strings-filename", languageFilePath)
+
+				Eventually(session.ExitCode()).Should(Equal(0))
+			})
+
+			It("Should output nothing", func() {
+				Ω(session).Should(Say(""))
+			})
 		})
 
-		It("Should output nothing", func() {
-			Ω(session).Should(Say(""))
+		Context("When there are strings missing from the json resource", func() {
+			BeforeEach(func() {
+				languageFilePath := filepath.Join(inputFilesPath, "missing_strings", "app.go.en.json")
+				codeDirPath := filepath.Join(inputFilesPath, "missing_strings", "code")
+				session = Runi18n("-c", "show-missing-strings", "-d", codeDirPath, "--i18n-strings-filename", languageFilePath)
+
+				Eventually(session.ExitCode()).Should(Equal(1))
+			})
+
+			It("Should output something", func() {
+				Ω(session).Should(Say("Missing"))
+			})
+		})
+
+		Context("When there are extra strings in the resource file", func() {
+			BeforeEach(func() {
+				languageFilePath := filepath.Join(inputFilesPath, "extra_strings", "app.go.en.json")
+				codeDirPath := filepath.Join(inputFilesPath, "extra_strings", "code")
+				session = Runi18n("-c", "show-missing-strings", "-d", codeDirPath, "--i18n-strings-filename", languageFilePath)
+
+				Eventually(session.ExitCode()).Should(Equal(1))
+			})
+
+			It("Should output something", func() {
+				Ω(session).Should(Say("Additional"))
+			})
 		})
 	})
 
-	Context("When there are strings missing from the json resource", func() {
-		BeforeEach(func() {
-			languageFilePath := filepath.Join(inputFilesPath, "missing_strings", "app.go.en.json")
-			codeDirPath := filepath.Join(inputFilesPath, "missing_strings", "code")
-			session = Runi18n("-c", "show-missing-strings", "-d", codeDirPath, "--i18n-strings-filename", languageFilePath)
+	Context("Using cobra commands", func() {
 
-			Eventually(session.ExitCode()).Should(Equal(1))
+		Context("When all the translated strings are in the json resource", func() {
+			BeforeEach(func() {
+				languageFilePath := filepath.Join(inputFilesPath, "no_missing_strings", "app.go.en.json")
+				codeDirPath := filepath.Join(inputFilesPath, "no_missing_strings", "code")
+				session = Runi18n("show-missing-strings", "-d", codeDirPath, "--i18n-strings-filename", languageFilePath)
+
+				Eventually(session.ExitCode()).Should(Equal(0))
+			})
+
+			It("Should output nothing", func() {
+				Ω(session).Should(Say(""))
+			})
 		})
 
-		It("Should output something", func() {
-			Ω(session).Should(Say("Missing"))
+		Context("When there are strings missing from the json resource", func() {
+			BeforeEach(func() {
+				languageFilePath := filepath.Join(inputFilesPath, "missing_strings", "app.go.en.json")
+				codeDirPath := filepath.Join(inputFilesPath, "missing_strings", "code")
+				session = Runi18n("show-missing-strings", "-d", codeDirPath, "--i18n-strings-filename", languageFilePath)
+
+				Eventually(session.ExitCode()).Should(Equal(1))
+			})
+
+			It("Should output something", func() {
+				Ω(session).Should(Say("Missing"))
+			})
 		})
-	})
 
-	Context("When there are extra strings in the resource file", func() {
-		BeforeEach(func() {
-			languageFilePath := filepath.Join(inputFilesPath, "extra_strings", "app.go.en.json")
-			codeDirPath := filepath.Join(inputFilesPath, "extra_strings", "code")
-			session = Runi18n("-c", "show-missing-strings", "-d", codeDirPath, "--i18n-strings-filename", languageFilePath)
+		Context("When there are extra strings in the resource file", func() {
+			BeforeEach(func() {
+				languageFilePath := filepath.Join(inputFilesPath, "extra_strings", "app.go.en.json")
+				codeDirPath := filepath.Join(inputFilesPath, "extra_strings", "code")
+				session = Runi18n("show-missing-strings", "-d", codeDirPath, "--i18n-strings-filename", languageFilePath)
 
-			Eventually(session.ExitCode()).Should(Equal(1))
-		})
+				Eventually(session.ExitCode()).Should(Equal(1))
+			})
 
-		It("Should output something", func() {
-			Ω(session).Should(Say("Additional"))
+			It("Should output something", func() {
+				Ω(session).Should(Say("Additional"))
+			})
 		})
 	})
 })

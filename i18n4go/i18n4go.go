@@ -76,6 +76,8 @@ func rootCobraCmd(opts common.Options) {
 	cmd.AddCommand(cmds.NewRewritePackageCommand(&opts))
 	cmd.AddCommand(cmds.NewVerifyStringsCommand(&opts))
 	cmd.AddCommand(cmds.NewFixupCommand(&opts))
+	cmd.AddCommand(cmds.NewMergeStringsCommand(&opts))
+	cmd.AddCommand(cmds.NewShowMissingStringsCommand(&opts))
 
 	if err := cmd.Execute(); err != nil {
 		fmt.Println(err.Error())
@@ -171,7 +173,7 @@ func mergeStringsCmd() {
 		return
 	}
 
-	mergeStrings := cmds.NewMergeStrings(options)
+	mergeStrings := cmds.NewMergeStrings(&options)
 
 	startTime := time.Now()
 
@@ -191,7 +193,7 @@ func showMissingStringsCmd() {
 		return
 	}
 
-	showMissingStrings := cmds.NewShowMissingStrings(options)
+	showMissingStrings := cmds.NewShowMissingStrings(&options)
 
 	startTime := time.Now()
 
