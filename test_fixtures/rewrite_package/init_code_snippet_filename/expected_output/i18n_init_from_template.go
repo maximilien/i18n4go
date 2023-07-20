@@ -5,10 +5,9 @@ import (
 	"path/filepath"
 
 	"github.com/maximilien/i18n4go/i18n"
-	goi18n "github.com/nicksnyder/go-i18n/i18n"
 )
 
-var T goi18n.TranslateFunc
+var T i18n.TranslateFunc
 
 func init() {
 	fmt.Println("DEBUG: this is a test i18n_init.go file")
