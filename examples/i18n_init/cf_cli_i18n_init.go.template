@@ -10,7 +10,7 @@ import (
 
 	"github.com/pivotal-cf-experimental/jibber_jabber"
 
-	goi18n "github.com/nicksnyder/go-i18n/i18n"
+	goi18n "github.com/maximilien/i18n4go/i18n"
 )
 
 type Detector interface {

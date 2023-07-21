@@ -15,6 +15,7 @@
 package i18n
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"io/ioutil"
@@ -24,13 +25,16 @@ import (
 
 	"github.com/pivotal-cf-experimental/jibber_jabber"
 
-	go_i18n "github.com/nicksnyder/go-i18n/i18n"
+	go_i18n "github.com/nicksnyder/go-i18n/v2/i18n"
+	"golang.org/x/text/language"
 )
 
 const (
 	DEFAULT_LOCALE   = "en_US"
 	DEFAULT_LANGUAGE = "en"
 )
+
+type TranslateFunc func(translateID string, args ...interface{}) string
 
 var SUPPORTED_LOCALES = map[string]string{
 	"de": "de_DE",
@@ -44,24 +48,29 @@ var SUPPORTED_LOCALES = map[string]string{
 	"ru": "ru_RU",
 	"zh": "zh_CN",
 }
-var RESOUCES_PATH = filepath.Join("cf", "i18n", "resources")
+var (
+	RESOUCES_PATH = filepath.Join("cf", "i18n", "resources")
+	bundle        *go_i18n.Bundle
+)
 
 func GetResourcesPath() string {
 	return RESOUCES_PATH
 }
 
-func Init(packageName string, i18nDirname string) go_i18n.TranslateFunc {
+func init() {
+	if bundle == nil {
+		bundle = go_i18n.NewBundle(language.AmericanEnglish)
+		bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
+	}
+}
+
+func Init(packageName string, i18nDirname string) TranslateFunc {
 	userLocale, err := initWithUserLocale(packageName, i18nDirname)
 	if err != nil {
 		userLocale = mustLoadDefaultLocale(packageName, i18nDirname)
 	}
 
-	T, err := go_i18n.Tfunc(userLocale, DEFAULT_LOCALE)
-	if err != nil {
-		panic(err)
-	}
-
-	return T
+	return Tfunc(userLocale, DEFAULT_LOCALE)
 }
 
 func initWithUserLocale(packageName, i18nDirname string) (string, error) {
@@ -127,7 +136,7 @@ func loadFromAsset(packageName, assetPath, locale, language string) error {
 		return err
 	}
 
-	go_i18n.MustLoadTranslationFile(fileName)
+	bundle.MustLoadMessageFile(fileName)
 
 	os.RemoveAll(fileName)
 
@@ -148,4 +157,73 @@ func saveLanguageFileToDisk(tmpDir, assetName string, byteArray []byte) (fileNam
 	}
 
 	return
+}
+
+func isNumber(value interface{}) bool {
+	switch value.(type) {
+	case int, int8, int16, int32, int64:
+		return true
+	}
+	return false
+}
+
+func SupportedLocaleLanguageTags() []language.Tag {
+	tags := []language.Tag{language.English}
+	for _, locale := range SUPPORTED_LOCALES {
+		tag, _ := language.Parse(locale)
+		tags = append(tags, tag)
+	}
+
+	return tags
+}
+
+// translate is a wrapper function that is based on the translate method for v1.3.0
+// To allow compatibility v2.0+ and older a wrapper method was created
+// @see https://github.com/nicksnyder/go-i18n/blob/v1.3.0/i18n/bundle/bundle.go#L227-L257
+func translate(loc *go_i18n.Localizer) TranslateFunc {
+	return func(messageId string, args ...interface{}) string {
+		var (
+			count interface{}
+			data  interface{}
+		)
+
+		if argc := len(args); argc > 0 {
+			if isNumber(args[0]) {
+				count = args[0]
+				if argc > 1 {
+					data = args[1]
+				}
+			} else {
+				data = args[0]
+			}
+		}
+
+		return loc.MustLocalize(&go_i18n.LocalizeConfig{
+			MessageID:    messageId,
+			TemplateData: data,
+			PluralCount:  count,
+		})
+	}
+}
+
+// Tfunc will return a method of TranslateFunc type to be used to tranlation messages
+func Tfunc(sources ...string) TranslateFunc {
+	localizer := go_i18n.NewLocalizer(bundle, DEFAULT_LOCALE)
+	tfunc := translate(localizer)
+	for _, s := range sources {
+		if s == "" {
+			continue
+		}
+
+		if s == DEFAULT_LOCALE {
+			return tfunc
+		}
+		localizer := go_i18n.NewLocalizer(bundle, s)
+		t := translate(localizer)
+		return func(translationID string, args ...interface{}) string {
+			return t(translationID, args...)
+		}
+	}
+
+	return tfunc
 }
