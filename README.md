@@ -1,13 +1,11 @@
 i18n Tooling for the Go Language [![Build Status](https://travis-ci.org/maximilien/i18n4go.svg?branch=master)](https://travis-ci.org/maximilien/i18n4go#)
 ==============================
 
-[![Join the chat at https://gitter.im/maximilien/i18n4go](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/maximilien/i18n4go?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) [![dWOpen Slack](https://raw.githubusercontent.com/maximilien/i18n4go/master/slack/slack.png)](https://dwopen.slack.com/messages/i18n4go/)
-
-This is a general purpose internationalization (i18n) tooling for Go language (Golang) programs. It allows you to prepare Go language code for internationalization and localization (l10n). You can also use it to help maintain the resulting i18n-enabled Golang code so that it remains internationalized. This tool was extracted while we worked on enabling the [Cloud Foundry CLI](https://github.com/cloudfoundry/cli) with i18n support.
+This is a general purpose internationalization (i18n) tooling for Go language (Golang) programs. It allows you to prepare Go language code for internationalization and localization (l10n). You can also use it to help maintain the resulting i18n-enabled Golang code so that it remains internationalized. This tool was extracted while working on enabling the [Cloud Foundry CLI](https://github.com/cloudfoundry/cli) with i18n support.
 
 This tool is licensed under the [Apache 2.0 OSS license](https://github.com/maximilien/i18n4go/blob/master/LICENSE). We'd love to hear from you if you are using, attempting to use, or planning to use this tool.
 
-Two additional ways, besides Gitter or Slack chat above, to contact us:
+Contact us:
 
 1. Feel free to [open an issue (good or bad)](https://github.com/maximilien/i18n4go/issues) here on Github.
 2. Send email to `i18n4go` at the Gmail domain.
@@ -25,13 +23,15 @@ Two additional ways, besides Gitter or Slack chat above, to contact us:
 ### Getting Latest Executable: i18n4go
 --------------------------------------
 
-Assuming you have a valid [Golang 1.4.2](https://golang.org/dl/) or [later](https://golang.org/dl/) installed for your system, you can quickly get the latest `i18n4go` executable by running the following `go` command:
+Assuming you have a valid [Golang 1.19.5](https://golang.org/dl/) or [later](https://golang.org/dl/) installed for your system, you can quickly get the latest `i18n4go` executable by running the following `go` command:
 
 ```
 $ go get github.com/maximilien/i18n4go/i18n4go
 ```
 
 This will build and place the `i18n4go` executable built for your operating system in your `$GOPATH/bin` directory.
+
+Yoiu can also download pre-built executable from the repo's [release](https://github.com/maximilien/i18n4go/releases) page.
 
 ### Cloning and Building
 ------------------------
@@ -117,18 +117,18 @@ For instance to create `fr_FR` file(s) for French and every other locale_Languag
 Printing the usage help: `$ i18n4go -h` or `$ i18n4go --help`
 
 ```
-usage: i18n4go -c extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -f <fileName>
-   or: i18n4go -c extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -d <dirName> [-r] [--ignore-regexp <fileNameRegexp>]
+usage: i18n4go extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -f <fileName>
+   or: i18n4go extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -d <dirName> [-r] [--ignore-regexp <fileNameRegexp>]
 
-usage: i18n4go -c rewrite-package [-v] [-r] -d <dirName> [--i18n-strings-filename <fileName> | --i18n-strings-dirname <dirName>]
-   or: i18n4go -c rewrite-package [-v] [-r] -f <fileName> --i18n-strings-filename <fileName>
+usage: i18n4go rewrite-package [-v] [-r] -d <dirName> [--i18n-strings-filename <fileName> | --i18n-strings-dirname <dirName>]
+   or: i18n4go rewrite-package [-v] [-r] -f <fileName> --i18n-strings-filename <fileName>
 
-usage: i18n4go -c merge-strings [-v] [-r] [--source-language <language>] -d <dirName>
+usage: i18n4go merge-strings [-v] [-r] [--source-language <language>] -d <dirName>
 
-usage: i18n4go -c verify-strings [-v] [--source-language <language>] -f <sourceFileName> --language-files <language files>
-   or: i18n4go -c verify-strings [-v] [--source-language <language>] -f <sourceFileName> --languages <lang1,lang2,...>
+usage: i18n4go verify-strings [-v] [--source-language <language>] -f <sourceFileName> --language-files <language files>
+   or: i18n4go verify-strings [-v] [--source-language <language>] -f <sourceFileName> --languages <lang1,lang2,...>
 
-usage: i18n4go -c create-translations [-v] [--google-translate-api-key <api key>] [--source-language <language>] -f <fileName> --languages <lang1,lang2,...> -o <outputDir>
+usage: i18n4go create-translations [-v] [--google-translate-api-key <api key>] [--source-language <language>] -f <fileName> --languages <lang1,lang2,...> -o <outputDir>
 
   -h | --help                prints the usage
   -v                         verbose
@@ -137,13 +137,13 @@ usage: i18n4go -c create-translations [-v] [--google-translate-api-key <api key>
 
 ## extract-strings
 
-The general usage for `-c extract-strings` command is:
+The general usage for `extract-strings` command is:
 
 ```
   ...
   EXTRACT-STRINGS:
 
-  -c extract-strings         the extract strings command
+  extract-strings            the extract strings command
 
   -e                         [optional] the JSON file with strings to be excluded, defaults to excluded.json if present
 	-s												 [optional] the JSON file with regexp that specify a capturing group to be extracted instead of the full string matching the regexp
@@ -165,10 +165,10 @@ The general usage for `-c extract-strings` command is:
 
 ```
 
-The command `-c extract-strings` pulls strings out of go files.  For the examples below we are running the tool on a copy of the the [CloudFoundry CLI](https://github.com/cloudfoundry/cli) cloned in the `./tmp`
+The command `extract-strings` pulls strings out of go files.  For the examples below we are running the tool on a copy of the the [CloudFoundry CLI](https://github.com/cloudfoundry/cli) cloned in the `./tmp`
 
-```
-$ i18n4go -c extract-strings -v --po -f ./tmp/cli/cf/app/app.go -o ./tmp/cli/i18n -output-match-package
+```bash
+$ i18n4go extract-strings -v --po -f ./tmp/cli/cf/app/app.go -o ./tmp/cli/i18n -output-match-package
 
 i18n4go: extracting strings from file: ./tmp/cli/cf/app/app.go
 Could not find: excluded.json
@@ -206,7 +206,7 @@ b. Optionaly, using -p flag, it will generate `./tmp/cli/i18n/app/app.go.en.po`
 
 This file is the [PO](https://www.gnu.org/software/gettext/manual/html_node/PO-Files.html) formatted translation file for English. Some of its content is as follows:
 
-```
+```bash
 # filename: ../tmp/cli/cf/app/app.go, offset: 1617, line: 48, column: 16
 msgid "Show help"
 msgstr "Show help"
@@ -219,8 +219,8 @@ msgstr "%s help [COMMAND]"
 
 To extract multiples files that are in one directory, use the following:
 
-```
-$ i18n4go -c extract-strings -v --po -d ./tmp/cli/cf/app/ -o ./tmp/cli/i18n -output-match-package -ignore-regexp ".*test.*"
+```bash
+$ i18n4go extract-strings -v --po -d ./tmp/cli/cf/app/ -o ./tmp/cli/i18n -output-match-package -ignore-regexp ".*test.*"
 
 ...
 ```
@@ -229,13 +229,13 @@ The generated output JSON files are in: `./tmp/cli/i18n/app`
 
 ## merge-strings
 
-The general usage for `-c merge-strings` command is:
+The general usage for `merge-strings` command is:
 
 ```
   ...
   MERGE STRINGS:
 
-  -c merge-strings            merges multiple <filename>.go.<language>.json files into a <language>.all.json
+  merge-strings              merges multiple <filename>.go.<language>.json files into a <language>.all.json
 
   -d                         the directory containing the json files to combine
   -r                         [optional] recursesively combine files from all subdirectories
@@ -244,10 +244,10 @@ The general usage for `-c merge-strings` command is:
 
 ```
 
-The command `-c merge-strings` combines strings in multiple `*.go.[lang].json` files generated by `Extract Strings` into one file. Using the same example source as above.
+The command `merge-strings` combines strings in multiple `*.go.[lang].json` files generated by `Extract Strings` into one file. Using the same example source as above.
 
-```
-$ i18n4go -c merge-strings -v -d ./tmp/cli/i18n/app -source-language en
+```bash
+$ i18n4go merge-strings -v -d ./tmp/cli/i18n/app -source-language en
 
 i18n4go: scanning file: tmp/cli/i18n/app/app.go.en.json
 i18n4go: scanning file: tmp/cli/i18n/app/flag_helper.go.en.json
@@ -262,13 +262,13 @@ must match the language portion of the files in the directory, e.g., app.go.en.j
 
 ## rewrite-package
 
-The general usage for `-c rewrite-package` command is:
+The general usage for `rewrite-package` command is:
 
 ```
   ...
   REWRITE-PACKAGE:
 
-  -c rewrite-package         the rewrite package command
+  rewrite-package            the rewrite package command
 
   -f                         the source go file to be rewritten
   -d                         the directory containing the go files to rewrite
@@ -280,12 +280,12 @@ The general usage for `-c rewrite-package` command is:
 
 ```
 
-The command `-c rewrite-package` will modify the go source files such that every string identified in the JSON translation files are wrapped with the `T()` function. There are two cases:
+The command `rewrite-package` will modify the go source files such that every string identified in the JSON translation files are wrapped with the `T()` function. There are two cases:
 
 a. running it on one source file
 
-```
-$ i18n4go -c rewrite-package -v -f tmp/cli/cf/app/help.go -i18n-strings-dirname tmp/cli/i18n/app/ -o tmp/cli/cf/app/
+```bash
+$ i18n4go rewrite-package -v -f tmp/cli/cf/app/help.go -i18n-strings-dirname tmp/cli/i18n/app/ -o tmp/cli/cf/app/
 
 i18n4go: rewriting strings for source file: tmp/cli/cf/app/help.go
 i18n4go: adding init func to package: app  to output dir: tmp/cli/cf/app
@@ -299,8 +299,8 @@ Total time: 9.986963ms
 
 b. running it on a directory
 
-```
-$ i18n4go -c rewrite-package -v -d tmp/cli/cf/app/ -i18n-strings-dirname tmp/cli/i18n/app/ -o tmp/cli/cf/app/
+```bash
+$ i18n4go rewrite-package -v -d tmp/cli/cf/app/ -i18n-strings-dirname tmp/cli/i18n/app/ -o tmp/cli/cf/app/
 
 i18n4go: rewriting strings in dir tmp/cli/cf/app/, recursive: false
 
@@ -348,7 +348,7 @@ The general usage for `-c create-translations` command is:
   ...
   CREATE-TRANSLATIONS:
 
-  -c create-translations     the create translations command
+  create-translations     the create translations command
 
   -f                         the source translation file
   -o                         the output directory where the newly created translation files will be placed
@@ -359,10 +359,10 @@ The general usage for `-c create-translations` command is:
 
 ```
 
-The command `-c create-translations` generates copies of the `-source-language` file, one per language specified in the `-languages` flag (seperated by comma).
+The command `create-translations` generates copies of the `-source-language` file, one per language specified in the `-languages` flag (seperated by comma).
 
-```
-$ i18n4go -c create-translations -v -f tmp/cli/i18n/app/en.all.json -source-language en -languages "en_US,fr_FR,es_ES,de_DE" -o tmp/cli/i18n/app/
+```bash
+$ i18n4go create-translations -v -f tmp/cli/i18n/app/en.all.json -source-language en -languages "en_US,fr_FR,es_ES,de_DE" -o tmp/cli/i18n/app/
 
 i18n4go: creating translation files for: tmp/cli/i18n/app/en.all.json
 
@@ -386,13 +386,13 @@ Optionally, we can create automated translations for the generated copies using 
 
 ## verify-strings
 
-The general usage for `-c verify-strings` command is:
+The general usage for `verify-strings` command is:
 
 ```
   ...
   VERIFY-STRINGS:
 
-  -c verify-strings          the verify strings command
+  verify-strings             the verify strings command
 
 
   -f                         the source translation file
@@ -404,14 +404,14 @@ The general usage for `-c verify-strings` command is:
 
 ```
 
-The command `-c verify-strings` assures that combined language files have exactly the same keys.
+The command `verify-strings` assures that combined language files have exactly the same keys.
 
 For instance, in the example in `merge-strings` we created a combined language file called `./tmp/cli/i18n/app/en.all.json` and if we also
 had a `./tmp/cli/i18n/app/fr.all.json` for French and that file had missing strings then running the `verify-strings` would generate a
 `tmp/cli/i18n/app/fr.all.json.missing.diff.json`, as in the following:
 
-```
-$ i18n4go -c verify-strings -v -f tmp/cli/i18n/app/en.all.json -languages "fr"
+```bash
+$ i18n4go verify-strings -v -f tmp/cli/i18n/app/en.all.json -languages "fr"
 
 targetFilenames: [tmp/cli/i18n/app/fr.all.json]
 i18n4go: ERROR input file does not match target file: tmp/cli/i18n/app/fr.all.json
@@ -423,8 +423,8 @@ i18n4go: Could not verify strings for input filename, err: i18n4go: target file 
 Similarly, `verify-strings` will make sure that no additonal strings are added. So if we had an additional German `de.all.json` file that included additional strings
 running `verify-strings` would include a `tmp/cli/i18n/app/de.all.json.extra.diff.json`.
 
-```
-$ i18n4go -c -verify-strings -v -f tmp/cli/i18n/app/en.all.json -languages "fr,de"
+```bash
+$ i18n4go verify-strings -v -f tmp/cli/i18n/app/en.all.json -languages "fr,de"
 
 targetFilenames: [tmp/cli/i18n/app/fr.all.json tmp/cli/i18n/app/de.all.json]
 i18n4go: ERROR input file does not match target file: tmp/cli/i18n/app/fr.all.json
@@ -442,13 +442,13 @@ Finally, if a combined language file contains both extra and missing keys then `
 
 ## checkup
 
-The general usage for `-c checkup` command is:
+The general usage for `checkup` command is:
 
 ```
   ...
   CHECKUP:
 
-  -c checkup            the checkup command
+  checkup               the checkup command
 
 
   -q                    the qualifier to use when calling the T(...), defaults to empty but can be used to set to something like i18n for example, such that, i18n.T(...) is used for T(...) function
@@ -461,7 +461,7 @@ The `checkup` command ensures that the strings in code match strings in resource
 
 ## fixup
 
-The general usage for `-c fixup` command is:
+The general usage for `fixup` command is:
 
 ```
   ...
@@ -497,8 +497,8 @@ to the generated files from extracted strings.
 
 As an example run, generate an extracted string files useing the command:
 
-```
-$ i18n4go -c extract-strings -p -d ./tmp/cli/cf/app/ -o ./tmp/cli/i18n -output-match-package -ignore-regexp ".*test.*" -e ./example/excluded.json
+```bash
+$ i18n4go extract-strings -p -d ./tmp/cli/cf/app/ -o ./tmp/cli/i18n -output-match-package -ignore-regexp ".*test.*" -e ./example/excluded.json
 ```
 
 If we inspect the `./tmp/cli/i18n/app/app.go.en.json` file there should not be an entry for `"id": "help"`, but you should still see an entry for `"id": "show help"`
@@ -520,8 +520,8 @@ Regular expressions can be defined using the same JSON annotation as string lite
 As an example for regular expressions, let us consider the `^json:`. This expression will remove any string containg `json:` which would be useful when parsing the
 `./tmp/cli/cf/api/resources/events.go` file such as: `ExitDescription string `json:"exit_description"`. After running the command:
 
-```
-$ i18n4go -c extract-strings -v -d ./tmp/cli/cf/api/resources -o ./tmp/cli/i18n -output-match-package -ignore-regexp ".*test.*" -e ./example/excluded.json
+```bash
+$ i18n4go extract-strings -v -d ./tmp/cli/cf/api/resources -o ./tmp/cli/i18n -output-match-package -ignore-regexp ".*test.*" -e ./example/excluded.json
 ```
 
 We can inspect the `./tmp/cli/i18n/resources/events.go.en.json` file and see that there are no strings with the expression `json:`.
