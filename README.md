@@ -114,7 +114,8 @@ For instance to create `fr_FR` file(s) for French and every other locale_Languag
 ### Help
 --------
 
-Printing the usage help: `$ i18n4go -h` or `$ i18n4go --help`
+Printing the usage help: `$ i18n4go` . 
+Printing  usage help for commands: `$ i18n4go <command> --help|-h`
 
 ```
 usage: i18n4go extract-strings [-vpe] [--dry-run] [--output-flat|--output-match-package|-o <outputDir>] -f <fileName>
