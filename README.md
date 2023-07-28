@@ -23,7 +23,7 @@ Contact us:
 ### Getting Latest Executable: i18n4go
 --------------------------------------
 
-Assuming you have a valid [Golang 1.19.5](https://golang.org/dl/) or [later](https://golang.org/dl/) installed for your system, you can quickly get the latest `i18n4go` executable by running the following `go` command:
+Assuming you have a valid [Golang 1.17.x](https://golang.org/dl/) or [later](https://golang.org/dl/) installed for your system, you can quickly get the latest `i18n4go` executable by running the following `go` command:
 
 ```
 $ go install github.com/maximilien/i18n4go/i18n4go
