@@ -9,7 +9,7 @@ require (
 	github.com/onsi/gomega v1.27.9
 	github.com/pivotal-cf-experimental/jibber_jabber v0.0.0-20151120183258-bcc4c8345a21
 	github.com/spf13/cobra v1.7.0
-	golang.org/x/text v0.11.0
+	golang.org/x/text v0.12.0
 )
 
 require (
