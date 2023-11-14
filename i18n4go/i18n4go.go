@@ -355,7 +355,7 @@ usage: i18n4go -c checkup
 
   MERGE STRINGS:
 
-  -c merge-strings           the merge strings command which merges multiple <filename>.go.<language>.json files into a <language>.all.json
+  -c merge-strings           the merge strings command which merges multiple <filename>.go.<language>.json files into a all.<language>.json
 
   -r                         [optional] recursesively combine files from all subdirectories
   --source-language          [optional] the source language of the file, typically also part of the file name, e.g., "en_US" (default to 'en')
