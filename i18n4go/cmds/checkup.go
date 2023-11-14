@@ -50,16 +50,16 @@ func NewCheckup(options *common.Options) *Checkup {
 // NewCheckupCommand implements 'i18n4go checkup' command
 func NewCheckupCommand(options *common.Options) *cobra.Command {
 	checkupCmd := &cobra.Command{
-		Use:   "checkup",
-		Short: "Checks the transated files",
+		Use:   T("checkup"),
+		Short: T("Checks the transated files"),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return NewCheckup(options).Run()
 		},
 	}
 
-	checkupCmd.Flags().StringVarP(&options.QualifierFlag, "qualifier", "q", "", "[optional] the qualifier string that is used when using the T(...) function, default to nothing but could be set to `i18n` so that all calls would be: i18n.T(...)")
+	checkupCmd.Flags().StringVarP(&options.QualifierFlag, T("qualifier"), T("q"), T(""), T("[optional] the qualifier string that is used when using the T(...) function, default to nothing but could be set to `i18n` so that all calls would be: i18n.T(...)"))
 	// TODO: Optional flags shouldn't have set defaults. We should look into removing the default
-	checkupCmd.Flags().StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", ".*test.*", "recursively extract strings from all files in the same directory as filename or dirName")
+	checkupCmd.Flags().StringVar(&options.IgnoreRegexpFlag, T("ignore-regexp"), T(".*test.*"), T("recursively extract strings from all files in the same directory as filename or dirName"))
 	return checkupCmd
 }
 
@@ -88,44 +88,44 @@ func (cu *Checkup) Run() error {
 	sourceStrings, err := cu.findSourceStrings()
 
 	if err != nil {
-		cu.Println(fmt.Sprintf("Couldn't find any source strings: %s", err.Error()))
+		cu.Println(fmt.Sprintf(T("Couldn't find any source strings: {{.Arg0}}", map[string]interface{}{"Arg0": err.Error()})))
 		return err
 	}
 
-	locales := findTranslationFiles(".", cu.IgnoreRegexp, false)
+	locales := findTranslationFiles(T("."), cu.IgnoreRegexp, false)
 
-	englishFiles := locales["en_US"]
+	englishFiles := locales[T("en_US")]
 	if englishFiles == nil {
-		cu.Println("Could not find an i18n file for locale: en_US")
-		return errors.New("Could not find an i18n file for locale: en_US")
+		cu.Println(T("Could not find an i18n file for locale: en_US"))
+		return errors.New(T("Could not find an i18n file for locale: en_US"))
 	}
 
 	englishStrings, err := cu.findI18nStrings(englishFiles)
 
 	if err != nil {
-		cu.Println(fmt.Sprintf("Couldn't find the english strings: %s", err.Error()))
+		cu.Println(fmt.Sprintf(T("Couldn't find the english strings: {{.Arg0}}", map[string]interface{}{"Arg0": err.Error()})))
 		return err
 	}
 
-	err = cu.diffStrings("the code", "en_US", sourceStrings, englishStrings)
+	err = cu.diffStrings(T("the code"), T("en_US"), sourceStrings, englishStrings)
 
 	for locale, i18nFiles := range locales {
-		if locale == "en_US" {
+		if locale == T("en_US") {
 			continue
 		}
 
 		translatedStrings, err := cu.findI18nStrings(i18nFiles)
 
 		if err != nil {
-			cu.Println(fmt.Sprintf("Couldn't get the strings from %s: %s", locale, err.Error()))
+			cu.Println(fmt.Sprintf(T("Couldn't get the strings from {{.Arg0}}: {{.Arg1}}", map[string]interface{}{"Arg0": locale, "Arg1": err.Error()})))
 			return err
 		}
 
-		err = cu.diffStrings("en_US", locale, englishStrings, translatedStrings)
+		err = cu.diffStrings(T("en_US"), locale, englishStrings, translatedStrings)
 	}
 
 	if err == nil {
-		cu.Printf("OK")
+		cu.Printf(T("OK"))
 	}
 
 	return err
@@ -138,7 +138,7 @@ func getGoFiles(dir string) (files []string) {
 		if !fileInfo.IsDir() {
 			name := fileInfo.Name()
 
-			if strings.HasSuffix(name, ".go") && !strings.HasSuffix(name, "_test.go") {
+			if strings.HasSuffix(name, T(".go")) && !strings.HasSuffix(name, T("_test.go")) {
 				files = append(files, filepath.Join(dir, fileInfo.Name()))
 			}
 		} else {
@@ -212,7 +212,7 @@ func (cu *Checkup) inspectCallExpr(translatedStrings []string, stmtMap map[strin
 	case *ast.Ident:
 		funName := node.Fun.(*ast.Ident).Name
 		// inspect any T() or t() method calls
-		if funName == "T" || funName == "t" {
+		if funName == T("T") || funName == T("t") {
 			translatedStrings = cu.inspectTFunc(translatedStrings, stmtMap, *node)
 		}
 
@@ -221,7 +221,7 @@ func (cu *Checkup) inspectCallExpr(translatedStrings []string, stmtMap map[strin
 		if ident, ok := expr.X.(*ast.Ident); ok {
 			funName := expr.Sel.Name
 			// inspect any <MODULE>.T() or <MODULE>.t() method calls (eg. i18n.T())
-			if ident.Name == cu.options.QualifierFlag && (funName == "T" || funName == "t") {
+			if ident.Name == cu.options.QualifierFlag && (funName == T("T") || funName == T("t")) {
 				translatedStrings = cu.inspectTFunc(translatedStrings, stmtMap, *node)
 			}
 		}
@@ -264,12 +264,12 @@ func (cu *Checkup) inspectFile(file string) (translatedStrings []string, err err
 
 func (cu *Checkup) findSourceStrings() (sourceStrings map[string]string, err error) {
 	sourceStrings = make(map[string]string)
-	files := getGoFiles(".")
+	files := getGoFiles(T("."))
 
 	for _, file := range files {
 		fileStrings, err := cu.inspectFile(file)
 		if err != nil {
-			cu.Println("Error when inspecting go file: ", file)
+			cu.Println(T("Error when inspecting go file: "), file)
 			return sourceStrings, err
 		}
 
@@ -293,14 +293,14 @@ func getI18nFile(locale, dir string) (filePath string) {
 			name := fileInfo.Name()
 
 			// assume the file path is a json file and the path contains the locale
-			if strings.HasSuffix(name, ".json") && strings.Contains(name, fmt.Sprintf("%s.", locale)) {
+			if strings.HasSuffix(name, T(".json")) && strings.Contains(name, fmt.Sprintf(T("{{.Arg0}}.", map[string]interface{}{"Arg0": locale}))) {
 				filePath = filepath.Join(dir, fileInfo.Name())
 				break
 			}
 		} else {
 			filePath = getI18nFile(locale, filepath.Join(dir, fileInfo.Name()))
 
-			if filePath != "" {
+			if filePath != T("") {
 				break
 			}
 		}
@@ -317,19 +317,19 @@ func findTranslationFiles(dir string, ignoreRegexp *regexp.Regexp, verbose bool)
 		if !fileInfo.IsDir() {
 			name := fileInfo.Name()
 
-			if strings.HasSuffix(name, ".json") {
-				parts := strings.Split(name, ".")
+			if strings.HasSuffix(name, T(".json")) {
+				parts := strings.Split(name, T("."))
 				var locale string
 
 				for _, part := range parts {
-					invalidLangRegexp, _ := regexp.Compile("excluded|json|all")
+					invalidLangRegexp, _ := regexp.Compile(T("excluded|json|all"))
 					if !invalidLangRegexp.MatchString(part) {
 						locale = part
 					}
 				}
 
 				// No locale found so skipping
-				if locale == "" {
+				if locale == T("") {
 					continue
 				}
 
@@ -378,16 +378,16 @@ func (cu *Checkup) findI18nStrings(i18nFiles []string) (i18nStrings map[string]s
 
 func (cu *Checkup) diffStrings(sourceNameOne, sourceNameTwo string, stringsOne, stringsTwo map[string]string) (err error) {
 	for key, _ := range stringsOne {
-		if stringsTwo[key] == "" {
-			cu.Printf("\"%s\" exists in %s, but not in %s\n", key, sourceNameOne, sourceNameTwo)
-			err = errors.New("Strings don't match")
+		if stringsTwo[key] == T("") {
+			cu.Printf(T("\"{{.Arg0}}\" exists in {{.Arg1}}, but not in {{.Arg2}}\n", map[string]interface{}{"Arg0": key, "Arg1": sourceNameOne, "Arg2": sourceNameTwo}))
+			err = errors.New(T("Strings don't match"))
 		}
 	}
 
 	for key, _ := range stringsTwo {
-		if stringsOne[key] == "" {
-			cu.Printf("\"%s\" exists in %s, but not in %s\n", key, sourceNameTwo, sourceNameOne)
-			err = errors.New("Strings don't match")
+		if stringsOne[key] == T("") {
+			cu.Printf(T("\"{{.Arg0}}\" exists in {{.Arg1}}, but not in {{.Arg2}}\n", map[string]interface{}{"Arg0": key, "Arg1": sourceNameTwo, "Arg2": sourceNameOne}))
+			err = errors.New(T("Strings don't match"))
 		}
 	}
 

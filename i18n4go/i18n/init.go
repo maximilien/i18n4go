@@ -23,6 +23,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/maximilien/i18n4go/i18n4go/resources"
 	"github.com/pivotal-cf-experimental/jibber_jabber"
 
 	go_i18n "github.com/nicksnyder/go-i18n/v2/i18n"
@@ -49,22 +50,19 @@ var SUPPORTED_LOCALES = map[string]string{
 	"zh": "zh_CN",
 }
 var (
-	RESOUCES_PATH = filepath.Join("cf", "i18n", "resources")
-	bundle        *go_i18n.Bundle
+	RESOURCES_PATH = "./resources"
+	bundle         *go_i18n.Bundle
 )
 
 func GetResourcesPath() string {
-	return RESOUCES_PATH
+	return RESOURCES_PATH
 }
 
-func init() {
+func Init(packageName string, i18nDirname string) TranslateFunc {
 	if bundle == nil {
 		bundle = go_i18n.NewBundle(language.AmericanEnglish)
 		bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
 	}
-}
-
-func Init(packageName string, i18nDirname string) TranslateFunc {
 	userLocale, err := initWithUserLocale(packageName, i18nDirname)
 	if err != nil {
 		userLocale = mustLoadDefaultLocale(packageName, i18nDirname)
@@ -111,8 +109,10 @@ func mustLoadDefaultLocale(packageName, i18nDirname string) string {
 }
 
 func loadFromAsset(packageName, assetPath, locale, language string) error {
-	assetName := locale + ".all.json"
-	assetKey := filepath.Join(assetPath, language, packageName, assetName)
+	assetName := "all." + locale + ".json"
+	assetKey := filepath.Join(assetPath, packageName, assetName)
+	// REMOVEME: Do not commit
+	fmt.Printf("\nassetKey: %s\n", assetKey)
 
 	byteArray, err := resources.Asset(assetKey)
 	if err != nil {

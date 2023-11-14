@@ -16,6 +16,7 @@ require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/cloudfoundry/jibber_jabber v0.0.0-20151120183258-bcc4c8345a21 // indirect
 	github.com/fsnotify/fsnotify v1.4.9 // indirect
+	github.com/go-bindata/go-bindata v3.1.2+incompatible // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/nxadm/tail v1.4.8 // indirect
