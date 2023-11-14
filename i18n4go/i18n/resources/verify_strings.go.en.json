@@ -1,0 +1,162 @@
+[
+  {
+    "id": "the source translation file",
+    "translation": "the source translation file",
+    "modified": false
+  },
+  {
+    "id": "i18n4go: ERROR input file does not match target file:",
+    "translation": "i18n4go: ERROR input file does not match target file:",
+    "modified": false
+  },
+  {
+    "id": "File has duplicated key: %s\n%s",
+    "translation": "File has duplicated key: %s\n%s",
+    "modified": false
+  },
+  {
+    "id": "i18n4go: WARNING target file has extra key with ID: ",
+    "translation": "i18n4go: WARNING target file has extra key with ID: ",
+    "modified": false
+  },
+  {
+    "id": "i18n4go: target file has extra i18n strings with IDs: %s",
+    "translation": "i18n4go: target file has extra i18n strings with IDs: %s",
+    "modified": false
+  },
+  {
+    "id": "verify-strings",
+    "translation": "verify-strings",
+    "modified": false
+  },
+  {
+    "id": "Verify strings in translations",
+    "translation": "Verify strings in translations",
+    "modified": false
+  },
+  {
+    "id": "languages",
+    "translation": "languages",
+    "modified": false
+  },
+  {
+    "id": "the output directory where the missing translation keys will be placed",
+    "translation": "the output directory where the missing translation keys will be placed",
+    "modified": false
+  },
+  {
+    "id": "file",
+    "translation": "file",
+    "modified": false
+  },
+  {
+    "id": "i18n4go: Error checking input filename: ",
+    "translation": "i18n4go: Error checking input filename: ",
+    "modified": false
+  },
+  {
+    "id": "i18n4go: target file is missing i18n strings with IDs: %s",
+    "translation": "i18n4go: target file is missing i18n strings with IDs: %s",
+    "modified": false
+  },
+  {
+    "id": "source-language",
+    "translation": "source-language",
+    "modified": false
+  },
+  {
+    "id": "a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"",
+    "translation": "a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"",
+    "modified": false
+  },
+  {
+    "id": "a comma separated list of target files for different languages to compare,  e.g., \\\"en, en_US, fr_FR, es\\\"\t                                                                  if not specified then the languages flag is used to find target files in same directory as source",
+    "translation": "a comma separated list of target files for different languages to compare,  e.g., \\\"en, en_US, fr_FR, es\\\"\t                                                                  if not specified then the languages flag is used to find target files in same directory as source",
+    "modified": false
+  },
+  {
+    "id": "targetFilenames:",
+    "translation": "targetFilenames:",
+    "modified": false
+  },
+  {
+    "id": "i18n4go: Error input file: %s is empty",
+    "translation": "i18n4go: Error input file: %s is empty",
+    "modified": false
+  },
+  {
+    "id": "i18n4go: WARNING target file contains total of extra keys:",
+    "translation": "i18n4go: WARNING target file contains total of extra keys:",
+    "modified": false
+  },
+  {
+    "id": "the source language of the file, typically also part of the file name, e.g., \"en_US\"",
+    "translation": "the source language of the file, typically also part of the file name, e.g., \"en_US\"",
+    "modified": false
+  },
+  {
+    "id": "language-files",
+    "translation": "language-files",
+    "modified": false
+  },
+  {
+    "id": "i18n4go: WARNING target file has invalid templated translations with key ID: ",
+    "translation": "i18n4go: WARNING target file has invalid templated translations with key ID: ",
+    "modified": false
+  },
+  {
+    "id": "i18n4go: ERROR could not create the diff file:",
+    "translation": "i18n4go: ERROR could not create the diff file:",
+    "modified": false
+  },
+  {
+    "id": "i18n4go: generated diff file:",
+    "translation": "i18n4go: generated diff file:",
+    "modified": false
+  },
+  {
+    "id": "i18n4go: target file has invalid i18n strings with IDs: %s",
+    "translation": "i18n4go: target file has invalid i18n strings with IDs: %s",
+    "modified": false
+  },
+  {
+    "id": "en",
+    "translation": "en",
+    "modified": false
+  },
+  {
+    "id": "i18n4go: Error loading the i18n strings from input filename:",
+    "translation": "i18n4go: Error loading the i18n strings from input filename:",
+    "modified": false
+  },
+  {
+    "id": "i18n4go: WARNING target file contains total of invalid translations:",
+    "translation": "i18n4go: WARNING target file contains total of invalid translations:",
+    "modified": false
+  },
+  {
+    "id": ".missing.diff.json",
+    "translation": ".missing.diff.json",
+    "modified": false
+  },
+  {
+    "id": "output",
+    "translation": "output",
+    "modified": false
+  },
+  {
+    "id": "i18n4go: Error verifying target filename: ",
+    "translation": "i18n4go: Error verifying target filename: ",
+    "modified": false
+  },
+  {
+    "id": "i18n4go: Error loading the i18n strings from target filename:",
+    "translation": "i18n4go: Error loading the i18n strings from target filename:",
+    "modified": false
+  },
+  {
+    "id": "i18n4go: templated string is invalid, missing args in translation:",
+    "translation": "i18n4go: templated string is invalid, missing args in translation:",
+    "modified": false
+  }
+]

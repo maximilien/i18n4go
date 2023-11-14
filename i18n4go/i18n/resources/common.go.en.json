@@ -1,0 +1,47 @@
+[
+   {
+      "id": "Saving extracted i18n strings to file:",
+      "translation": "Saving extracted i18n strings to file:",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: Error compiling interpolated string Regexp: %s\n",
+      "translation": "i18n4go: Error compiling interpolated string Regexp: %s\n",
+      "modified": false
+   },
+   {
+      "id": "WARNING: fail to compile ignore-regexp:",
+      "translation": "WARNING: fail to compile ignore-regexp:",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: Non-regular source file %s (%s)\n",
+      "translation": "i18n4go: Non-regular source file %s (%s)\n",
+      "modified": false
+   },
+   {
+      "id": "PWD",
+      "translation": "PWD",
+      "modified": false
+   },
+   {
+      "id": "Creating and saving i18n strings to .po file:",
+      "translation": "Creating and saving i18n strings to .po file:",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: creating and saving i18n strings to .po file:",
+      "translation": "i18n4go: creating and saving i18n strings to .po file:",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: Error compiling templated string Regexp: %s\n",
+      "translation": "i18n4go: Error compiling templated string Regexp: %s\n",
+      "modified": false
+   },
+   {
+      "id": "Duplicated key found: ",
+      "translation": "Duplicated key found: ",
+      "modified": false
+   }
+]

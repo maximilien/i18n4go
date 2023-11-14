@@ -1,0 +1,27 @@
+[
+   {
+      "id": "Build Date:   %s\n",
+      "translation": "Build Date:   %s\n",
+      "modified": false
+   },
+   {
+      "id": "Git Revision: %s\n",
+      "translation": "Git Revision: %s\n",
+      "modified": false
+   },
+   {
+      "id": "version",
+      "translation": "version",
+      "modified": false
+   },
+   {
+      "id": "Show the version of the i18n client",
+      "translation": "Show the version of the i18n client",
+      "modified": false
+   },
+   {
+      "id": "Version:      %s\n",
+      "translation": "Version:      %s\n",
+      "modified": false
+   }
+]

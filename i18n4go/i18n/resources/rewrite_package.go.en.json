@@ -1,0 +1,262 @@
+[
+   {
+      "id": "i18n4go: error determining the import path:",
+      "translation": "i18n4go: error determining the import path:",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: got a pkg with import:",
+      "translation": "i18n4go: got a pkg with import:",
+      "modified": false
+   },
+   {
+      "id": " to output dir:",
+      "translation": " to output dir:",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: loading JSON strings from file: %s\n",
+      "translation": "i18n4go: loading JSON strings from file: %s\n",
+      "modified": false
+   },
+   {
+      "id": "the dir name for which all .go files will have their strings extracted",
+      "translation": "the dir name for which all .go files will have their strings extracted",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: inserting T() calls for strings that need to be translated",
+      "translation": "i18n4go: inserting T() calls for strings that need to be translated",
+      "modified": false
+   },
+   {
+      "id": "i18n-strings-filename",
+      "translation": "i18n-strings-filename",
+      "modified": false
+   },
+   {
+      "id": "recursive",
+      "translation": "recursive",
+      "modified": false
+   },
+   {
+      "id": "filepath.Join(",
+      "translation": "filepath.Join(",
+      "modified": false
+   },
+   {
+      "id": "generate standard .po file for translation",
+      "translation": "generate standard .po file for translation",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: got a root pkg with import path:",
+      "translation": "i18n4go: got a root pkg with import path:",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: error reading content of init code snippet file: %s\n, using default",
+      "translation": "i18n4go: error reading content of init code snippet file: %s\n, using default",
+      "modified": false
+   },
+   {
+      "id": "PWD",
+      "translation": "PWD",
+      "modified": false
+   },
+   {
+      "id": "a perl-style regular expression for files to ignore, e.g., \".*test.*\"",
+      "translation": "a perl-style regular expression for files to ignore, e.g., \".*test.*\"",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: using the PWD as the rootPath:",
+      "translation": "i18n4go: using the PWD as the rootPath:",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: using import path as:",
+      "translation": "i18n4go: using import path as:",
+      "modified": false
+   },
+   {
+      "id": "rewrite-package",
+      "translation": "rewrite-package",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: got a local import %s so using %s instead for pkg",
+      "translation": "i18n4go: got a local import %s so using %s instead for pkg",
+      "modified": false
+   },
+   {
+      "id": "recursively rewrite packages from all files in the same directory as filename or dirName",
+      "translation": "recursively rewrite packages from all files in the same directory as filename or dirName",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: error saving updated i18n strings file:",
+      "translation": "i18n4go: error saving updated i18n strings file:",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: error getting root path import:",
+      "translation": "i18n4go: error getting root path import:",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: adding init func to package:",
+      "translation": "i18n4go: adding init func to package:",
+      "modified": false
+   },
+   {
+      "id": "saving file to path",
+      "translation": "saving file to path",
+      "modified": false
+   },
+   {
+      "id": "Rewrite translated packages from go source files",
+      "translation": "Rewrite translated packages from go source files",
+      "modified": false
+   },
+   {
+      "id": "root-path",
+      "translation": "root-path",
+      "modified": false
+   },
+   {
+      "id": "ignore-regexp",
+      "translation": "ignore-regexp",
+      "modified": false
+   },
+   {
+      "id": "Total rewritten strings:",
+      "translation": "Total rewritten strings:",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: error saving AST file:",
+      "translation": "i18n4go: error saving AST file:",
+      "modified": false
+   },
+   {
+      "id": "init-code-snippet-filename",
+      "translation": "init-code-snippet-filename",
+      "modified": false
+   },
+   {
+      "id": "[optional] the path to a file containing the template snippet for the code that is used for go-i18n initialization",
+      "translation": "[optional] the path to a file containing the template snippet for the code that is used for go-i18n initialization",
+      "modified": false
+   },
+   {
+      "id": "Total files parsed:",
+      "translation": "Total files parsed:",
+      "modified": false
+   },
+   {
+      "id": "cowardly refusing to translate the strings in test file:",
+      "translation": "cowardly refusing to translate the strings in test file:",
+      "modified": false
+   },
+   {
+      "id": "output",
+      "translation": "output",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: WARNING could not find JSON file:",
+      "translation": "i18n4go: WARNING could not find JSON file:",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: error adding init() func to package:",
+      "translation": "i18n4go: error adding init() func to package:",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: determining import path using root path:",
+      "translation": "i18n4go: determining import path using root path:",
+      "modified": false
+   },
+   {
+      "id": "a JSON file with the strings that should be i18n enabled, typically the output of the extract-strings command",
+      "translation": "a JSON file with the strings that should be i18n enabled, typically the output of the extract-strings command",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: error appending T() to AST file:",
+      "translation": "i18n4go: error appending T() to AST file:",
+      "modified": false
+   },
+   {
+      "id": "a directory with the extracted JSON files, using -output-match-package with extract-strings command this directory should match the input files package name",
+      "translation": "a directory with the extracted JSON files, using -output-match-package with extract-strings command this directory should match the input files package name",
+      "modified": false
+   },
+   {
+      "id": "output directory where the translation files will be placed",
+      "translation": "output directory where the translation files will be placed",
+      "modified": false
+   },
+   {
+      "id": "package __PACKAGE__NAME__\n\nimport (\n\t\"path/filepath\"\n\n\ti18n \"github.com/maximilien/i18n4go/i18n\"\n)\n\nvar T i18n.TranslateFunc\n\nfunc init() {\n\tT = i18n.Init(__FULL_IMPORT_PATH__, i18n.GetResourcesPath())\n}",
+      "translation": "package __PACKAGE__NAME__\n\nimport (\n\t\"path/filepath\"\n\n\ti18n \"github.com/maximilien/i18n4go/i18n\"\n)\n\nvar T i18n.TranslateFunc\n\nfunc init() {\n\tT = i18n.Init(__FULL_IMPORT_PATH__, i18n.GetResourcesPath())\n}",
+      "modified": false
+   },
+   {
+      "id": "i18n-strings-dirname",
+      "translation": "i18n-strings-dirname",
+      "modified": false
+   },
+   {
+      "id": "i18n_init.go",
+      "translation": "i18n_init.go",
+      "modified": false
+   },
+   {
+      "id": "directory",
+      "translation": "directory",
+      "modified": false
+   },
+   {
+      "id": "file",
+      "translation": "file",
+      "modified": false
+   },
+   {
+      "id": "the source go file to be rewritten",
+      "translation": "the source go file to be rewritten",
+      "modified": false
+   },
+   {
+      "id": "the root path to the Go source files whose packages are being rewritten, defaults to working directory, if not specified",
+      "translation": "the root path to the Go source files whose packages are being rewritten, defaults to working directory, if not specified",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: rewriting strings in dir %s, recursive: %t\n",
+      "translation": "i18n4go: rewriting strings in dir %s, recursive: %t\n",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: rewriting strings for source file:",
+      "translation": "i18n4go: rewriting strings for source file:",
+      "modified": false
+   },
+   {
+      "id": "i18n4go: got a local import %s so using %s instead for root pkg",
+      "translation": "i18n4go: got a local import %s so using %s instead for root pkg",
+      "modified": false
+   },
+   {
+      "id": "string",
+      "translation": "string",
+      "modified": false
+   },
+   {
+      "id": "WARNING compiling ignore-regexp:",
+      "translation": "WARNING compiling ignore-regexp:",
+      "modified": false
+   }
+]

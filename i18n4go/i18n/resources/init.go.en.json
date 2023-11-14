@@ -1,0 +1,87 @@
+[
+   {
+      "id": "fr_FR",
+      "translation": "fr_FR",
+      "modified": false
+   },
+   {
+      "id": "pt_BR",
+      "translation": "pt_BR",
+      "modified": false
+   },
+   {
+      "id": "i18n4go_res",
+      "translation": "i18n4go_res",
+      "modified": false
+   },
+   {
+      "id": "resources",
+      "translation": "resources",
+      "modified": false
+   },
+   {
+      "id": ".all.json",
+      "translation": ".all.json",
+      "modified": false
+   },
+   {
+      "id": "en_US",
+      "translation": "en_US",
+      "modified": false
+   },
+   {
+      "id": "en",
+      "translation": "en",
+      "modified": false
+   },
+   {
+      "id": "zh_CN",
+      "translation": "zh_CN",
+      "modified": false
+   },
+   {
+      "id": "cf",
+      "translation": "cf",
+      "modified": false
+   },
+   {
+      "id": "de_DE",
+      "translation": "de_DE",
+      "modified": false
+   },
+   {
+      "id": "Could not load i18n asset: %v",
+      "translation": "Could not load i18n asset: %v",
+      "modified": false
+   },
+   {
+      "id": "ru_RU",
+      "translation": "ru_RU",
+      "modified": false
+   },
+   {
+      "id": "Could not load en_US language files. God save the queen. ",
+      "translation": "Could not load en_US language files. God save the queen. ",
+      "modified": false
+   },
+   {
+      "id": "es_ES",
+      "translation": "es_ES",
+      "modified": false
+   },
+   {
+      "id": "it_IT",
+      "translation": "it_IT",
+      "modified": false
+   },
+   {
+      "id": "ja_JA",
+      "translation": "ja_JA",
+      "modified": false
+   },
+   {
+      "id": "ko_KO",
+      "translation": "ko_KO",
+      "modified": false
+   }
+]

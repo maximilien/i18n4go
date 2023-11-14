@@ -1,0 +1,92 @@
+[
+   {
+      "id": "excluded|json|all",
+      "translation": "excluded|json|all",
+      "modified": false
+   },
+   {
+      "id": "checkup",
+      "translation": "checkup",
+      "modified": false
+   },
+   {
+      "id": "Checks the transated files",
+      "translation": "Checks the transated files",
+      "modified": false
+   },
+   {
+      "id": "Couldn't find the english strings: %s",
+      "translation": "Couldn't find the english strings: %s",
+      "modified": false
+   },
+   {
+      "id": "Could not find an i18n file for locale: en_US",
+      "translation": "Could not find an i18n file for locale: en_US",
+      "modified": false
+   },
+   {
+      "id": "OK",
+      "translation": "OK",
+      "modified": false
+   },
+   {
+      "id": "[optional] the qualifier string that is used when using the T(...) function, default to nothing but could be set to `i18n` so that all calls would be: i18n.T(...)",
+      "translation": "[optional] the qualifier string that is used when using the T(...) function, default to nothing but could be set to `i18n` so that all calls would be: i18n.T(...)",
+      "modified": false
+   },
+   {
+      "id": ".*test.*",
+      "translation": ".*test.*",
+      "modified": false
+   },
+   {
+      "id": "recursively extract strings from all files in the same directory as filename or dirName",
+      "translation": "recursively extract strings from all files in the same directory as filename or dirName",
+      "modified": false
+   },
+   {
+      "id": "qualifier",
+      "translation": "qualifier",
+      "modified": false
+   },
+   {
+      "id": "_test.go",
+      "translation": "_test.go",
+      "modified": false
+   },
+   {
+      "id": "Error when inspecting go file: ",
+      "translation": "Error when inspecting go file: ",
+      "modified": false
+   },
+   {
+      "id": "Couldn't get the strings from %s: %s",
+      "translation": "Couldn't get the strings from %s: %s",
+      "modified": false
+   },
+   {
+      "id": "\"%s\" exists in %s, but not in %s\n",
+      "translation": "\"%s\" exists in %s, but not in %s\n",
+      "modified": false
+   },
+   {
+      "id": "Strings don't match",
+      "translation": "Strings don't match",
+      "modified": false
+   },
+   {
+      "id": "ignore-regexp",
+      "translation": "ignore-regexp",
+      "modified": false
+   },
+   {
+      "id": "Couldn't find any source strings: %s",
+      "translation": "Couldn't find any source strings: %s",
+      "modified": false
+   },
+   {
+      "id": "the code",
+      "translation": "the code",
+      "modified": false
+   }
+]
