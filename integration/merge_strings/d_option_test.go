@@ -15,10 +15,12 @@
 package merge_strings_test
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 
+	"github.com/maximilien/i18n4go/common"
 	. "github.com/maximilien/i18n4go/integration/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
@@ -73,7 +75,20 @@ var _ = Describe("merge-strings -d dirName", func() {
 					Ω(err).Should(BeNil())
 					Ω(actualBytes).ShouldNot(BeNil())
 
-					Ω(string(expectedBytes)).Should(Equal(string(actualBytes)))
+					expectedTranslations := []common.I18nStringInfo{}
+					err = json.Unmarshal(expectedBytes, &expectedTranslations)
+					Ω(err).Should(BeNil())
+
+					actualTranslations := []common.I18nStringInfo{}
+					err = json.Unmarshal(actualBytes, &actualTranslations)
+					Ω(err).Should(BeNil())
+
+					Ω(len(actualTranslations)).Should(Equal(len(expectedTranslations)))
+					for idx := range actualTranslations {
+						Ω(actualTranslations[idx].ID).Should(Equal(expectedTranslations[idx].ID))
+						Ω(actualTranslations[idx].Translation).Should(Equal(expectedTranslations[idx].Translation))
+					}
+
 				})
 			})
 
@@ -101,7 +116,19 @@ var _ = Describe("merge-strings -d dirName", func() {
 					Ω(err).Should(BeNil())
 					Ω(actualBytes).ShouldNot(BeNil())
 
-					Ω(string(expectedBytes)).Should(Equal(string(actualBytes)))
+					expectedTranslations := []common.I18nStringInfo{}
+					err = json.Unmarshal(expectedBytes, &expectedTranslations)
+					Ω(err).Should(BeNil())
+
+					actualTranslations := []common.I18nStringInfo{}
+					err = json.Unmarshal(actualBytes, &actualTranslations)
+					Ω(err).Should(BeNil())
+
+					Ω(len(actualTranslations)).Should(Equal(len(expectedTranslations)))
+					for idx := range actualTranslations {
+						Ω(actualTranslations[idx].ID).Should(Equal(expectedTranslations[idx].ID))
+						Ω(actualTranslations[idx].Translation).Should(Equal(expectedTranslations[idx].Translation))
+					}
 				})
 			})
 		})
@@ -140,7 +167,19 @@ var _ = Describe("merge-strings -d dirName", func() {
 					Ω(err).Should(BeNil())
 					Ω(actualBytes).ShouldNot(BeNil())
 
-					Ω(string(expectedBytes)).Should(Equal(string(actualBytes)))
+					expectedTranslations := []common.I18nStringInfo{}
+					err = json.Unmarshal(expectedBytes, &expectedTranslations)
+					Ω(err).Should(BeNil())
+
+					actualTranslations := []common.I18nStringInfo{}
+					err = json.Unmarshal(actualBytes, &actualTranslations)
+					Ω(err).Should(BeNil())
+
+					Ω(len(actualTranslations)).Should(Equal(len(expectedTranslations)))
+					for idx := range actualTranslations {
+						Ω(actualTranslations[idx].ID).Should(Equal(expectedTranslations[idx].ID))
+						Ω(actualTranslations[idx].Translation).Should(Equal(expectedTranslations[idx].Translation))
+					}
 				})
 			})
 
@@ -168,7 +207,19 @@ var _ = Describe("merge-strings -d dirName", func() {
 					Ω(err).Should(BeNil())
 					Ω(actualBytes).ShouldNot(BeNil())
 
-					Ω(string(expectedBytes)).Should(Equal(string(actualBytes)))
+					expectedTranslations := []common.I18nStringInfo{}
+					err = json.Unmarshal(expectedBytes, &expectedTranslations)
+					Ω(err).Should(BeNil())
+
+					actualTranslations := []common.I18nStringInfo{}
+					err = json.Unmarshal(actualBytes, &actualTranslations)
+					Ω(err).Should(BeNil())
+
+					Ω(len(actualTranslations)).Should(Equal(len(expectedTranslations)))
+					for idx := range actualTranslations {
+						Ω(actualTranslations[idx].ID).Should(Equal(expectedTranslations[idx].ID))
+						Ω(actualTranslations[idx].Translation).Should(Equal(expectedTranslations[idx].Translation))
+					}
 				})
 			})
 		})

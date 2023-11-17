@@ -267,14 +267,13 @@ var _ = Describe("fixup", func() {
 				mappedTranslations, err := common.CreateI18nStringInfoMap(translations)
 				Ω(err).ShouldNot(HaveOccurred())
 
-				Ω(mappedTranslations["I like apples."].Modified).Should(BeTrue())
 				Ω(mappedTranslations["I like apples."].Translation).ShouldNot(Equal("I like apples."))
 			})
 		})
 
 		Context("When the user says the translation is new", func() {
 			var (
-				apple = common.I18nStringInfo{ID: "I like apples.", Translation: "I like apples.", Modified: false}
+				apple = common.I18nStringInfo{ID: "I like apples.", Translation: "I like apples."}
 			)
 
 			JustBeforeEach(func() {
@@ -315,7 +314,7 @@ var _ = Describe("fixup", func() {
 			mappedTranslations, err := common.CreateI18nStringInfoMap(translations)
 			Ω(err).ShouldNot(HaveOccurred())
 			Ω(mappedTranslations["I'm the extra key"]).Should(Equal(
-				common.I18nStringInfo{ID: "I'm the extra key", Translation: "I'm the extra key", Modified: false},
+				common.I18nStringInfo{ID: "I'm the extra key", Translation: "I'm the extra key"},
 			))
 		})
 	})
