@@ -39,3 +39,6 @@ jobs:
       run: |
         export GOPATH=$(go env GOPATH)/bin
         ./bin/test
+
+    - name: Validate
+      run: ./bin/validate
