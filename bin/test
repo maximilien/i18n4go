@@ -34,5 +34,5 @@
   go fmt ./...
 
   echo -e "\n Integration Testing packages:"
-  go test ./integration/... -parallel 4 $@
+  go test -count=1 ./integration/... -parallel 4 $@
 )
