@@ -20,7 +20,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/maximilien/i18n4go/common"
+	"github.com/maximilien/i18n4go/i18n4go/common"
 	. "github.com/maximilien/i18n4go/integration/test_helpers"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
