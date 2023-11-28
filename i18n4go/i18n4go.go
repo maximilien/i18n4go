@@ -23,8 +23,8 @@ import (
 
 	"runtime/debug"
 
-	"github.com/maximilien/i18n4go/cmds"
-	"github.com/maximilien/i18n4go/common"
+	"github.com/maximilien/i18n4go/i18n4go/cmds"
+	"github.com/maximilien/i18n4go/i18n4go/common"
 	"github.com/spf13/cobra"
 )
 

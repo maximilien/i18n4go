@@ -21,9 +21,8 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/maximilien/i18n4go/i18n4go/common"
 	"github.com/spf13/cobra"
-
-	"github.com/maximilien/i18n4go/common"
 )
 
 type mergeStrings struct {

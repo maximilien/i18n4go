@@ -232,7 +232,7 @@ var _ = Describe("rewrite-package [...] --init-code-snippet-filename some-file",
 				Ω(session.ExitCode()).Should(Equal(0))
 			})
 
-			It("rewrites the source go file wrapping strings with T() and generates a i18n_init.go using teamplate file", func() {
+			It("rewrites the source go file wrapping strings with T() and generates a i18n_init.go using template file", func() {
 				expectedOutputFile := filepath.Join(expectedFilesPath, "issue14.go")
 				bytes, err := ioutil.ReadFile(expectedOutputFile)
 				Ω(err).ShouldNot(HaveOccurred())
