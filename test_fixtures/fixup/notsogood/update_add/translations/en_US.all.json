@@ -1,17 +1,14 @@
 [
-   {
-      "id": "Translated hello world!",
-      "translation": "Translated hello world!",
-      "modified": false
-   },
-   {
-      "id": "And the entire human race",
-      "translation": "And the entire human race",
-      "modified": false
-   },
-   {
-      "id": "I like bananas.",
-      "translation": "I like bananas.",
-      "modified": false
-   }
+  {
+    "id": "Translated hello world!",
+    "translation": "Translated hello world!"
+  },
+  {
+    "id": "And the entire human race",
+    "translation": "And the entire human race"
+  },
+  {
+    "id": "I like bananas.",
+    "translation": "I like bananas."
+  }
 ]

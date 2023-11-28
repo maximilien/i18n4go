@@ -388,7 +388,7 @@ func updateTranslations(localMap map[string]common.I18nStringInfo, localeFile st
 		if locale == "en_US" {
 			localMap[value] = common.I18nStringInfo{ID: value, Translation: value}
 		} else {
-			localMap[value] = common.I18nStringInfo{ID: value, Translation: localMap[key].Translation, Modified: true}
+			localMap[value] = common.I18nStringInfo{ID: value, Translation: localMap[key].Translation}
 		}
 		delete(localMap, key)
 	}

@@ -1,22 +1,18 @@
 [
-   {
-      "id": "cruel",
-      "translation": "cruel",
-      "modified": false
-   },
-   {
-      "id": "Evil",
-      "translation": "Evil",
-      "modified": false
-   },
-   {
-      "id": "Bye from {{.Arg0}}",
-      "translation": "Bye from {{.Arg0}}",
-      "modified": false
-   },
-   {
-      "id": "Hello {{.Arg0}} world!",
-      "translation": "Hello {{.Arg0}} world!",
-      "modified": false
-   }
+  {
+    "id": "cruel",
+    "translation": "cruel"
+  },
+  {
+    "id": "Evil",
+    "translation": "Evil"
+  },
+  {
+    "id": "Bye from {{.Arg0}}",
+    "translation": "Bye from {{.Arg0}}"
+  },
+  {
+    "id": "Hello {{.Arg0}} world!",
+    "translation": "Hello {{.Arg0}} world!"
+  }
 ]

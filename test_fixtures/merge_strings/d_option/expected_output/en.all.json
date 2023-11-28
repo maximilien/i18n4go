@@ -1,107 +1,88 @@
 [
    {
       "id": "An unexpected type of error",
-      "translation": "An unexpected type of error",
-      "modified": false
+      "translation": "An unexpected type of error"
    },
    {
       "id": "Potato",
-      "translation": "Potato bananana cream pie",
-      "modified": false
+      "translation": "Potato bananana cream pie"
    },
    {
       "id": "Total extracted strings:",
-      "translation": "Total extracted strings:",
-      "modified": false
+      "translation": "Total extracted strings:"
    },
    {
       "id": "Total files parsed:",
-      "translation": "Total files parsed:",
-      "modified": false
+      "translation": "Total files parsed:"
    },
    {
       "id": "Total time:",
-      "translation": "Total time:",
-      "modified": false
+      "translation": "Total time:"
    },
    {
       "id": "a perl-style regular expression for files to ignore, e.g., \".*test.*\"",
-      "translation": "a perl-style regular expression for files to ignore, e.g., \".*test.*\"",
-      "modified": false
+      "translation": "a perl-style regular expression for files to ignore, e.g., \".*test.*\""
    },
    {
       "id": "create translation files for different languages using a source file",
-      "translation": "create translation files for different languages using a source file",
-      "modified": false
+      "translation": "create translation files for different languages using a source file"
    },
    {
       "id": "generate standard .po file for translation",
-      "translation": "generate standard .po file for translation",
-      "modified": false
+      "translation": "generate standard .po file for translation"
    },
    {
       "id": "generated files are created in directory to match the package name",
-      "translation": "generated files are created in directory to match the package name",
-      "modified": false
+      "translation": "generated files are created in directory to match the package name"
    },
    {
       "id": "generated files are created in the specified output directory",
-      "translation": "generated files are created in the specified output directory",
-      "modified": false
+      "translation": "generated files are created in the specified output directory"
    },
    {
       "id": "output directory where the translation files will be placed",
-      "translation": "output directory where the translation files will be placed",
-      "modified": false
+      "translation": "output directory where the translation files will be placed"
    },
    {
       "id": "prevents any output files from being created",
-      "translation": "prevents any output files from being created",
-      "modified": false
+      "translation": "prevents any output files from being created"
    },
    {
       "id": "prints the usage",
-      "translation": "prints the usage",
-      "modified": false
+      "translation": "prints the usage"
    },
    {
       "id": "recursively extract strings from all files in the same directory as filename or dirName",
-      "translation": "recursively extract strings from all files in the same directory as filename or dirName",
-      "modified": false
+      "translation": "recursively extract strings from all files in the same directory as filename or dirName"
+      
    },
    {
       "id": "the dir name for which all .go files will have their strings extracted",
-      "translation": "the dir name for which all .go files will have their strings extracted",
-      "modified": false
+      "translation": "the dir name for which all .go files will have their strings extracted"
+      
    },
    {
       "id": "the excluded JSON file name, all strings there will be excluded",
-      "translation": "the excluded JSON file name, all strings there will be excluded",
-      "modified": false
+      "translation": "the excluded JSON file name, all strings there will be excluded"
    },
    {
       "id": "the file name for which strings are extracted",
-      "translation": "the file name for which strings are extracted",
-      "modified": false
+      "translation": "the file name for which strings are extracted"
    },
    {
       "id": "the source language of the file, typically also part of the file name, e.g., \"en_US\"",
-      "translation": "the source language of the file, typically also part of the file name, e.g., \"en_US\"",
-      "modified": false
+      "translation": "the source language of the file, typically also part of the file name, e.g., \"en_US\""
    },
    {
       "id": "verbose mode where lots of output is generated during execution",
-      "translation": "verbose mode where lots of output is generated during execution",
-      "modified": false
+      "translation": "verbose mode where lots of output is generated during execution"
    },
    {
       "id": "want to extract strings from file or directory",
-      "translation": "want to extract strings from file or directory",
-      "modified": false
+      "translation": "want to extract strings from file or directory"
    },
    {
       "id": "your public Google Translate API key which is used to generate translations (charge is applicable)",
-      "translation": "your public Google Translate API key which is used to generate translations (charge is applicable)",
-      "modified": false
+      "translation": "your public Google Translate API key which is used to generate translations (charge is applicable)"
    }
 ]
