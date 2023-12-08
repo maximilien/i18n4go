@@ -29,9 +29,8 @@ import (
 	"go/parser"
 	"go/token"
 
+	"github.com/maximilien/i18n4go/i18n4go/common"
 	"github.com/spf13/cobra"
-
-	"github.com/maximilien/i18n4go/common"
 )
 
 type fixup struct {
@@ -389,7 +388,7 @@ func updateTranslations(localMap map[string]common.I18nStringInfo, localeFile st
 		if locale == "en_US" {
 			localMap[value] = common.I18nStringInfo{ID: value, Translation: value}
 		} else {
-			localMap[value] = common.I18nStringInfo{ID: value, Translation: localMap[key].Translation, Modified: true}
+			localMap[value] = common.I18nStringInfo{ID: value, Translation: localMap[key].Translation}
 		}
 		delete(localMap, key)
 	}

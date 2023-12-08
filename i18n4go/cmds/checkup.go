@@ -29,7 +29,7 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/maximilien/i18n4go/common"
+	"github.com/maximilien/i18n4go/i18n4go/common"
 )
 
 type Checkup struct {
