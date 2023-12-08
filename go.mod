@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/nicksnyder/go-i18n v1.10.1
-	github.com/nicksnyder/go-i18n/v2 v2.2.1
+	github.com/nicksnyder/go-i18n/v2 v2.2.2
 	github.com/onsi/ginkgo v1.16.5
 	github.com/onsi/gomega v1.27.9
 	github.com/pivotal-cf-experimental/jibber_jabber v0.0.0-20151120183258-bcc4c8345a21
