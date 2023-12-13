@@ -47,14 +47,14 @@ var _ = Describe("merge-strings -d dirName -source-lanuage sourceLanguage", func
 
 		AfterEach(func() {
 			RemoveAllFiles(
-				GetFilePath(inputFilesPath, "fr.all.json"),
+				GetFilePath(inputFilesPath, "all.fr.json"),
 			)
 		})
 
-		It("fr.all.json contains translations from both files", func() {
+		It("all.fr.json contains translations from both files", func() {
 			CompareExpectedToGeneratedTraslationJson(
-				GetFilePath(expectedFilesPath, "fr.all.json"),
-				GetFilePath(inputFilesPath, "fr.all.json"),
+				GetFilePath(expectedFilesPath, "all.fr.json"),
+				GetFilePath(inputFilesPath, "all.fr.json"),
 			)
 		})
 	})

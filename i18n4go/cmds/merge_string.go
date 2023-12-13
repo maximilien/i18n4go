@@ -100,7 +100,7 @@ func (ms *mergeStrings) combineStringInfosPerDirectory(directory string) error {
 		combineStringInfo(StringInfos, combinedMap)
 	}
 
-	filePath := filepath.Join(directory, ms.SourceLanguage+".all.json")
+	filePath := filepath.Join(directory, "all."+ms.SourceLanguage+".json")
 	ms.I18nStringInfos = common.I18nStringInfoMapValues2Array(combinedMap)
 	sort.Sort(ms)
 	common.SaveI18nStringInfos(ms, ms.Options(), ms.I18nStringInfos, filePath)

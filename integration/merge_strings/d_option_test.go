@@ -52,20 +52,20 @@ var _ = Describe("merge-strings -d dirName", func() {
 
 				AfterEach(func() {
 					RemoveAllFiles(
-						GetFilePath(inputFilesPath, "en.all.json"),
+						GetFilePath(inputFilesPath, "all.en.json"),
 					)
 				})
 
-				It("creates an en.all.json that contains translations from both files", func() {
+				It("creates an all.en.json that contains translations from both files", func() {
 					CompareExpectedToGeneratedTraslationJson(
-						GetFilePath(expectedFilesPath, "en.all.json"),
-						GetFilePath(inputFilesPath, "en.all.json"),
+						GetFilePath(expectedFilesPath, "all.en.json"),
+						GetFilePath(inputFilesPath, "all.en.json"),
 					)
 				})
 
-				It("creates an en.all.json for which the translation strings order are stable", func() {
-					expectedFilePath := GetFilePath(expectedFilesPath, "en.all.json")
-					actualFilePath := GetFilePath(inputFilesPath, "en.all.json")
+				It("creates an all.en.json for which the translation strings order are stable", func() {
+					expectedFilePath := GetFilePath(expectedFilesPath, "all.en.json")
+					actualFilePath := GetFilePath(inputFilesPath, "all.en.json")
 
 					expectedBytes, err := ioutil.ReadFile(expectedFilePath)
 					Ω(err).Should(BeNil())
@@ -100,13 +100,13 @@ var _ = Describe("merge-strings -d dirName", func() {
 
 				AfterEach(func() {
 					RemoveAllFiles(
-						GetFilePath(filepath.Join(inputFilesPath, "reordered"), "en.all.json"),
+						GetFilePath(filepath.Join(inputFilesPath, "reordered"), "all.en.json"),
 					)
 				})
 
-				It("creates an en.all.json keeping the stable order", func() {
-					expectedFilePath := GetFilePath(expectedFilesPath, "en.all.json")
-					actualFilePath := GetFilePath(filepath.Join(inputFilesPath, "reordered"), "en.all.json")
+				It("creates an all.en.json keeping the stable order", func() {
+					expectedFilePath := GetFilePath(expectedFilesPath, "all.en.json")
+					actualFilePath := GetFilePath(filepath.Join(inputFilesPath, "reordered"), "all.en.json")
 
 					expectedBytes, err := ioutil.ReadFile(expectedFilePath)
 					Ω(err).Should(BeNil())
@@ -144,20 +144,20 @@ var _ = Describe("merge-strings -d dirName", func() {
 
 				AfterEach(func() {
 					RemoveAllFiles(
-						GetFilePath(inputFilesPath, "en.all.json"),
+						GetFilePath(inputFilesPath, "all.en.json"),
 					)
 				})
 
-				It("creates an en.all.json that contains translations from both files", func() {
+				It("creates an all.en.json that contains translations from both files", func() {
 					CompareExpectedToGeneratedTraslationJson(
-						GetFilePath(expectedFilesPath, "en.all.json"),
-						GetFilePath(inputFilesPath, "en.all.json"),
+						GetFilePath(expectedFilesPath, "all.en.json"),
+						GetFilePath(inputFilesPath, "all.en.json"),
 					)
 				})
 
-				It("creates an en.all.json for which the translation strings order are stable", func() {
-					expectedFilePath := GetFilePath(expectedFilesPath, "en.all.json")
-					actualFilePath := GetFilePath(inputFilesPath, "en.all.json")
+				It("creates an all.en.json for which the translation strings order are stable", func() {
+					expectedFilePath := GetFilePath(expectedFilesPath, "all.en.json")
+					actualFilePath := GetFilePath(inputFilesPath, "all.en.json")
 
 					expectedBytes, err := ioutil.ReadFile(expectedFilePath)
 					Ω(err).Should(BeNil())
@@ -191,13 +191,13 @@ var _ = Describe("merge-strings -d dirName", func() {
 
 				AfterEach(func() {
 					RemoveAllFiles(
-						GetFilePath(filepath.Join(inputFilesPath, "reordered"), "en.all.json"),
+						GetFilePath(filepath.Join(inputFilesPath, "reordered"), "all.en.json"),
 					)
 				})
 
-				It("creates an en.all.json keeping the stable order", func() {
-					expectedFilePath := GetFilePath(expectedFilesPath, "en.all.json")
-					actualFilePath := GetFilePath(filepath.Join(inputFilesPath, "reordered"), "en.all.json")
+				It("creates an all.en.json keeping the stable order", func() {
+					expectedFilePath := GetFilePath(expectedFilesPath, "all.en.json")
+					actualFilePath := GetFilePath(filepath.Join(inputFilesPath, "reordered"), "all.en.json")
 
 					expectedBytes, err := ioutil.ReadFile(expectedFilePath)
 					Ω(err).Should(BeNil())
