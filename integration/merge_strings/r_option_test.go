@@ -48,19 +48,19 @@ var _ = Describe("merge-strings -d dirName -r", func() {
 
 			AfterEach(func() {
 				RemoveAllFiles(
-					GetFilePath(inputFilesPath, "en.all.json"),
-					GetFilePath(inputFilesPath+"/sub", "en.all.json"),
+					GetFilePath(inputFilesPath, "all.en.json"),
+					GetFilePath(inputFilesPath+"/sub", "all.en.json"),
 				)
 			})
 
-			It("en.all.json contains translations from both files", func() {
+			It("all.en.json contains translations from both files", func() {
 				CompareExpectedToGeneratedTraslationJson(
-					GetFilePath(expectedFilesPath, "en.all.json"),
-					GetFilePath(inputFilesPath, "en.all.json"),
+					GetFilePath(expectedFilesPath, "all.en.json"),
+					GetFilePath(inputFilesPath, "all.en.json"),
 				)
 				CompareExpectedToGeneratedTraslationJson(
-					GetFilePath(expectedFilesPath+"/sub", "en.all.json"),
-					GetFilePath(inputFilesPath+"/sub", "en.all.json"),
+					GetFilePath(expectedFilesPath+"/sub", "all.en.json"),
+					GetFilePath(inputFilesPath+"/sub", "all.en.json"),
 				)
 			})
 		})
@@ -75,19 +75,19 @@ var _ = Describe("merge-strings -d dirName -r", func() {
 
 			AfterEach(func() {
 				RemoveAllFiles(
-					GetFilePath(inputFilesPath, "en.all.json"),
-					GetFilePath(inputFilesPath+"/sub", "en.all.json"),
+					GetFilePath(inputFilesPath, "all.en.json"),
+					GetFilePath(inputFilesPath+"/sub", "all.en.json"),
 				)
 			})
 
-			It("en.all.json contains translations from both files", func() {
+			It("all.en.json contains translations from both files", func() {
 				CompareExpectedToGeneratedTraslationJson(
-					GetFilePath(expectedFilesPath, "en.all.json"),
-					GetFilePath(inputFilesPath, "en.all.json"),
+					GetFilePath(expectedFilesPath, "all.en.json"),
+					GetFilePath(inputFilesPath, "all.en.json"),
 				)
 				CompareExpectedToGeneratedTraslationJson(
-					GetFilePath(expectedFilesPath+"/sub", "en.all.json"),
-					GetFilePath(inputFilesPath+"/sub", "en.all.json"),
+					GetFilePath(expectedFilesPath+"/sub", "all.en.json"),
+					GetFilePath(inputFilesPath+"/sub", "all.en.json"),
 				)
 			})
 		})
