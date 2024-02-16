@@ -1,0 +1,14 @@
+{
+  "excludedStrings": [
+    "",
+    "version",
+    "locale",
+    "en_US",
+    "foo",
+    "foo <arg>"
+  ],
+  "excludedRegexps": [
+    "^[a-z]{1}", 
+    "^v([0-9){1}\\.([0-9]){1}\\.([0-9]){1}" 
+  ]
+}

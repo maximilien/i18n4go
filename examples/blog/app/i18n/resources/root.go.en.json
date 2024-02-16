@@ -1,0 +1,18 @@
+[
+   {
+      "id": "Test cli command",
+      "translation": "Test cli command"
+   },
+   {
+      "id": "Show the current version",
+      "translation": "Show the current version"
+   },
+   {
+      "id": "Change current locale",
+      "translation": "Change current locale"
+   },
+   {
+      "id": "Version {{.Version}}",
+      "translation": "Version {{.Version}}"
+   }
+]
