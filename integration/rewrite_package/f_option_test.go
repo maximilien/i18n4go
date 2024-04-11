@@ -87,6 +87,12 @@ var _ = Describe("rewrite-package -f filename", func() {
 				Ω(err).ShouldNot(HaveOccurred())
 				Ω(expectedBytes).ShouldNot(Equal(""))
 			})
+
+			It("adds the generated i18n_resources.go file", func() {
+				i18nRC := filepath.Join(outputDir, "i18n_resources.go")
+				_, err := os.ReadFile(i18nRC)
+				Ω(err).ShouldNot(HaveOccurred())
+			})
 		})
 
 		Context("all strings to rewrite are simple strings", func() {
