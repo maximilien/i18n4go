@@ -49,7 +49,7 @@ var SUPPORTED_LOCALES = map[string]string{
 	"zh": "zh_CN",
 }
 var (
-	RESOUCES_PATH = filepath.Join("cf", "i18n", "resources")
+	RESOUCES_PATH = filepath.Join("i18n", "resources")
 	bundle        *go_i18n.Bundle
 )
 
@@ -111,8 +111,8 @@ func mustLoadDefaultLocale(packageName, i18nDirname string, assetFn AssetFunc) s
 }
 
 func loadFromAsset(packageName, assetPath, locale, language string, assetFn AssetFunc) error {
-	assetName := locale + ".all.json"
-	assetKey := filepath.Join(assetPath, language, packageName, assetName)
+	assetName := "all." + locale + ".json"
+	assetKey := filepath.Join(assetPath, packageName, assetName)
 
 	byteArray, err := assetFn(assetKey)
 	if err != nil {
