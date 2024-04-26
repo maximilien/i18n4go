@@ -180,7 +180,6 @@ func (rp *rewritePackage) Run() error {
 
 func (rp *rewritePackage) generateBindataFromI18nStrings() error {
 	if rp.RootPackageName != "" {
-		rp.Println("i18n4go: adding binary go file to package:", rp.RootPackageName, " to output dir:", rp.OutputDirname)
 		bindataConfig := bindata.NewConfig()
 		bindataConfig.Package = rp.RootPackageName
 		bindataConfig.Output = filepath.Join(rp.OutputDirname, "i18n_resources.go")
@@ -192,7 +191,6 @@ func (rp *rewritePackage) generateBindataFromI18nStrings() error {
 		}
 		err := bindata.Translate(bindataConfig)
 		if err != nil {
-			rp.Println("i18n4go: error generating binary go file for translation files:", err.Error())
 			return err
 		}
 	}
