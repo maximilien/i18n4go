@@ -16,14 +16,12 @@ package i18n
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
 
-	"github.com/maximilien/i18n4go/i18n4go/resources"
 	"github.com/pivotal-cf-experimental/jibber_jabber"
 
 	go_i18n "github.com/nicksnyder/go-i18n/v2/i18n"
@@ -36,6 +34,7 @@ const (
 )
 
 type TranslateFunc func(translateID string, args ...interface{}) string
+type AssetFunc func(asset string) ([]byte, error)
 
 var SUPPORTED_LOCALES = map[string]string{
 	"de": "de_DE",
@@ -50,8 +49,8 @@ var SUPPORTED_LOCALES = map[string]string{
 	"zh": "zh_CN",
 }
 var (
-	RESOURCES_PATH = "./resources"
-	bundle         *go_i18n.Bundle
+	RESOUCES_PATH = filepath.Join("i18n", "resources")
+	bundle        *go_i18n.Bundle
 )
 
 func GetResourcesPath() string {
@@ -63,15 +62,18 @@ func Init(packageName string, i18nDirname string) TranslateFunc {
 		bundle = go_i18n.NewBundle(language.AmericanEnglish)
 		bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
 	}
-	userLocale, err := initWithUserLocale(packageName, i18nDirname)
+}
+
+func Init(packageName string, i18nDirname string, assetFn AssetFunc) TranslateFunc {
+	userLocale, err := initWithUserLocale(packageName, i18nDirname, assetFn)
 	if err != nil {
-		userLocale = mustLoadDefaultLocale(packageName, i18nDirname)
+		userLocale = mustLoadDefaultLocale(packageName, i18nDirname, assetFn)
 	}
 
 	return Tfunc(userLocale, DEFAULT_LOCALE)
 }
 
-func initWithUserLocale(packageName, i18nDirname string) (string, error) {
+func initWithUserLocale(packageName, i18nDirname string, assetFn AssetFunc) (string, error) {
 	userLocale, err := jibber_jabber.DetectIETF()
 	if err != nil {
 		userLocale = DEFAULT_LOCALE
@@ -83,7 +85,7 @@ func initWithUserLocale(packageName, i18nDirname string) (string, error) {
 	}
 
 	userLocale = strings.Replace(userLocale, "-", "_", 1)
-	err = loadFromAsset(packageName, i18nDirname, userLocale, language)
+	err = loadFromAsset(packageName, i18nDirname, userLocale, language, assetFn)
 	if err != nil {
 		locale := SUPPORTED_LOCALES[language]
 		if locale == "" {
@@ -91,16 +93,16 @@ func initWithUserLocale(packageName, i18nDirname string) (string, error) {
 		} else {
 			userLocale = locale
 		}
-		err = loadFromAsset(packageName, i18nDirname, userLocale, language)
+		err = loadFromAsset(packageName, i18nDirname, userLocale, language, assetFn)
 	}
 
 	return userLocale, err
 }
 
-func mustLoadDefaultLocale(packageName, i18nDirname string) string {
+func mustLoadDefaultLocale(packageName, i18nDirname string, assetFn AssetFunc) string {
 	userLocale := DEFAULT_LOCALE
 
-	err := loadFromAsset(packageName, i18nDirname, DEFAULT_LOCALE, DEFAULT_LANGUAGE)
+	err := loadFromAsset(packageName, i18nDirname, DEFAULT_LOCALE, DEFAULT_LANGUAGE, assetFn)
 	if err != nil {
 		panic("Could not load en_US language files. God save the queen. " + err.Error())
 	}
@@ -108,19 +110,17 @@ func mustLoadDefaultLocale(packageName, i18nDirname string) string {
 	return userLocale
 }
 
-func loadFromAsset(packageName, assetPath, locale, language string) error {
+func loadFromAsset(packageName, assetPath, locale, language string, assetFn AssetFunc) error {
 	assetName := "all." + locale + ".json"
 	assetKey := filepath.Join(assetPath, packageName, assetName)
-	// REMOVEME: Do not commit
-	fmt.Printf("\nassetKey: %s\n", assetKey)
 
-	byteArray, err := resources.Asset(assetKey)
+	byteArray, err := assetFn(assetKey)
 	if err != nil {
 		return err
 	}
 
 	if len(byteArray) == 0 {
-		return errors.New(fmt.Sprintf("Could not load i18n asset: %v", assetKey))
+		return fmt.Errorf("Could not load i18n asset: %v", assetKey)
 	}
 
 	tmpDir, err := ioutil.TempDir("", "i18n4go_res")

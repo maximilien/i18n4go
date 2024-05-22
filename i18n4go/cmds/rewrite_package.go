@@ -27,6 +27,7 @@ import (
 	"go/token"
 	"io/ioutil"
 
+	"github.com/go-bindata/go-bindata/v3"
 	"github.com/maximilien/i18n4go/i18n4go/common"
 
 	"github.com/spf13/cobra"
@@ -48,7 +49,9 @@ import (
 var T i18n.TranslateFunc
 
 func init() {
-	T = i18n.Init(__FULL_IMPORT_PATH__, i18n.GetResourcesPath())
+	T = i18n.Init(__FULL_IMPORT_PATH__, i18n.GetResourcesPath(), func(asset string) ([]byte, error) {
+		return Asset(asset)
+	})
 }`
 )
 
@@ -59,6 +62,8 @@ type rewritePackage struct {
 	OutputDirname           string
 	I18nStringsFilename     string
 	I18nStringsDirname      string
+	I18nStringsFilePaths    []string
+	RootPackageName         string
 	RootPath                string
 	InitCodeSnippetFilename string
 
@@ -148,21 +153,48 @@ func (rp *rewritePackage) Printf(msg string, a ...interface{}) (int, error) {
 }
 
 func (rp *rewritePackage) Run() error {
-	var err error
 
 	if rp.options.FilenameFlag != "" {
-		if err = rp.loadStringsToBeTranslated(rp.I18nStringsFilename); err != nil {
+		if err := rp.loadStringsToBeTranslated(rp.I18nStringsFilename); err != nil {
 			return err
 		}
-		err = rp.processFilename(rp.options.FilenameFlag)
+		if err := rp.processFilename(rp.options.FilenameFlag); err != nil {
+			return err
+		}
+		rp.I18nStringsFilePaths = []string{rp.I18nStringsFilename}
 	} else {
-		err = rp.processDir(rp.options.DirnameFlag, rp.options.RecurseFlag)
+		if err := rp.processDir(rp.options.DirnameFlag, rp.options.RecurseFlag); err != nil {
+			return err
+		}
+	}
+
+	if err := rp.generateBindataFromI18nStrings(); err != nil {
+		return err
 	}
 
 	rp.Println()
 	rp.Println("Total files parsed:", rp.TotalFiles)
 	rp.Println("Total rewritten strings:", rp.TotalStrings)
-	return err
+	return nil
+}
+
+func (rp *rewritePackage) generateBindataFromI18nStrings() error {
+	if rp.RootPackageName != "" {
+		bindataConfig := bindata.NewConfig()
+		bindataConfig.Package = rp.RootPackageName
+		bindataConfig.Output = filepath.Join(rp.OutputDirname, "i18n_resources.go")
+		for _, i18nFilePath := range rp.I18nStringsFilePaths {
+			bindataConfig.Input = append(bindataConfig.Input, bindata.InputConfig{
+				Path:      filepath.Clean(i18nFilePath),
+				Recursive: false,
+			})
+		}
+		err := bindata.Translate(bindataConfig)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (rp *rewritePackage) loadStringsToBeTranslated(fileName string) error {
@@ -202,6 +234,7 @@ func (rp *rewritePackage) processDir(dirName string, recursive bool) error {
 			}
 
 			rp.I18nStringsFilename = filepath.Join(rp.I18nStringsDirname, i18nFilename)
+			rp.I18nStringsFilePaths = append(rp.I18nStringsFilePaths, rp.I18nStringsFilename)
 			rp.Printf("i18n4go: loading JSON strings from file: %s\n", rp.I18nStringsFilename)
 			if err := rp.loadStringsToBeTranslated(rp.I18nStringsFilename); err != nil {
 				rp.Println("i18n4go: WARNING could not find JSON file:", rp.I18nStringsFilename, err.Error())
@@ -227,6 +260,7 @@ func (rp *rewritePackage) resetProcessing() {
 	rp.ExtractedStrings = nil
 	rp.UpdatedExtractedStrings = nil
 	rp.I18nStringsFilename = ""
+	rp.RootPackageName = ""
 	rp.SaveExtractedStrings = false
 }
 
@@ -267,6 +301,10 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 
 	if rp.OutputDirname == "" {
 		rp.OutputDirname = filepath.Dir(fileName)
+	}
+
+	if rp.RootPackageName == "" {
+		rp.RootPackageName = astFile.Name.Name
 	}
 
 	outputDir := filepath.Join(rp.OutputDirname, filepath.Dir(rp.relativePathForFile(fileName)))
