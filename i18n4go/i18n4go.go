@@ -25,6 +25,7 @@ import (
 
 	"github.com/maximilien/i18n4go/i18n4go/cmds"
 	"github.com/maximilien/i18n4go/i18n4go/common"
+	"github.com/maximilien/i18n4go/i18n4go/i18n"
 	"github.com/spf13/cobra"
 )
 
@@ -65,10 +66,10 @@ func main() {
 func rootCobraCmd(opts common.Options) {
 	cmd := &cobra.Command{
 		Use:  "i18n4go",
-		Long: "General purpose tool for i18n",
+		Long: i18n.T("General purpose tool for i18n"),
 	}
 
-	cmd.PersistentFlags().BoolVarP(&opts.VerboseFlag, "verbose", "v", false, "verbose mode where lots of output is generated during execution")
+	cmd.PersistentFlags().BoolVarP(&opts.VerboseFlag, "verbose", "v", false, i18n.T("verbose mode where lots of output is generated during execution"))
 
 	cmd.AddCommand(cmds.NewCreateTranslationsCommand(&opts))
 	cmd.AddCommand(cmds.NewCheckupCommand(&opts))
@@ -98,12 +99,12 @@ func extractStringsCmd() {
 
 	err := cmd.Run()
 	if err != nil {
-		cmd.Println("i18n4go: Could not extract strings, err:", err)
+		cmd.Println(i18n.T("i18n4go: Could not extract strings, err:"), err)
 		os.Exit(1)
 	}
 
 	duration := time.Now().Sub(startTime)
-	cmd.Println("Total time:", duration)
+	cmd.Println(i18n.T("Total time:"), duration)
 }
 
 func createTranslationsCmd() {
@@ -118,12 +119,12 @@ func createTranslationsCmd() {
 
 	err := cmd.Run()
 	if err != nil {
-		cmd.Println("i18n4go: Could not create translation files, err:", err)
+		cmd.Println(i18n.T("i18n4go: Could not create translation files, err:"), err)
 		os.Exit(1)
 	}
 
 	duration := time.Now().Sub(startTime)
-	cmd.Println("Total time:", duration)
+	cmd.Println(i18n.T("Total time:"), duration)
 }
 
 func verifyStringsCmd() {
@@ -138,12 +139,12 @@ func verifyStringsCmd() {
 
 	err := cmd.Run()
 	if err != nil {
-		cmd.Println("i18n4go: Could not verify strings for input filename, err:", err)
+		cmd.Println(i18n.T("i18n4go: Could not verify strings for input filename, err:"), err)
 		os.Exit(1)
 	}
 
 	duration := time.Now().Sub(startTime)
-	cmd.Println("Total time:", duration)
+	cmd.Println(i18n.T("Total time:"), duration)
 }
 
 func rewritePackageCmd() {
@@ -159,12 +160,12 @@ func rewritePackageCmd() {
 
 	err := cmd.Run()
 	if err != nil {
-		cmd.Println("i18n4go: Could not successfully rewrite package, err:", err)
+		cmd.Println(i18n.T("i18n4go: Could not successfully rewrite package, err:"), err)
 		os.Exit(1)
 	}
 
 	duration := time.Now().Sub(startTime)
-	cmd.Println("Total time:", duration)
+	cmd.Println(i18n.T("Total time:"), duration)
 }
 
 func mergeStringsCmd() {
@@ -179,12 +180,12 @@ func mergeStringsCmd() {
 
 	err := mergeStrings.Run()
 	if err != nil {
-		mergeStrings.Println("i18n4go: Could not merge strings, err:", err)
+		mergeStrings.Println(i18n.T("i18n4go: Could not merge strings, err:"), err)
 		os.Exit(1)
 	}
 
 	duration := time.Now().Sub(startTime)
-	mergeStrings.Println("Total time:", duration)
+	mergeStrings.Println(i18n.T("Total time:"), duration)
 }
 
 func showMissingStringsCmd() {
@@ -199,12 +200,12 @@ func showMissingStringsCmd() {
 
 	err := showMissingStrings.Run()
 	if err != nil {
-		showMissingStrings.Println("i18n4go: Could not show missing strings, err:", err)
+		showMissingStrings.Println(i18n.T("i18n4go: Could not show missing strings, err:"), err)
 		os.Exit(1)
 	}
 
 	duration := time.Now().Sub(startTime)
-	showMissingStrings.Println("Total time:", duration)
+	showMissingStrings.Println(i18n.T("Total time:"), duration)
 }
 
 func checkupCmd() {
@@ -219,12 +220,12 @@ func checkupCmd() {
 
 	err := checkup.Run()
 	if err != nil {
-		checkup.Println("i18n4go: Could not checkup, err:", err)
+		checkup.Println(i18n.T("i18n4go: Could not checkup, err:"), err)
 		os.Exit(1)
 	}
 
 	duration := time.Now().Sub(startTime)
-	checkup.Println("Total time:", duration)
+	checkup.Println(i18n.T("Total time:"), duration)
 }
 
 func fixupCmd() {
@@ -239,57 +240,57 @@ func fixupCmd() {
 
 	err := fixup.Run()
 	if err != nil {
-		fixup.Println("i18n4go: Could not fixup, err:", err)
+		fixup.Println(i18n.T("i18n4go: Could not fixup, err:"), err)
 		os.Exit(1)
 	}
 
 	duration := time.Now().Sub(startTime)
-	fixup.Println("Total time:", duration)
+	fixup.Println(i18n.T("Total time:"), duration)
 }
 
 func init() {
-	flag.StringVar(&options.CommandFlag, "c", "", "the command, one of: extract-strings, create-translations, rewrite-package, verify-strings, merge-strings, checkup, fixup")
+	flag.StringVar(&options.CommandFlag, "c", "", i18n.T("the command, one of: extract-strings, create-translations, rewrite-package, verify-strings, merge-strings, checkup, fixup"))
 
-	flag.BoolVar(&options.HelpFlag, "h", false, "prints the usage")
-	flag.BoolVar(&options.LongHelpFlag, "help", false, "prints the usage")
+	flag.BoolVar(&options.HelpFlag, "h", false, i18n.T("prints the usage"))
+	flag.BoolVar(&options.LongHelpFlag, "help", false, i18n.T("prints the usage"))
 
-	flag.StringVar(&options.SourceLanguageFlag, "source-language", "en", "the source language of the file, typically also part of the file name, e.g., \"en_US\"")
-	flag.StringVar(&options.LanguagesFlag, "languages", "", "a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"")
-	flag.StringVar(&options.GoogleTranslateApiKeyFlag, "google-translate-api-key", "", "[optional] your public Google Translate API key which is used to generate translations (charge is applicable)")
+	flag.StringVar(&options.SourceLanguageFlag, "source-language", "en", i18n.T("the source language of the file, typically also part of the file name, e.g., \"en_US\""))
+	flag.StringVar(&options.LanguagesFlag, "languages", "", i18n.T("a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\""))
+	flag.StringVar(&options.GoogleTranslateApiKeyFlag, "google-translate-api-key", "", i18n.T("[optional] your public Google Translate API key which is used to generate translations (charge is applicable)"))
 
-	flag.BoolVar(&options.VerboseFlag, "v", false, "verbose mode where lots of output is generated during execution")
+	flag.BoolVar(&options.VerboseFlag, "v", false, i18n.T("verbose mode where lots of output is generated during execution"))
 
-	flag.BoolVar(&options.PoFlag, "po", false, "generate standard .po file for translation")
+	flag.BoolVar(&options.PoFlag, "po", false, i18n.T("generate standard .po file for translation"))
 
-	flag.BoolVar(&options.MetaFlag, "meta", false, "[optional] create a *.extracted.json file with metadata such as: filename, directory, and positions of the strings in source file")
-	flag.BoolVar(&options.DryRunFlag, "dry-run", false, "prevents any output files from being created")
+	flag.BoolVar(&options.MetaFlag, "meta", false, i18n.T("[optional] create a *.extracted.json file with metadata such as: filename, directory, and positions of the strings in source file"))
+	flag.BoolVar(&options.DryRunFlag, "dry-run", false, i18n.T("prevents any output files from being created"))
 
-	flag.StringVar(&options.ExcludedFilenameFlag, "e", "excluded.json", "[optional] the excluded JSON file name, all strings there will be excluded")
+	flag.StringVar(&options.ExcludedFilenameFlag, "e", "excluded.json", i18n.T("[optional] the excluded JSON file name, all strings there will be excluded"))
 
-	flag.StringVar(&options.SubstringFilenameFlag, "s", "capturing_group.json", "[optional] the substring capturing JSON file name, all strings there will only have their first capturing group saved as a translation")
+	flag.StringVar(&options.SubstringFilenameFlag, "s", "capturing_group.json", i18n.T("[optional] the substring capturing JSON file name, all strings there will only have their first capturing group saved as a translation"))
 
-	flag.StringVar(&options.OutputDirFlag, "o", "", "output directory where the translation files will be placed")
+	flag.StringVar(&options.OutputDirFlag, "o", "", i18n.T("output directory where the translation files will be placed"))
 
-	flag.BoolVar(&options.OutputFlatFlag, "output-flat", true, "generated files are created in the specified output directory")
-	flag.BoolVar(&options.OutputMatchPackageFlag, "output-match-package", false, "generated files are created in directory to match the package name")
+	flag.BoolVar(&options.OutputFlatFlag, "output-flat", true, i18n.T("generated files are created in the specified output directory"))
+	flag.BoolVar(&options.OutputMatchPackageFlag, "output-match-package", false, i18n.T("generated files are created in directory to match the package name"))
 
-	flag.StringVar(&options.FilenameFlag, "f", "", "the file name for which strings are extracted")
+	flag.StringVar(&options.FilenameFlag, "f", "", i18n.T("the file name for which strings are extracted"))
 
-	flag.StringVar(&options.DirnameFlag, "d", "", "the dir name for which all .go files will have their strings extracted")
+	flag.StringVar(&options.DirnameFlag, "d", "", i18n.T("the dir name for which all .go files will have their strings extracted"))
 
-	flag.BoolVar(&options.RecurseFlag, "r", false, "recursively extract strings from all files in the same directory as filename or dirName")
+	flag.BoolVar(&options.RecurseFlag, "r", false, i18n.T("recursively extract strings from all files in the same directory as filename or dirName"))
 
-	flag.StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", ".*test.*", "a perl-style regular expression for files to ignore, e.g., \".*test.*\"")
+	flag.StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", ".*test.*", i18n.T("a perl-style regular expression for files to ignore, e.g., \".*test.*\""))
 
-	flag.StringVar(&options.LanguageFilesFlag, "language-files", "", `[optional] a comma separated list of target files for different languages to compare,  e.g., \"en, en_US, fr_FR, es\"	                                                                  if not specified then the languages flag is used to find target files in same directory as source`)
+	flag.StringVar(&options.LanguageFilesFlag, "language-files", "", i18n.T(`[optional] a comma separated list of target files for different languages to compare,  e.g., \"en, en_US, fr_FR, es\"	                                                                  if not specified then the languages flag is used to find target files in same directory as source`))
 
-	flag.StringVar(&options.I18nStringsFilenameFlag, "i18n-strings-filename", "", "a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command")
-	flag.StringVar(&options.I18nStringsDirnameFlag, "i18n-strings-dirname", "", "a directory with the extracted JSON files, using -output-match-package with -extract-strings this directory should match the input files package name")
-	flag.StringVar(&options.RootPathFlag, "root-path", "", "the root path to the Go source files whose packages are being rewritten, defaults to working directory, if not specified")
+	flag.StringVar(&options.I18nStringsFilenameFlag, "i18n-strings-filename", "", i18n.T("a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command"))
+	flag.StringVar(&options.I18nStringsDirnameFlag, "i18n-strings-dirname", "", i18n.T("a directory with the extracted JSON files, using -output-match-package with -extract-strings this directory should match the input files package name"))
+	flag.StringVar(&options.RootPathFlag, "root-path", "", i18n.T("the root path to the Go source files whose packages are being rewritten, defaults to working directory, if not specified"))
 
-	flag.StringVar(&options.InitCodeSnippetFilenameFlag, "init-code-snippet-filename", "", "[optional] the path to a file containing the template snippet for the code that is used for go-i18n initialization")
+	flag.StringVar(&options.InitCodeSnippetFilenameFlag, "init-code-snippet-filename", "", i18n.T("[optional] the path to a file containing the template snippet for the code that is used for go-i18n initialization"))
 
-	flag.StringVar(&options.QualifierFlag, "q", "", "[optional] the qualifier string that is used when using the T(...) function, default to nothing but could be set to `i18n` so that all calls would be: i18n.T(...)")
+	flag.StringVar(&options.QualifierFlag, "q", "", i18n.T("[optional] the qualifier string that is used when using the i18n.T(...) function, default to nothing but could be set to `i18n` so that all calls would be: i18n.T(...)"))
 
 	flag.Parse()
 }
@@ -397,13 +398,13 @@ usage: i18n4go -c checkup
   CHECKUP:
 
   -c checkup                 the checkup command which ensures that the strings in code match strings in resource files and vice versa
-  -q                         the qualifier to use when calling the T(...), defaults to empty but can be used to set to something like i18n for example, such that, i18n.T(...) is used for T(...) function
+  -q                         the qualifier to use when calling the i18n.T(...), defaults to empty but can be used to set to something like i18n for example, such that, i18n.T(...) is used for i18n.T(...) function
 
   FIXUP:
 
   -c fixup                   the fixup command which interactively lets users add, update, or remove translations keys from code and resource files.
 `
-	fmt.Println(fmt.Sprintf("%s\nVersion %s", usageString, VERSION))
+	fmt.Println(fmt.Sprintf(i18n.T("{{.Arg0}}\nVersion {{.Arg1}}", map[string]interface{}{"Arg0": usageString, "Arg1": VERSION})))
 }
 
 func handlePanic() {
@@ -415,7 +416,7 @@ func handlePanic() {
 		case string:
 			displayCrashDialog(err)
 		default:
-			displayCrashDialog("An unexpected type of error")
+			displayCrashDialog(i18n.T("An unexpected type of error"))
 		}
 	}
 
@@ -425,7 +426,7 @@ func handlePanic() {
 }
 
 func displayCrashDialog(errorMessage string) {
-	formattedString := `
+	formattedString := i18n.T(`
 Something completely unexpected happened. This is a bug in %s.
 Please file this bug : https://github.com/maximilien/i18n4go/issues
 Tell us that you ran this command:
@@ -439,7 +440,7 @@ this error occurred:
 and this stack trace:
 
 %s
-	`
+	`)
 
 	stackTrace := "\t" + strings.Replace(string(debug.Stack()), "\n", "\n\t", -1)
 	println(fmt.Sprintf(formattedString, "i18n4go", strings.Join(os.Args, " "), errorMessage, stackTrace))

@@ -28,6 +28,8 @@ import (
 	"path/filepath"
 
 	"encoding/json"
+
+	"github.com/maximilien/i18n4go/i18n4go/i18n"
 )
 
 const (
@@ -66,7 +68,7 @@ func CheckFile(fileName string) (string, string, error) {
 	}
 
 	if !fileInfo.Mode().IsRegular() {
-		return "", "", fmt.Errorf("i18n4go: Non-regular source file %s (%s)\n", fileInfo.Name(), fileInfo.Mode().String())
+		return "", "", fmt.Errorf(i18n.T("i18n4go: Non-regular source file {{.Arg0}} ({{.Arg1}})\n", map[string]interface{}{"Arg0": fileInfo.Name(), "Arg1": fileInfo.Mode().String()}))
 	}
 
 	return filepath.Base(fileName), filepath.Dir(fileName), nil
@@ -153,7 +155,7 @@ func SaveStrings(printer PrinterInterface, options Options, stringInfos map[stri
 
 	outputFilename := filepath.Join(outputDirname, fileName[strings.LastIndex(fileName, string(os.PathSeparator))+1:len(fileName)])
 	if len(stringInfos) != 0 {
-		printer.Println("Saving extracted i18n strings to file:", outputFilename)
+		printer.Println(i18n.T("Saving extracted i18n strings to file:"), outputFilename)
 	}
 
 	if !options.DryRunFlag && len(i18nStringInfos) != 0 {
@@ -172,7 +174,7 @@ func SaveStrings(printer PrinterInterface, options Options, stringInfos map[stri
 
 func SaveStringsInPo(printer PrinterInterface, options Options, stringInfos map[string]StringInfo, outputDirname string, fileName string) error {
 	if len(stringInfos) != 0 {
-		printer.Println("Creating and saving i18n strings to .po file:", fileName)
+		printer.Println(i18n.T("Creating and saving i18n strings to .po file:"), fileName)
 	}
 
 	if !options.DryRunFlag && len(stringInfos) != 0 {
@@ -203,7 +205,7 @@ func SaveStringsInPo(printer PrinterInterface, options Options, stringInfos map[
 }
 
 func SaveI18nStringsInPo(printer PrinterInterface, options Options, i18nStrings []I18nStringInfo, fileName string) error {
-	printer.Println("i18n4go: creating and saving i18n strings to .po file:", fileName)
+	printer.Println(i18n.T("i18n4go: creating and saving i18n strings to .po file:"), fileName)
 
 	if !options.DryRunFlag && len(i18nStrings) != 0 {
 		file, err := os.Create(fileName)
@@ -269,7 +271,7 @@ func CreateI18nStringInfoMap(i18nStringInfos []I18nStringInfo) (map[string]I18nS
 		if _, ok := inputMap[i18nStringInfo.ID]; !ok {
 			inputMap[i18nStringInfo.ID] = i18nStringInfo
 		} else {
-			return nil, errors.New("Duplicated key found: " + i18nStringInfo.ID)
+			return nil, errors.New(i18n.T("Duplicated key found: ") + i18nStringInfo.ID)
 		}
 
 	}
@@ -290,7 +292,7 @@ func CopyI18nStringInfoMap(i18nStringInfoMap map[string]I18nStringInfo) map[stri
 func GetTemplatedStringArgs(aString string) []string {
 	re, err := getTemplatedStringRegexp()
 	if err != nil {
-		fmt.Printf("i18n4go: Error compiling templated string Regexp: %s\n", err.Error())
+		fmt.Printf(i18n.T("i18n4go: Error compiling templated string Regexp: {{.Arg0}}\n", map[string]interface{}{"Arg0": err.Error()}))
 		return []string{}
 	}
 
@@ -308,7 +310,7 @@ func GetTemplatedStringArgs(aString string) []string {
 func IsTemplatedString(aString string) bool {
 	re, err := getTemplatedStringRegexp()
 	if err != nil {
-		fmt.Printf("i18n4go: Error compiling templated string Regexp: %s\n", err.Error())
+		fmt.Printf(i18n.T("i18n4go: Error compiling templated string Regexp: {{.Arg0}}\n", map[string]interface{}{"Arg0": err.Error()}))
 		return false
 	}
 
@@ -318,7 +320,7 @@ func IsTemplatedString(aString string) bool {
 func IsInterpolatedString(aString string) bool {
 	re, err := getInterpolatedStringRegexp()
 	if err != nil {
-		fmt.Printf("i18n4go: Error compiling interpolated string Regexp: %s\n", err.Error())
+		fmt.Printf(i18n.T("i18n4go: Error compiling interpolated string Regexp: {{.Arg0}}\n", map[string]interface{}{"Arg0": err.Error()}))
 		return false
 	}
 
@@ -332,7 +334,7 @@ func ConvertToTemplatedString(aString string) string {
 
 	re, err := getInterpolatedStringRegexp()
 	if err != nil {
-		fmt.Printf("i18n4go: Error compiling interpolated string Regexp: %s\n", err.Error())
+		fmt.Printf(i18n.T("i18n4go: Error compiling interpolated string Regexp: {{.Arg0}}\n", map[string]interface{}{"Arg0": err.Error()}))
 		return ""
 	}
 
@@ -379,7 +381,7 @@ func GetIgnoreRegexp(ignoreRegexp string) (compiledRegexp *regexp.Regexp) {
 	if ignoreRegexp != "" {
 		reg, err := regexp.Compile(ignoreRegexp)
 		if err != nil {
-			fmt.Println("WARNING: fail to compile ignore-regexp:", err)
+			fmt.Println(i18n.T("WARNING: fail to compile ignore-regexp:"), err)
 		}
 		compiledRegexp = reg
 	}

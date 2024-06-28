@@ -29,6 +29,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/maximilien/i18n4go/i18n4go/common"
+	"github.com/maximilien/i18n4go/i18n4go/i18n"
 )
 
 type showMissingStrings struct {
@@ -53,14 +54,14 @@ func NewShowMissingStrings(options *common.Options) *showMissingStrings {
 func NewShowMissingStringsCommand(options *common.Options) *cobra.Command {
 	showMissingStringsCmd := &cobra.Command{
 		Use:   "show-missing-strings",
-		Short: "Shows missing strings in translations",
+		Short: i18n.T("Shows missing strings in translations"),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return NewShowMissingStrings(options).Run()
 		},
 	}
 
-	showMissingStringsCmd.Flags().StringVarP(&options.DirnameFlag, "directory", "d", "", "the directory containing the go files to validate")
-	showMissingStringsCmd.Flags().StringVar(&options.I18nStringsFilenameFlag, "i18n-strings-filename", "", "a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command")
+	showMissingStringsCmd.Flags().StringVarP(&options.DirnameFlag, "directory", "d", "", i18n.T("the directory containing the go files to validate"))
+	showMissingStringsCmd.Flags().StringVar(&options.I18nStringsFilenameFlag, "i18n-strings-filename", "", i18n.T("a JSON file with the strings that should be i18n enabled, typically the output of -extract-strings command"))
 
 	// TODO: setup options and params for Cobra command here using common.Options
 
@@ -142,7 +143,7 @@ func (sms *showMissingStrings) inspectFile(filename string) error {
 	}
 
 	if strings.HasPrefix(fileInfo.Name(), ".") || !strings.HasSuffix(fileInfo.Name(), ".go") {
-		sms.Println("WARNING ignoring file:", absFilePath)
+		sms.Println(i18n.T("WARNING ignoring file:"), absFilePath)
 		return nil
 	}
 
@@ -170,7 +171,7 @@ func (sms *showMissingStrings) extractString(f *ast.File, fset *token.FileSet, f
 							panic(err.Error())
 						}
 
-						sms.Println("Adding to translated strings:", translatedString)
+						sms.Println(i18n.T("Adding to translated strings:"), translatedString)
 						sms.TranslatedStrings = append(sms.TranslatedStrings, filename+": "+translatedString)
 					}
 				}
@@ -188,13 +189,13 @@ func (sms *showMissingStrings) showMissingTranslatedStrings() error {
 	missingStrings := false
 	for _, codeString := range sms.TranslatedStrings {
 		if !sms.stringInStringInfos(codeString, sms.I18nStringInfos) {
-			fmt.Println("Missing:", codeString)
+			fmt.Println(i18n.T("Missing:"), codeString)
 			missingStrings = true
 		}
 	}
 
 	if missingStrings {
-		return errors.New("Missing Strings!")
+		return errors.New(i18n.T("Missing Strings!"))
 	}
 
 	return nil
@@ -209,7 +210,7 @@ func (sms *showMissingStrings) stringInStringInfos(str string, list []common.I18
 	_, translatedStr := splitFilePathAndString(str)
 	for _, stringInfo := range list {
 		if translatedStr == stringInfo.ID {
-			sms.Println("Found", stringInfo.ID, "UNDER", str)
+			sms.Println(i18n.T("Found"), stringInfo.ID, i18n.T("UNDER"), str)
 			return true
 		}
 	}
@@ -222,12 +223,12 @@ func (sms *showMissingStrings) showExtraStrings() error {
 	additionalStrings := false
 	for _, stringInfo := range sms.I18nStringInfos {
 		if !stringInTranslatedStrings(stringInfo.ID, sms.TranslatedStrings) {
-			fmt.Println("Additional:", stringInfo.ID)
+			fmt.Println(i18n.T("Additional:"), stringInfo.ID)
 			additionalStrings = true
 		}
 	}
 	if additionalStrings {
-		return errors.New("Additional Strings!")
+		return errors.New(i18n.T("Additional Strings!"))
 	}
 	return nil
 }

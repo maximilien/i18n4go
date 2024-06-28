@@ -3,6 +3,7 @@ package cmds
 import (
 	"fmt"
 
+	"github.com/maximilien/i18n4go/i18n4go/i18n"
 	"github.com/spf13/cobra"
 )
 
@@ -14,11 +15,11 @@ var GitRevision string
 func NewVersionCommand(p *I18NParams) *cobra.Command {
 	versionCmd := &cobra.Command{
 		Use:   "version",
-		Short: "Show the version of the i18n client",
+		Short: i18n.T("Show the version of the i18n client"),
 		RunE: func(cmd *cobra.Command, args []string) error {
-			fmt.Printf("Version:      %s\n", Version)
-			fmt.Printf("Build Date:   %s\n", BuildDate)
-			fmt.Printf("Git Revision: %s\n", GitRevision)
+			fmt.Printf(i18n.T("Version:      {{.Arg0}}\n", map[string]interface{}{"Arg0": Version}))
+			fmt.Printf(i18n.T("Build Date:   {{.Arg0}}\n", map[string]interface{}{"Arg0": BuildDate}))
+			fmt.Printf(i18n.T("Git Revision: {{.Arg0}}\n", map[string]interface{}{"Arg0": GitRevision}))
 			return nil
 		},
 	}

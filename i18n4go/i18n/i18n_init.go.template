@@ -9,5 +9,7 @@ import (
 var T goi18n.TranslateFunc
 
 func init() {
-    T = i18n.Init(__FULL_IMPORT_PATH__, i18n.GetResourcesPath())
+    T = i18n.Init(__FULL_IMPORT_PATH__, i18n.GetResourcesPath(), func(asset string) ([]byte, error) {
+		        return Asset(asset)
+    })
 }

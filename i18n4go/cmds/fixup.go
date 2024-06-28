@@ -30,6 +30,7 @@ import (
 	"go/token"
 
 	"github.com/maximilien/i18n4go/i18n4go/common"
+	"github.com/maximilien/i18n4go/i18n4go/i18n"
 	"github.com/spf13/cobra"
 )
 
@@ -55,14 +56,14 @@ func NewFixup(options *common.Options) *fixup {
 func NewFixupCommand(options *common.Options) *cobra.Command {
 	fixupCmd := &cobra.Command{
 		Use:   "fixup",
-		Long:  "Add, update, or remove translation keys from source files and resources files",
-		Short: "Fixup the transation files",
+		Long:  i18n.T("Add, update, or remove translation keys from source files and resources files"),
+		Short: i18n.T("Fixup the transation files"),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return NewFixup(options).Run()
 		},
 	}
 
-	fixupCmd.Flags().StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", ".*test.*", "recursively extract strings from all files in the same directory as filename or dirName")
+	fixupCmd.Flags().StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", ".*test.*", i18n.T("recursively extract strings from all files in the same directory as filename or dirName"))
 
 	return fixupCmd
 }
@@ -93,27 +94,31 @@ func (fix *fixup) Run() error {
 	fix.Source = source
 
 	if err != nil {
-		fmt.Println(fmt.Sprintf("Couldn't find any source strings: %s", err.Error()))
+		fmt.Println(i18n.T("Couldn't find any source strings: {{.Arg0}}", map[string]interface{}{
+			"Arg0": err.Error(),
+		}))
 		return err
 	}
 
 	locales := findTranslationFiles(".", fix.IgnoreRegexp, fix.options.VerboseFlag)
 	englishFiles, ok := locales["en_US"]
 	if !ok {
-		fmt.Println("Unable to find english translation files")
-		return errors.New("Unable to find english translation files")
+		fmt.Println(i18n.T("Unable to find english translation files"))
+		return errors.New(i18n.T("Unable to find english translation files"))
 	}
 
 	englishFile := englishFiles[0]
 	if englishFile == "" {
-		fmt.Println("Could not find an i18n file for locale: en_US")
-		return errors.New("Could not find an i18n file for locale: en_US")
+		fmt.Println(i18n.T("Could not find an i18n file for locale: en_US"))
+		return errors.New(i18n.T("Could not find an i18n file for locale: en_US"))
 	}
 
 	englishStringInfos, err := fix.findI18nStrings(englishFile)
 
 	if err != nil {
-		fmt.Println(fmt.Sprintf("Couldn't find the english strings: %s", err.Error()))
+		fmt.Println(i18n.T("Couldn't find the english strings: {{.Arg0}}", map[string]interface{}{
+			"Arg0": err.Error(),
+		}))
 		return err
 	}
 
@@ -153,7 +158,7 @@ func (fix *fixup) Run() error {
 				updated := false
 
 				for !escape {
-					fmt.Printf("Is the string \"%s\" a new or updated string? [new/upd]\n", newUpdatedTranslation)
+					fmt.Printf(i18n.T("Is the string \"%s\" a new or updated string? [new/upd]\n"), newUpdatedTranslation)
 
 					_, err := fmt.Scanf("%s\n", &input)
 					if err != nil {
@@ -167,7 +172,7 @@ func (fix *fixup) Run() error {
 						additionalTranslations = append(additionalTranslations, newUpdatedTranslation)
 						escape = true
 					case "upd":
-						fmt.Println("Select the number for the previous translation:")
+						fmt.Println(i18n.T("Select the number for the previous translation:"))
 						for index, value := range removedTranslations {
 							fmt.Printf("\t%d. %s\n", (index + 1), value)
 						}
@@ -185,15 +190,15 @@ func (fix *fixup) Run() error {
 
 								updated = true
 							} else {
-								fmt.Println("Invalid response.")
+								fmt.Println(i18n.T("Invalid response."))
 							}
 						}
 						escape = true
 					case "exit":
-						fmt.Println("Canceling fixup")
+						fmt.Println(i18n.T("Canceling fixup"))
 						os.Exit(0)
 					default:
-						fmt.Println("Invalid response.")
+						fmt.Println(i18n.T("Invalid response."))
 					}
 				}
 			} else {
@@ -207,7 +212,7 @@ func (fix *fixup) Run() error {
 	for locale, i18nFiles := range locales {
 		translatedStrings, err := fix.findI18nStrings(i18nFiles[0])
 		if err != nil {
-			fmt.Println(fmt.Sprintf("Couldn't get the strings from %s: %s", locale, err.Error()))
+			fmt.Println(fmt.Sprintf(i18n.T("Couldn't get the strings from {{.Arg0}}: {{.Arg1}}"), locale, err.Error()))
 			return err
 		}
 
@@ -227,7 +232,7 @@ func (fix *fixup) Run() error {
 	}
 
 	if err == nil {
-		fmt.Printf("OK")
+		fmt.Printf(i18n.T("OK"))
 	}
 
 	return err
@@ -274,7 +279,7 @@ func (fix *fixup) findSourceStrings() (sourceStrings map[string]int, err error) 
 	for _, file := range files {
 		fileStrings, err := fix.inspectFile(file)
 		if err != nil {
-			fmt.Println("Error when inspecting go file: ", file)
+			fmt.Println(i18n.T("Error when inspecting go file: "), file)
 			return sourceStrings, err
 		}
 
@@ -359,7 +364,7 @@ func writeStringInfoMapToJSON(localeMap map[string]common.I18nStringInfo, locale
 }
 
 func addTranslations(localeMap map[string]common.I18nStringInfo, localeFile string, addTranslations []string) {
-	fmt.Printf("Adding these strings to the %s translation file:\n", localeFile)
+	fmt.Printf(i18n.T("Adding these strings to the %s translation file:\n"), localeFile)
 
 	for _, id := range addTranslations {
 		localeMap[id] = common.I18nStringInfo{ID: id, Translation: id}
@@ -369,7 +374,7 @@ func addTranslations(localeMap map[string]common.I18nStringInfo, localeFile stri
 
 func removeTranslations(localeMap map[string]common.I18nStringInfo, localeFile string, remTranslations []string) error {
 	var err error
-	fmt.Printf("Removing these strings from the %s translation file:\n", localeFile)
+	fmt.Printf(i18n.T("Removing these strings from the %s translation file:\n"), localeFile)
 
 	for _, id := range remTranslations {
 		delete(localeMap, id)
@@ -380,7 +385,7 @@ func removeTranslations(localeMap map[string]common.I18nStringInfo, localeFile s
 }
 
 func updateTranslations(localMap map[string]common.I18nStringInfo, localeFile string, locale string, updTranslations map[string]string) {
-	fmt.Printf("Updating the following strings from the %s translation file:\n", localeFile)
+	fmt.Printf(i18n.T("Updating the following strings from the %s translation file:\n"), localeFile)
 
 	for key, value := range updTranslations {
 		fmt.Println("\t", key)

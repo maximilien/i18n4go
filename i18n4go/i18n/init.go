@@ -49,22 +49,19 @@ var SUPPORTED_LOCALES = map[string]string{
 	"zh": "zh_CN",
 }
 var (
-	RESOUCES_PATH = filepath.Join("i18n", "resources")
-	bundle        *go_i18n.Bundle
+	RESOURCES_PATH = filepath.Join("i18n4go", "i18n", "resources")
+	bundle         *go_i18n.Bundle
 )
 
 func GetResourcesPath() string {
 	return RESOURCES_PATH
 }
 
-func Init(packageName string, i18nDirname string) TranslateFunc {
+func Init(packageName string, i18nDirname string, assetFn AssetFunc) TranslateFunc {
 	if bundle == nil {
 		bundle = go_i18n.NewBundle(language.AmericanEnglish)
 		bundle.RegisterUnmarshalFunc("json", json.Unmarshal)
 	}
-}
-
-func Init(packageName string, i18nDirname string, assetFn AssetFunc) TranslateFunc {
 	userLocale, err := initWithUserLocale(packageName, i18nDirname, assetFn)
 	if err != nil {
 		userLocale = mustLoadDefaultLocale(packageName, i18nDirname, assetFn)
@@ -102,6 +99,10 @@ func initWithUserLocale(packageName, i18nDirname string, assetFn AssetFunc) (str
 func mustLoadDefaultLocale(packageName, i18nDirname string, assetFn AssetFunc) string {
 	userLocale := DEFAULT_LOCALE
 
+	// REMOVEME: Do not commit
+	fmt.Printf("\npackageName: %s\n", packageName)
+	// REMOVEME: Do not commit
+	fmt.Printf("\ni18nDirname: %s\n", i18nDirname)
 	err := loadFromAsset(packageName, i18nDirname, DEFAULT_LOCALE, DEFAULT_LANGUAGE, assetFn)
 	if err != nil {
 		panic("Could not load en_US language files. God save the queen. " + err.Error())
@@ -120,7 +121,7 @@ func loadFromAsset(packageName, assetPath, locale, language string, assetFn Asse
 	}
 
 	if len(byteArray) == 0 {
-		return fmt.Errorf("Could not load i18n asset: %v", assetKey)
+		return fmt.Errorf(T("Could not load i18n asset: {{.Arg0}}", map[string]interface{}{"Arg0": assetKey}))
 	}
 
 	tmpDir, err := ioutil.TempDir("", "i18n4go_res")
@@ -198,11 +199,15 @@ func translate(loc *go_i18n.Localizer) TranslateFunc {
 			}
 		}
 
-		return loc.MustLocalize(&go_i18n.LocalizeConfig{
+		msg, err := loc.Localize(&go_i18n.LocalizeConfig{
 			MessageID:    messageId,
 			TemplateData: data,
 			PluralCount:  count,
 		})
+		if err != nil {
+			return ""
+		}
+		return msg
 	}
 }
 

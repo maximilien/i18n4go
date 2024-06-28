@@ -29,6 +29,7 @@ import (
 
 	"github.com/go-bindata/go-bindata/v3"
 	"github.com/maximilien/i18n4go/i18n4go/common"
+	"github.com/maximilien/i18n4go/i18n4go/i18n"
 
 	"github.com/spf13/cobra"
 
@@ -85,7 +86,7 @@ func NewRewritePackage(options *common.Options) *rewritePackage {
 	if options.IgnoreRegexpFlag != "" {
 		compiledReg, err := regexp.Compile(options.IgnoreRegexpFlag)
 		if err != nil {
-			fmt.Println("WARNING compiling ignore-regexp:", err)
+			fmt.Println(i18n.T("WARNING compiling ignore-regexp:"), err)
 		}
 		compiledRegexp = compiledReg
 	}
@@ -112,23 +113,23 @@ func NewRewritePackage(options *common.Options) *rewritePackage {
 func NewRewritePackageCommand(options *common.Options) *cobra.Command {
 	rewritePackageCmd := &cobra.Command{
 		Use:   "rewrite-package",
-		Short: "Rewrite translated packages from go source files",
+		Short: i18n.T("Rewrite translated packages from go source files"),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return NewRewritePackage(options).Run()
 		},
 	}
 
-	rewritePackageCmd.Flags().BoolVar(&options.PoFlag, "po", false, "generate standard .po file for translation")
-	rewritePackageCmd.Flags().BoolVarP(&options.RecurseFlag, "recursive", "r", false, "recursively rewrite packages from all files in the same directory as filename or dirName")
+	rewritePackageCmd.Flags().BoolVar(&options.PoFlag, "po", false, i18n.T("generate standard .po file for translation"))
+	rewritePackageCmd.Flags().BoolVarP(&options.RecurseFlag, "recursive", "r", false, i18n.T("recursively rewrite packages from all files in the same directory as filename or dirName"))
 
-	rewritePackageCmd.Flags().StringVarP(&options.FilenameFlag, "file", "f", "", "the source go file to be rewritten")
-	rewritePackageCmd.Flags().StringVarP(&options.DirnameFlag, "directory", "d", "", "the dir name for which all .go files will have their strings extracted")
-	rewritePackageCmd.Flags().StringVar(&options.I18nStringsFilenameFlag, "i18n-strings-filename", "", "a JSON file with the strings that should be i18n enabled, typically the output of the extract-strings command")
-	rewritePackageCmd.Flags().StringVar(&options.I18nStringsDirnameFlag, "i18n-strings-dirname", "", "a directory with the extracted JSON files, using -output-match-package with extract-strings command this directory should match the input files package name")
-	rewritePackageCmd.Flags().StringVarP(&options.OutputDirFlag, "output", "o", "", "output directory where the translation files will be placed")
-	rewritePackageCmd.Flags().StringVar(&options.RootPathFlag, "root-path", "", "the root path to the Go source files whose packages are being rewritten, defaults to working directory, if not specified")
-	rewritePackageCmd.Flags().StringVar(&options.InitCodeSnippetFilenameFlag, "init-code-snippet-filename", "", "[optional] the path to a file containing the template snippet for the code that is used for go-i18n initialization")
-	rewritePackageCmd.Flags().StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", ".*test.*", "a perl-style regular expression for files to ignore, e.g., \".*test.*\"")
+	rewritePackageCmd.Flags().StringVarP(&options.FilenameFlag, "file", "f", "", i18n.T("the source go file to be rewritten"))
+	rewritePackageCmd.Flags().StringVarP(&options.DirnameFlag, "directory", "d", "", i18n.T("the dir name for which all .go files will have their strings extracted"))
+	rewritePackageCmd.Flags().StringVar(&options.I18nStringsFilenameFlag, "i18n-strings-filename", "", i18n.T("a JSON file with the strings that should be i18n enabled, typically the output of the extract-strings command"))
+	rewritePackageCmd.Flags().StringVar(&options.I18nStringsDirnameFlag, "i18n-strings-dirname", "", i18n.T("a directory with the extracted JSON files, using -output-match-package with extract-strings command this directory should match the input files package name"))
+	rewritePackageCmd.Flags().StringVarP(&options.OutputDirFlag, "output", "o", "", i18n.T("output directory where the translation files will be placed"))
+	rewritePackageCmd.Flags().StringVar(&options.RootPathFlag, "root-path", "", i18n.T("the root path to the Go source files whose packages are being rewritten, defaults to working directory, if not specified"))
+	rewritePackageCmd.Flags().StringVar(&options.InitCodeSnippetFilenameFlag, "init-code-snippet-filename", "", i18n.T("[optional] the path to a file containing the template snippet for the code that is used for go-i18n initialization"))
+	rewritePackageCmd.Flags().StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", ".*test.*", i18n.T("a perl-style regular expression for files to ignore, e.g., \".*test.*\""))
 	return rewritePackageCmd
 }
 
@@ -173,8 +174,8 @@ func (rp *rewritePackage) Run() error {
 	}
 
 	rp.Println()
-	rp.Println("Total files parsed:", rp.TotalFiles)
-	rp.Println("Total rewritten strings:", rp.TotalStrings)
+	rp.Println(i18n.T("Total files parsed:"), rp.TotalFiles)
+	rp.Println(i18n.T("Total rewritten strings:"), rp.TotalStrings)
 	return nil
 }
 
@@ -216,7 +217,7 @@ func (rp *rewritePackage) loadStringsToBeTranslated(fileName string) error {
 }
 
 func (rp *rewritePackage) processDir(dirName string, recursive bool) error {
-	rp.Printf("i18n4go: rewriting strings in dir %s, recursive: %t\n", dirName, recursive)
+	rp.Printf(i18n.T("i18n4go: rewriting strings in dir {{.Arg0}}, recursive: {{.Arg1}}\n", map[string]interface{}{"Arg0": dirName, "Arg1": recursive}))
 	rp.Println()
 
 	fileInfos, _ := ioutil.ReadDir(dirName)
@@ -235,9 +236,9 @@ func (rp *rewritePackage) processDir(dirName string, recursive bool) error {
 
 			rp.I18nStringsFilename = filepath.Join(rp.I18nStringsDirname, i18nFilename)
 			rp.I18nStringsFilePaths = append(rp.I18nStringsFilePaths, rp.I18nStringsFilename)
-			rp.Printf("i18n4go: loading JSON strings from file: %s\n", rp.I18nStringsFilename)
+			rp.Printf(i18n.T("i18n4go: loading JSON strings from file: {{.Arg0}}\n", map[string]interface{}{"Arg0": rp.I18nStringsFilename}))
 			if err := rp.loadStringsToBeTranslated(rp.I18nStringsFilename); err != nil {
-				rp.Println("i18n4go: WARNING could not find JSON file:", rp.I18nStringsFilename, err.Error())
+				rp.Println(i18n.T("i18n4go: WARNING could not find JSON file:"), rp.I18nStringsFilename, err.Error())
 				rp.resetProcessing()
 				continue
 			}
@@ -273,7 +274,7 @@ func (rp *rewritePackage) ignoreFile(fileName string) bool {
 
 func (rp *rewritePackage) processFilename(fileName string) error {
 	rp.TotalFiles += 1
-	rp.Println("i18n4go: rewriting strings for source file:", fileName)
+	rp.Println(i18n.T("i18n4go: rewriting strings for source file:"), fileName)
 
 	fileSet := token.NewFileSet()
 
@@ -289,13 +290,13 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 	}
 
 	if strings.HasSuffix(fileName, "_test.go") {
-		rp.Println("cowardly refusing to translate the strings in test file:", fileName)
+		rp.Println(i18n.T("cowardly refusing to translate the strings in test file:"), fileName)
 		return nil
 	}
 
 	importPath, err := rp.determineImportPath(absFilePath)
 	if err != nil {
-		rp.Println("i18n4go: error determining the import path:", err.Error())
+		rp.Println(i18n.T("i18n4go: error determining the import path:"), err.Error())
 		return err
 	}
 
@@ -310,20 +311,20 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 	outputDir := filepath.Join(rp.OutputDirname, filepath.Dir(rp.relativePathForFile(fileName)))
 	err = rp.addInitFuncToPackage(astFile.Name.Name, outputDir, importPath)
 	if err != nil {
-		rp.Println("i18n4go: error adding init() func to package:", err.Error())
+		rp.Println(i18n.T("i18n4go: error adding init() func to package:"), err.Error())
 		return err
 	}
 
 	err = rp.insertTFuncCall(astFile)
 	if err != nil {
-		rp.Println("i18n4go: error appending T() to AST file:", err.Error())
+		rp.Println(i18n.T("i18n4go: error appending i18n.T() to AST file:"), err.Error())
 		return err
 	}
 
 	relativeFilePath := rp.relativePathForFile(fileName)
 	err = rp.saveASTFile(relativeFilePath, fileName, astFile, fileSet)
 	if err != nil {
-		rp.Println("i18n4go: error saving AST file:", err.Error())
+		rp.Println(i18n.T("i18n4go: error saving AST file:"), err.Error())
 		return err
 	}
 
@@ -331,7 +332,7 @@ func (rp *rewritePackage) processFilename(fileName string) error {
 		i18nStringInfos := common.I18nStringInfoMapValues2Array(rp.UpdatedExtractedStrings)
 		err := common.SaveI18nStringInfos(rp, rp.Options(), i18nStringInfos, rp.I18nStringsFilename)
 		if err != nil {
-			rp.Println("i18n4go: error saving updated i18n strings file:", err.Error())
+			rp.Println(i18n.T("i18n4go: error saving updated i18n strings file:"), err.Error())
 			return err
 		}
 	}
@@ -346,36 +347,36 @@ func (rp *rewritePackage) determineImportPath(filePath string) (string, error) {
 		otherPkgImportPath string
 	)
 	if rp.options.RootPathFlag == "" {
-		rp.Println("i18n4go: using the PWD as the rootPath:", os.Getenv("PWD"))
+		rp.Println(i18n.T("i18n4go: using the PWD as the rootPath:"), os.Getenv("PWD"))
 		rp.RootPath = os.Getenv("PWD")
 	}
-	rp.Println("i18n4go: determining import path using root path:", rp.RootPath)
+	rp.Println(i18n.T("i18n4go: determining import path using root path:"), rp.RootPath)
 	pkg, err := build.Default.ImportDir(rp.RootPath, build.ImportMode(1))
 	if err != nil {
-		rp.Println("i18n4go: error getting root path import:", err.Error())
+		rp.Println(i18n.T("i18n4go: error getting root path import:"), err.Error())
 		return "", err
 	}
 
 	if build.IsLocalImport(pkg.ImportPath) {
 		pkgImportPath = pkg.Dir
-		rp.Printf("i18n4go: got a local import %s so using %s instead for root pkg", pkg.ImportPath, pkg.Dir)
+		rp.Printf(i18n.T("i18n4go: got a local import {{.Arg0}} so using {{.Arg1}} instead for root pkg", map[string]interface{}{"Arg0": pkg.ImportPath, "Arg1": pkg.Dir}))
 	} else {
 		pkgImportPath = pkg.ImportPath
-		rp.Println("i18n4go: got a root pkg with import path:", pkg.ImportPath)
+		rp.Println(i18n.T("i18n4go: got a root pkg with import path:"), pkg.ImportPath)
 	}
 
 	otherPkg, err := build.Default.ImportDir(dirName, build.ImportMode(0))
 	if err != nil {
-		rp.Println("i18n4go: error getting root path import:", err.Error())
+		rp.Println(i18n.T("i18n4go: error getting root path import:"), err.Error())
 		return "", err
 	}
 
 	if build.IsLocalImport(otherPkg.ImportPath) {
 		otherPkgImportPath = otherPkg.Dir
-		rp.Printf("i18n4go: got a local import %s so using %s instead for pkg", otherPkg.ImportPath, otherPkg.Dir)
+		rp.Printf(i18n.T("i18n4go: got a local import {{.Arg0}} so using {{.Arg1}} instead for pkg", map[string]interface{}{"Arg0": otherPkg.ImportPath, "Arg1": otherPkg.Dir}))
 	} else {
 		otherPkgImportPath = otherPkg.ImportPath
-		rp.Println("i18n4go: got a pkg with import:", otherPkg.ImportPath)
+		rp.Println(i18n.T("i18n4go: got a pkg with import:"), otherPkg.ImportPath)
 	}
 
 	importPath := otherPkgImportPath
@@ -383,13 +384,13 @@ func (rp *rewritePackage) determineImportPath(filePath string) (string, error) {
 	if strings.HasPrefix(importPath, "/") {
 		importPath = strings.TrimLeft(importPath, "/")
 	}
-	rp.Println("i18n4go: using import path as:", importPath)
+	rp.Println(i18n.T("i18n4go: using import path as:"), importPath)
 
 	return importPath, nil
 }
 
 func (rp *rewritePackage) insertTFuncCall(astFile *ast.File) error {
-	rp.Println("i18n4go: inserting T() calls for strings that need to be translated")
+	rp.Println(i18n.T("i18n4go: inserting i18n.T() calls for strings that need to be translated"))
 	var declarations []ast.Decl
 	if len(astFile.Imports) > 0 {
 		declarations = astFile.Decls[1:]
@@ -639,7 +640,7 @@ func (rp *rewritePackage) wrapBasicLitWithT(basicLit *ast.BasicLit) ast.Expr {
 }
 
 func (rp *rewritePackage) addInitFuncToPackage(packageName, outputDir, importPath string) error {
-	rp.Println("i18n4go: adding init func to package:", packageName, " to output dir:", outputDir)
+	rp.Println(i18n.T("i18n4go: adding init func to package:"), packageName, i18n.T(" to output dir:"), outputDir)
 
 	common.CreateOutputDirsIfNeeded(outputDir)
 
@@ -659,7 +660,7 @@ func (rp *rewritePackage) getInitFuncCodeSnippetContent(packageName, importPath 
 	if rp.InitCodeSnippetFilename != "" {
 		bytes, err := ioutil.ReadFile(rp.InitCodeSnippetFilename)
 		if err != nil {
-			rp.Printf("i18n4go: error reading content of init code snippet file: %s\n, using default", rp.InitCodeSnippetFilename)
+			rp.Printf(i18n.T("i18n4go: error reading content of init code snippet file: {{.Arg0}}\n, using default", map[string]interface{}{"Arg0": rp.InitCodeSnippetFilename}))
 		} else {
 			snippetContent = string(bytes)
 		}
@@ -684,7 +685,7 @@ func (rp *rewritePackage) saveASTFile(relativeFilePath, fileName string, astFile
 
 	common.CreateOutputDirsIfNeeded(filepath.Dir(pathToFile))
 
-	rp.Println("saving file to path", pathToFile)
+	rp.Println(i18n.T("saving file to path"), pathToFile)
 	ioutil.WriteFile(pathToFile, buffer.Bytes(), fileInfo.Mode())
 
 	return nil
