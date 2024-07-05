@@ -221,8 +221,6 @@ func (ct *createTranslations) googleTranslate(translateString string, language s
 	escapedTranslateString := url.QueryEscape(translateString)
 	googleTranslateUrl := "https://www.googleapis.com/language/translate/v2?key=" + ct.options.GoogleTranslateApiKeyFlag + "&target=" + language + "&q=" + escapedTranslateString
 
-	// REMOVEME: Do not commit
-	fmt.Printf("\ngoogleTranslateUrl: %s\n", googleTranslateUrl)
 	response, err := http.Get(googleTranslateUrl)
 	if err != nil {
 		ct.Println(i18n.T("i18n4go: ERROR invoking Google Translate: "), googleTranslateUrl)

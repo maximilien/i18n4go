@@ -99,10 +99,6 @@ func initWithUserLocale(packageName, i18nDirname string, assetFn AssetFunc) (str
 func mustLoadDefaultLocale(packageName, i18nDirname string, assetFn AssetFunc) string {
 	userLocale := DEFAULT_LOCALE
 
-	// REMOVEME: Do not commit
-	fmt.Printf("\npackageName: %s\n", packageName)
-	// REMOVEME: Do not commit
-	fmt.Printf("\ni18nDirname: %s\n", i18nDirname)
 	err := loadFromAsset(packageName, i18nDirname, DEFAULT_LOCALE, DEFAULT_LANGUAGE, assetFn)
 	if err != nil {
 		panic("Could not load en_US language files. God save the queen. " + err.Error())
