@@ -221,7 +221,7 @@ func (cu *Checkup) inspectCallExpr(translatedStrings []string, stmtMap map[strin
 		expr := node.Fun.(*ast.SelectorExpr)
 		if ident, ok := expr.X.(*ast.Ident); ok {
 			funName := expr.Sel.Name
-			// inspect any <MODULE>.i18n.T() or <MODULE>.t() method calls (eg. i18n.T())
+			// inspect any <MODULE>.T() or <MODULE>.t() method calls (eg. i18n.T())
 			if ident.Name == cu.options.QualifierFlag && (funName == "T" || funName == "t") {
 				translatedStrings = cu.inspectTFunc(translatedStrings, stmtMap, *node)
 			}
