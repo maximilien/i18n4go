@@ -17,7 +17,7 @@ set -e
 
 echo -e "\nUpdate (Re)generated translation files..."
 
-PROJ_DIR=$(dirname $0)
+PROJ_DIR=$(cd $(dirname $(dirname $0)) && pwd)
 if [[ -z $(command -v go-bindata) ]]; then
   echo -e "\nInstalling go-bindata..."
   # install outside of GO PATH
