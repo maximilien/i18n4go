@@ -49,7 +49,7 @@ var SUPPORTED_LOCALES = map[string]string{
 	"zh": "zh_CN",
 }
 var (
-	RESOURCES_PATH = filepath.Join("i18n4go", "i18n", "resources")
+	RESOURCES_PATH = filepath.Join("i18n", "resources")
 	bundle         *go_i18n.Bundle
 )
 

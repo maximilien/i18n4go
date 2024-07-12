@@ -3,7 +3,7 @@ package __PACKAGE__NAME__
 import (
     "path/filepath"
 
-    i18n "github.com/maximilien/i18n4go/i18n4go/i18n"
+    "github.com/maximilien/i18n4go/i18n4go/i18n"
 )
 
 var T goi18n.TranslateFunc
