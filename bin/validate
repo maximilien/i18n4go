@@ -22,7 +22,7 @@ if [[ -z $(command -v go-bindata) ]]; then
   echo -e "\nInstalling go-bindata..."
   # install outside of GO PATH
   pushd /tmp >/dev/null 
-  go get -u github.com/go-bindata/go-bindata/...
+  go install -a -v github.com/go-bindata/go-bindata/...@latest
   popd > /dev/null
 fi
 
