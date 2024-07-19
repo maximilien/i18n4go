@@ -28,6 +28,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/maximilien/i18n4go/i18n4go/common"
+	"github.com/maximilien/i18n4go/i18n4go/i18n"
 )
 
 type createTranslations struct {
@@ -74,7 +75,7 @@ func NewCreateTranslations(options *common.Options) *createTranslations {
 func NewCreateTranslationsCommand(options *common.Options) *cobra.Command {
 	createTranslationsCmd := &cobra.Command{
 		Use:   "create-translations",
-		Short: "Creates the transation files",
+		Short: i18n.T("Creates the transation files"),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return NewCreateTranslations(options).Run()
 		},
@@ -82,11 +83,11 @@ func NewCreateTranslationsCommand(options *common.Options) *cobra.Command {
 
 	// TODO: --google-translate-api-key is too long of an optional flag
 	// might want to shorten it or add an alias for usability
-	createTranslationsCmd.Flags().StringVar(&options.GoogleTranslateApiKeyFlag, "google-translate-api-key", "", "[optional] your public Google Translate API key which is used to generate translations (charge is applicable)")
-	createTranslationsCmd.Flags().StringVarP(&options.SourceLanguageFlag, "source-language", "s", "en", "the source language of the file, typically also part of the file name, e.g., \"en_US\"")
-	createTranslationsCmd.Flags().StringVarP(&options.FilenameFlag, "file", "f", "", "the source translation file")
-	createTranslationsCmd.Flags().StringVarP(&options.LanguagesFlag, "languages", "l", "", "a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"")
-	createTranslationsCmd.Flags().StringVarP(&options.OutputDirFlag, "output", "o", "", "the output directory where the newly created translation files will be placed")
+	createTranslationsCmd.Flags().StringVar(&options.GoogleTranslateApiKeyFlag, "google-translate-api-key", "", i18n.T("[optional] your public Google Translate API key which is used to generate translations (charge is applicable)"))
+	createTranslationsCmd.Flags().StringVarP(&options.SourceLanguageFlag, "source-language", "s", "en", i18n.T("the source language of the file, typically also part of the file name, e.g., \"en_US\""))
+	createTranslationsCmd.Flags().StringVarP(&options.FilenameFlag, "file", "f", "", i18n.T("the source translation file"))
+	createTranslationsCmd.Flags().StringVarP(&options.LanguagesFlag, "languages", "l", "", i18n.T("a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\""))
+	createTranslationsCmd.Flags().StringVarP(&options.OutputDirFlag, "output", "o", "", i18n.T("the output directory where the newly created translation files will be placed"))
 
 	return createTranslationsCmd
 
@@ -113,24 +114,24 @@ func (ct *createTranslations) Printf(msg string, a ...interface{}) (int, error) 
 }
 
 func (ct *createTranslations) Run() error {
-	ct.Println("i18n4go: creating translation files for:", ct.Filename)
+	ct.Println(i18n.T("i18n4go: creating translation files for:"), ct.Filename)
 	ct.Println()
 
 	for _, language := range ct.Languages {
-		ct.Println("i18n4go: creating translation file copy for language:", language)
+		ct.Println(i18n.T("i18n4go: creating translation file copy for language:"), language)
 
 		if ct.options.GoogleTranslateApiKeyFlag != "" {
 			destFilename, err := ct.createTranslationFileWithGoogleTranslate(language)
 			if err != nil {
-				return fmt.Errorf("i18n4go: could not create translation file for language: %s with Google Translate", language)
+				return fmt.Errorf(i18n.T("i18n4go: could not create translation file for language: {{.Arg0}} with Google Translate", map[string]interface{}{"Arg0": language}))
 			}
-			ct.Println("i18n4go: created translation file with Google Translate:", destFilename)
+			ct.Println(i18n.T("i18n4go: created translation file with Google Translate:"), destFilename)
 		} else {
 			destFilename, err := ct.createTranslationFile(ct.Filename, language)
 			if err != nil {
-				return fmt.Errorf("i18n4go: could not create default translation file for language: %s\nerr:%s", language, err.Error())
+				return fmt.Errorf(i18n.T("i18n4go: could not create default translation file for language: {{.Arg0}}\nerr:{{.Arg1}}", map[string]interface{}{"Arg0": language, "Arg1": err.Error()}))
 			}
-			ct.Println("i18n4go: created default translation file:", destFilename)
+			ct.Println(i18n.T("i18n4go: created default translation file:"), destFilename)
 		}
 	}
 
@@ -148,7 +149,7 @@ func (ct *createTranslations) createTranslationFileWithGoogleTranslate(language 
 	err = common.CreateOutputDirsIfNeeded(ct.OutputDirname)
 	if err != nil {
 		ct.Println(err)
-		return "", fmt.Errorf("i18n4go: could not create output directory: %s", ct.OutputDirname)
+		return "", fmt.Errorf(i18n.T("i18n4go: could not create output directory: {{.Arg0}}", map[string]interface{}{"Arg0": ct.OutputDirname}))
 	}
 
 	destFilename := filepath.Join(ct.OutputDirname, strings.Replace(fileName, ct.options.SourceLanguageFlag, language, -1))
@@ -156,19 +157,19 @@ func (ct *createTranslations) createTranslationFileWithGoogleTranslate(language 
 	i18nStringInfos, err := common.LoadI18nStringInfos(ct.Filename)
 	if err != nil {
 		ct.Println(err)
-		return "", fmt.Errorf("i18n4go: could not load i18n strings from file: %s", ct.Filename)
+		return "", fmt.Errorf(i18n.T("i18n4go: could not load i18n strings from file: {{.Arg0}}", map[string]interface{}{"Arg0": ct.Filename}))
 	}
 
 	if len(i18nStringInfos) == 0 {
-		return "", fmt.Errorf("i18n4go: input file: %s is empty", ct.Filename)
+		return "", fmt.Errorf(i18n.T("i18n4go: input file: {{.Arg0}} is empty", map[string]interface{}{"Arg0": ct.Filename}))
 	}
 
-	ct.Println("i18n4go: attempting to use Google Translate to translate source strings in: ", language)
+	ct.Println(i18n.T("i18n4go: attempting to use Google Translate to translate source strings in: "), language)
 	modifiedI18nStringInfos := make([]common.I18nStringInfo, len(i18nStringInfos))
 	for i, i18nStringInfo := range i18nStringInfos {
 		translation, _, err := ct.googleTranslate(i18nStringInfo.Translation, language)
 		if err != nil {
-			ct.Println("i18n4go: error invoking Google Translate for string:", i18nStringInfo.Translation)
+			ct.Println(i18n.T("i18n4go: error invoking Google Translate for string:"), i18nStringInfo.Translation)
 		} else {
 			modifiedI18nStringInfos[i] = common.I18nStringInfo{ID: i18nStringInfo.ID, Translation: translation}
 		}
@@ -177,7 +178,7 @@ func (ct *createTranslations) createTranslationFileWithGoogleTranslate(language 
 	err = common.SaveI18nStringInfos(ct, ct.Options(), modifiedI18nStringInfos, destFilename)
 	if err != nil {
 		ct.Println(err)
-		return "", fmt.Errorf("i18n4go: could not save Google Translate i18n strings to file: %s", destFilename)
+		return "", fmt.Errorf(i18n.T("i18n4go: could not save Google Translate i18n strings to file: {{.Arg0}}", map[string]interface{}{"Arg0": destFilename}))
 	}
 
 	if ct.options.PoFlag {
@@ -185,7 +186,7 @@ func (ct *createTranslations) createTranslationFileWithGoogleTranslate(language 
 		err = common.SaveI18nStringsInPo(ct, ct.Options(), modifiedI18nStringInfos, poFilename)
 		if err != nil {
 			ct.Println(err)
-			return "", fmt.Errorf("i18n4go: could not save PO file: %s", poFilename)
+			return "", fmt.Errorf(i18n.T("i18n4go: could not save PO file: {{.Arg0}}", map[string]interface{}{"Arg0": poFilename}))
 		}
 	}
 
@@ -203,15 +204,15 @@ func (ct *createTranslations) createTranslationFile(sourceFilename string, langu
 	i18nStringInfos, err := common.LoadI18nStringInfos(sourceFilename)
 	if err != nil {
 		ct.Println(err)
-		return "", fmt.Errorf("i18n4go: could not load i18n strings from file: %s", sourceFilename)
+		return "", fmt.Errorf(i18n.T("i18n4go: could not load i18n strings from file: {{.Arg0}}", map[string]interface{}{"Arg0": sourceFilename}))
 	}
 
 	if len(i18nStringInfos) == 0 {
-		return "", fmt.Errorf("i18n4go: input file: %s is empty", sourceFilename)
+		return "", fmt.Errorf(i18n.T("i18n4go: input file: {{.Arg0}} is empty", map[string]interface{}{"Arg0": sourceFilename}))
 	}
 
 	destFilename := filepath.Join(ct.OutputDirname, strings.Replace(fileName, ct.options.SourceLanguageFlag, language, -1))
-	ct.Println("i18n4go: creating translation file:", destFilename)
+	ct.Println(i18n.T("i18n4go: creating translation file:"), destFilename)
 
 	return destFilename, common.CopyFileContents(sourceFilename, destFilename)
 }
@@ -222,7 +223,7 @@ func (ct *createTranslations) googleTranslate(translateString string, language s
 
 	response, err := http.Get(googleTranslateUrl)
 	if err != nil {
-		ct.Println("i18n4go: ERROR invoking Google Translate: ", googleTranslateUrl)
+		ct.Println(i18n.T("i18n4go: ERROR invoking Google Translate: "), googleTranslateUrl)
 		return "", "", err
 	}
 
@@ -230,14 +231,14 @@ func (ct *createTranslations) googleTranslate(translateString string, language s
 
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		ct.Println("i18n4go: ERROR parsing Google Translate response body")
+		ct.Println(i18n.T("i18n4go: ERROR parsing Google Translate response body"))
 		return "", "", err
 	}
 
 	var googleTranslateData GoogleTranslateData
 	err = json.Unmarshal(body, &googleTranslateData)
 	if err != nil {
-		ct.Println("i18n4go: ERROR parsing Google Translate response body")
+		ct.Println(i18n.T("i18n4go: ERROR parsing Google Translate response body"))
 		return "", "", err
 	}
 

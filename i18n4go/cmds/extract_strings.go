@@ -34,6 +34,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/maximilien/i18n4go/i18n4go/common"
+	"github.com/maximilien/i18n4go/i18n4go/i18n"
 )
 
 type extractStrings struct {
@@ -78,29 +79,29 @@ func NewExtractStrings(options *common.Options) *extractStrings {
 func NewExtractStringsCommand(options *common.Options) *cobra.Command {
 	extractTranslationsCmd := &cobra.Command{
 		Use:   "extract-strings",
-		Short: "Extract the translation strings from go source files",
+		Short: i18n.T("Extract the translation strings from go source files"),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return NewExtractStrings(options).Run()
 		},
 	}
 
-	extractTranslationsCmd.Flags().BoolVar(&options.PoFlag, "po", false, "generate standard .po file for translation")
+	extractTranslationsCmd.Flags().BoolVar(&options.PoFlag, "po", false, i18n.T("generate standard .po file for translation"))
 	// NOTE: To keep existing behavior we are leaving the default value ".*test.*"
 	// but optional flags not used should have default values other than empty or false (for clarity)
-	extractTranslationsCmd.Flags().StringVarP(&options.FilenameFlag, "file", "f", "", "the file name for which strings are extracted")
-	extractTranslationsCmd.Flags().StringVarP(&options.ExcludedFilenameFlag, "exclude", "e", "excluded.json", "the JSON file with strings to be excluded, defaults to excluded.json if present")
-	extractTranslationsCmd.Flags().StringVarP(&options.SubstringFilenameFlag, "substring-file", "s", "capturing_group.json", "the substring capturing JSON file name, all strings there will only have their first capturing group saved as a translation")
-	extractTranslationsCmd.Flags().BoolVarP(&options.MetaFlag, "meta", "m", false, "[optional] create a *.extracted.json file with metadata such as: filename, directory, and positions of the strings in source file")
-	extractTranslationsCmd.Flags().BoolVar(&options.DryRunFlag, "dry-run", false, "prevents any output files from being created")
+	extractTranslationsCmd.Flags().StringVarP(&options.FilenameFlag, "file", "f", "", i18n.T("the file name for which strings are extracted"))
+	extractTranslationsCmd.Flags().StringVarP(&options.ExcludedFilenameFlag, "exclude", "e", "excluded.json", i18n.T("the JSON file with strings to be excluded, defaults to excluded.json if present"))
+	extractTranslationsCmd.Flags().StringVarP(&options.SubstringFilenameFlag, "substring-file", "s", "capturing_group.json", i18n.T("the substring capturing JSON file name, all strings there will only have their first capturing group saved as a translation"))
+	extractTranslationsCmd.Flags().BoolVarP(&options.MetaFlag, "meta", "m", false, i18n.T("[optional] create a *.extracted.json file with metadata such as: filename, directory, and positions of the strings in source file"))
+	extractTranslationsCmd.Flags().BoolVar(&options.DryRunFlag, "dry-run", false, i18n.T("prevents any output files from being created"))
 	// TODO: Optional flag that defaults to true is not best practice
 	// We should rename this flag to have the default be fault
-	extractTranslationsCmd.Flags().BoolVar(&options.OutputFlatFlag, "output-flat", true, "generated files are created in the specified output directory")
-	extractTranslationsCmd.Flags().BoolVar(&options.OutputMatchPackageFlag, "output-match-package", false, "generated files are created in directory to match the package name")
-	extractTranslationsCmd.Flags().StringVarP(&options.OutputDirFlag, "output", "o", "", "output directory where the translation files will be placed")
-	extractTranslationsCmd.Flags().StringVarP(&options.DirnameFlag, "directory", "d", "", "the dir name for which all .go files will have their strings extracted")
-	extractTranslationsCmd.Flags().BoolVarP(&options.RecurseFlag, "recursive", "r", false, "recursively extract strings from all files in the same directory as filename or dirName")
+	extractTranslationsCmd.Flags().BoolVar(&options.OutputFlatFlag, "output-flat", true, i18n.T("generated files are created in the specified output directory"))
+	extractTranslationsCmd.Flags().BoolVar(&options.OutputMatchPackageFlag, "output-match-package", false, i18n.T("generated files are created in directory to match the package name"))
+	extractTranslationsCmd.Flags().StringVarP(&options.OutputDirFlag, "output", "o", "", i18n.T("output directory where the translation files will be placed"))
+	extractTranslationsCmd.Flags().StringVarP(&options.DirnameFlag, "directory", "d", "", i18n.T("the dir name for which all .go files will have their strings extracted"))
+	extractTranslationsCmd.Flags().BoolVarP(&options.RecurseFlag, "recursive", "r", false, i18n.T("recursively extract strings from all files in the same directory as filename or dirName"))
 	// Same as NOTE in L78-79
-	extractTranslationsCmd.Flags().StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", ".*test.*", "recursively extract strings from all files in the same directory as filename or dirName")
+	extractTranslationsCmd.Flags().StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", ".*test.*", i18n.T("recursively extract strings from all files in the same directory as filename or dirName"))
 
 	return extractTranslationsCmd
 }
@@ -131,20 +132,20 @@ func (es *extractStrings) Run() error {
 	} else {
 		err := es.InspectDir(es.options.DirnameFlag, es.options.RecurseFlag)
 		if err != nil {
-			es.Println("i18n4go: could not extract strings from directory:", es.options.DirnameFlag)
+			es.Println(i18n.T("i18n4go: could not extract strings from directory:"), es.options.DirnameFlag)
 			return err
 		}
 		es.Println()
-		es.Println("Total files parsed:", es.TotalFiles)
-		es.Println("Total extracted strings:", es.TotalStrings)
+		es.Println(i18n.T("Total files parsed:"), es.TotalFiles)
+		es.Println(i18n.T("Total extracted strings:"), es.TotalStrings)
 	}
 	return nil
 }
 
 func (es *extractStrings) InspectFile(filename string) error {
-	es.Println("i18n4go: extracting strings from file:", filename)
+	es.Println(i18n.T("i18n4go: extracting strings from file:"), filename)
 	if es.options.DryRunFlag {
-		es.Println("WARNING running in -dry-run mode")
+		es.Println(i18n.T("WARNING running in -dry-run mode"))
 	}
 
 	es.ExtractedStrings = make(map[string]common.StringInfo)
@@ -168,7 +169,7 @@ func (es *extractStrings) InspectFile(filename string) error {
 	}
 
 	if strings.HasPrefix(fileInfo.Name(), ".") {
-		es.Println("WARNING ignoring file:", absFilePath)
+		es.Println(i18n.T("WARNING ignoring file:"), absFilePath)
 		return nil
 	}
 
@@ -183,14 +184,14 @@ func (es *extractStrings) InspectFile(filename string) error {
 		es.Println(err)
 		return err
 	}
-	es.Println(fmt.Sprintf("Loaded %d excluded strings", len(es.FilteredStrings)))
+	es.Println(fmt.Sprintf(i18n.T("Loaded {{.Arg0}} excluded strings", map[string]interface{}{"Arg0": len(es.FilteredStrings)})))
 
 	err = es.loadExcludedRegexps()
 	if err != nil {
 		es.Println(err)
 		return err
 	}
-	es.Println(fmt.Sprintf("Loaded %d excluded regexps", len(es.FilteredRegexps)))
+	es.Println(fmt.Sprintf(i18n.T("Loaded {{.Arg0}} excluded regexps", map[string]interface{}{"Arg0": len(es.FilteredRegexps)})))
 
 	if es.options.SubstringFilenameFlag != "" {
 		err := es.loadSubstringRegexps()
@@ -198,7 +199,7 @@ func (es *extractStrings) InspectFile(filename string) error {
 			es.Println(err)
 			return err
 		}
-		es.Println(fmt.Sprintf("Loaded %d substring regexps", len(es.FilteredRegexps)))
+		es.Println(fmt.Sprintf(i18n.T("Loaded {{.Arg0}} substring regexps", map[string]interface{}{"Arg0": len(es.FilteredRegexps)})))
 	}
 
 	es.excludeImports(astFile)
@@ -208,7 +209,7 @@ func (es *extractStrings) InspectFile(filename string) error {
 	es.TotalStrings += len(es.ExtractedStrings)
 	es.TotalFiles += 1
 
-	es.Printf("Extracted %d strings from file: %s\n", len(es.ExtractedStrings), absFilePath)
+	es.Printf(i18n.T("Extracted {{.Arg0}} strings from file: {{.Arg1}}\n", map[string]interface{}{"Arg0": len(es.ExtractedStrings), "Arg1": absFilePath}))
 
 	var outputDirname = es.OutputDirname
 	if es.options.OutputDirFlag != "" {
@@ -259,7 +260,7 @@ func (es *extractStrings) InspectFile(filename string) error {
 }
 
 func (es *extractStrings) InspectDir(dirName string, recursive bool) error {
-	es.Printf("i18n4go: inspecting dir %s, recursive: %t\n", dirName, recursive)
+	es.Printf(i18n.T("i18n4go: inspecting dir {{.Arg0}}, recursive: {{.Arg1}}\n", map[string]interface{}{"Arg0": dirName, "Arg1": recursive}))
 	es.Println()
 
 	fset := token.NewFileSet()
@@ -272,13 +273,13 @@ func (es *extractStrings) InspectDir(dirName string, recursive bool) error {
 	}
 
 	for k, pkg := range packages {
-		es.Println("Extracting strings in package:", k)
+		es.Println(i18n.T("Extracting strings in package:"), k)
 		for fileName, _ := range pkg.Files {
 			if es.IgnoreRegexp != nil && es.IgnoreRegexp.MatchString(fileName) {
-				es.Println("Using ignore-regexp:", es.options.IgnoreRegexpFlag)
+				es.Println(i18n.T("Using ignore-regexp:"), es.options.IgnoreRegexpFlag)
 				continue
 			} else {
-				es.Println("No match for ignore-regexp:", es.options.IgnoreRegexpFlag)
+				es.Println(i18n.T("No match for ignore-regexp:"), es.options.IgnoreRegexpFlag)
 			}
 
 			if strings.HasSuffix(fileName, ".go") {
@@ -289,7 +290,7 @@ func (es *extractStrings) InspectDir(dirName string, recursive bool) error {
 			}
 		}
 	}
-	es.Printf("Extracted total of %d strings\n\n", es.TotalStringsDir)
+	es.Printf(i18n.T("Extracted total of {{.Arg0}} strings\n\n", map[string]interface{}{"Arg0": es.TotalStringsDir}))
 
 	if recursive {
 		fileInfos, _ := ioutil.ReadDir(dirName)
@@ -311,12 +312,12 @@ func (es *extractStrings) findImportPath(filename string) (string, error) {
 
 	filePath, err := common.FindFilePath(filename)
 	if err != nil {
-		fmt.Println("ERROR opening file", err)
+		fmt.Println(i18n.T("ERROR opening file"), err)
 		return "", err
 	}
 
 	pkg, err := build.ImportDir(filePath, 0)
-	srcPath := "src" + string(os.PathSeparator)
+	srcPath := i18n.T("src") + string(os.PathSeparator)
 	if strings.HasPrefix(pkg.Dir, srcPath) {
 		path = filepath.Join(path, pkg.Dir[len(srcPath):len(pkg.Dir)])
 	}
@@ -329,13 +330,13 @@ func (es *extractStrings) findPackagePath(filename string) (string, error) {
 
 	filePath, err := common.FindFilePath(filename)
 	if err != nil {
-		fmt.Println("ERROR opening file", err)
+		fmt.Println(i18n.T("ERROR opening file"), err)
 		return "", err
 	}
 
 	pkg, err := build.ImportDir(filePath, 0)
 	if err != nil {
-		fmt.Println("ERROR opening file", err)
+		fmt.Println(i18n.T("ERROR opening file"), err)
 		return "", err
 	}
 
@@ -344,7 +345,7 @@ func (es *extractStrings) findPackagePath(filename string) (string, error) {
 
 func (es *extractStrings) saveExtractedStrings(outputDirname string) error {
 	if len(es.ExtractedStrings) != 0 {
-		es.Println("Saving extracted strings to file:", es.Filename)
+		es.Println(i18n.T("Saving extracted strings to file:"), es.Filename)
 	}
 
 	if !es.options.DryRunFlag {
@@ -398,11 +399,11 @@ func (es *extractStrings) setPoFilename(filename string) {
 func (es *extractStrings) loadExcludedStrings() error {
 	_, err := os.Stat(es.options.ExcludedFilenameFlag)
 	if os.IsNotExist(err) {
-		es.Println("Could not find:", es.options.ExcludedFilenameFlag)
+		es.Println(i18n.T("Could not find:"), es.options.ExcludedFilenameFlag)
 		return nil
 	}
 
-	es.Println("Excluding strings in file:", es.options.ExcludedFilenameFlag)
+	es.Println(i18n.T("Excluding strings in file:"), es.options.ExcludedFilenameFlag)
 
 	content, err := ioutil.ReadFile(es.options.ExcludedFilenameFlag)
 	if err != nil {
@@ -427,11 +428,11 @@ func (es *extractStrings) loadExcludedStrings() error {
 func (es *extractStrings) loadExcludedRegexps() error {
 	_, err := os.Stat(es.options.ExcludedFilenameFlag)
 	if os.IsNotExist(err) {
-		es.Println("Could not find:", es.options.ExcludedFilenameFlag)
+		es.Println(i18n.T("Could not find:"), es.options.ExcludedFilenameFlag)
 		return nil
 	}
 
-	es.Println("Excluding regexps in file:", es.options.ExcludedFilenameFlag)
+	es.Println(i18n.T("Excluding regexps in file:"), es.options.ExcludedFilenameFlag)
 
 	content, err := ioutil.ReadFile(es.options.ExcludedFilenameFlag)
 	if err != nil {
@@ -449,7 +450,7 @@ func (es *extractStrings) loadExcludedRegexps() error {
 	for _, regexpString := range excludedRegexps.ExcludedRegexps {
 		compiledRegexp, err := regexp.Compile(regexpString)
 		if err != nil {
-			fmt.Println("WARNING error compiling regexp:", regexpString)
+			fmt.Println(i18n.T("WARNING error compiling regexp:"), regexpString)
 		}
 
 		es.FilteredRegexps = append(es.FilteredRegexps, compiledRegexp)
@@ -465,11 +466,11 @@ type CaptureGroupSubstrings struct {
 func (es *extractStrings) loadSubstringRegexps() error {
 	_, err := os.Stat(es.options.SubstringFilenameFlag)
 	if os.IsNotExist(err) {
-		es.Println("Could not find:", es.options.SubstringFilenameFlag)
+		es.Println(i18n.T("Could not find:"), es.options.SubstringFilenameFlag)
 		return nil
 	}
 
-	es.Println("Capturing substrings in file:", es.options.SubstringFilenameFlag)
+	es.Println(i18n.T("Capturing substrings in file:"), es.options.SubstringFilenameFlag)
 
 	content, err := ioutil.ReadFile(es.options.SubstringFilenameFlag)
 	if err != nil {
@@ -487,7 +488,7 @@ func (es *extractStrings) loadSubstringRegexps() error {
 	for _, regexpString := range captureGroupStrings.RegexpsStrings {
 		compiledRegexp, err := regexp.Compile(regexpString)
 		if err != nil {
-			fmt.Println("WARNING error compiling regexp:", regexpString)
+			fmt.Println(i18n.T("WARNING error compiling regexp:"), regexpString)
 		}
 
 		es.SubstringRegexps = append(es.SubstringRegexps, compiledRegexp)
@@ -527,7 +528,7 @@ func (es *extractStrings) processBasicLit(basicLit *ast.BasicLit, n ast.Node, fs
 		if compiledRegexp.MatchString(basicLit.Value) {
 			submatches := compiledRegexp.FindStringSubmatch(basicLit.Value)
 			if submatches == nil {
-				es.Println(fmt.Sprintf("WARNING No capturing group found in %s", compiledRegexp.String()))
+				es.Println(fmt.Sprintf(i18n.T("WARNING No capturing group found in {{.Arg0}}", map[string]interface{}{"Arg0": compiledRegexp.String()})))
 				return
 			}
 			captureGroup := submatches[1]

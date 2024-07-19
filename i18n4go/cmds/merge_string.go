@@ -22,6 +22,7 @@ import (
 	"strings"
 
 	"github.com/maximilien/i18n4go/i18n4go/common"
+	"github.com/maximilien/i18n4go/i18n4go/i18n"
 	"github.com/spf13/cobra"
 )
 
@@ -49,15 +50,15 @@ func NewMergeStrings(options *common.Options) *mergeStrings {
 func NewMergeStringsCommand(options *common.Options) *cobra.Command {
 	mergeStringsCmd := &cobra.Command{
 		Use:   "merge-strings",
-		Short: "Merge translation strings",
+		Short: i18n.T("Merge translation strings"),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return NewMergeStrings(options).Run()
 		},
 	}
-	mergeStringsCmd.Flags().BoolVarP(&options.RecurseFlag, "recursive", "r", false, "recursively extract strings from all files in the same directory as filename or dirName")
-	mergeStringsCmd.Flags().StringVarP(&options.SourceLanguageFlag, "source-language", "s", "en", "the source language of the file, typically also part of the file name, e.g., \"en_US\"")
+	mergeStringsCmd.Flags().BoolVarP(&options.RecurseFlag, "recursive", "r", false, i18n.T("recursively extract strings from all files in the same directory as filename or dirName"))
+	mergeStringsCmd.Flags().StringVarP(&options.SourceLanguageFlag, "source-language", "s", "en", i18n.T("the source language of the file, typically also part of the file name, e.g., \"en_US\""))
 
-	mergeStringsCmd.Flags().StringVarP(&options.DirnameFlag, "directory", "d", "", "the dir name for which all .go files will have their strings extracted")
+	mergeStringsCmd.Flags().StringVarP(&options.DirnameFlag, "directory", "d", "", i18n.T("the dir name for which all .go files will have their strings extracted"))
 
 	return mergeStringsCmd
 }
@@ -104,7 +105,7 @@ func (ms *mergeStrings) combineStringInfosPerDirectory(directory string) error {
 	ms.I18nStringInfos = common.I18nStringInfoMapValues2Array(combinedMap)
 	sort.Sort(ms)
 	common.SaveI18nStringInfos(ms, ms.Options(), ms.I18nStringInfos, filePath)
-	ms.Println("i18n4go: saving combined language file: " + filePath)
+	ms.Println(i18n.T("i18n4go: saving combined language file: ") + filePath)
 
 	if ms.Recurse {
 		for _, directory = range directories {
@@ -136,7 +137,7 @@ func (ms mergeStrings) matchFileToSourceLanguage(files []string, lang string) (l
 	for _, file := range files {
 		if strings.Contains(file, languageMatcher) {
 			list = append(list, file)
-			ms.Println("i18n4go: scanning file: " + file)
+			ms.Println(i18n.T("i18n4go: scanning file: ") + file)
 		}
 	}
 	return

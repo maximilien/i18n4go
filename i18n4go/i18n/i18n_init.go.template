@@ -3,11 +3,13 @@ package __PACKAGE__NAME__
 import (
     "path/filepath"
 
-    i18n "github.com/maximilien/i18n4go/i18n"
+    "github.com/maximilien/i18n4go/i18n4go/i18n"
 )
 
 var T goi18n.TranslateFunc
 
 func init() {
-    T = i18n.Init(__FULL_IMPORT_PATH__, i18n.GetResourcesPath())
+    T = i18n.Init(__FULL_IMPORT_PATH__, i18n.GetResourcesPath(), func(asset string) ([]byte, error) {
+		        return Asset(asset)
+    })
 }

@@ -20,6 +20,7 @@ import (
 	"strings"
 
 	"github.com/maximilien/i18n4go/i18n4go/common"
+	"github.com/maximilien/i18n4go/i18n4go/i18n"
 	"github.com/spf13/cobra"
 )
 
@@ -51,17 +52,17 @@ func NewVerifyStrings(options *common.Options) *verifyStrings {
 func NewVerifyStringsCommand(options *common.Options) *cobra.Command {
 	verifyStringsCmd := &cobra.Command{
 		Use:   "verify-strings",
-		Short: "Verify strings in translations",
+		Short: i18n.T("Verify strings in translations"),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return NewVerifyStrings(options).Run()
 		},
 	}
 
-	verifyStringsCmd.Flags().StringVarP(&options.SourceLanguageFlag, "source-language", "s", "en", "the source language of the file, typically also part of the file name, e.g., \"en_US\"")
-	verifyStringsCmd.Flags().StringVar(&options.LanguagesFlag, "languages", "", "a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\"")
-	verifyStringsCmd.Flags().StringVar(&options.LanguageFilesFlag, "language-files", "", `a comma separated list of target files for different languages to compare,  e.g., \"en, en_US, fr_FR, es\"	                                                                  if not specified then the languages flag is used to find target files in same directory as source`)
-	verifyStringsCmd.Flags().StringVarP(&options.OutputDirFlag, "output", "o", "", "the output directory where the missing translation keys will be placed")
-	verifyStringsCmd.Flags().StringVarP(&options.FilenameFlag, "file", "f", "", "the source translation file")
+	verifyStringsCmd.Flags().StringVarP(&options.SourceLanguageFlag, "source-language", "s", "en", i18n.T("the source language of the file, typically also part of the file name, e.g., \"en_US\""))
+	verifyStringsCmd.Flags().StringVar(&options.LanguagesFlag, "languages", "", i18n.T("a comma separated list of valid languages with optional territory, e.g., \"en, en_US, fr_FR, es\""))
+	verifyStringsCmd.Flags().StringVar(&options.LanguageFilesFlag, "language-files", "", i18n.T(`a comma separated list of target files for different languages to compare,  e.g., \"en, en_US, fr_FR, es\"	                                                                  if not specified then the languages flag is used to find target files in same directory as source`))
+	verifyStringsCmd.Flags().StringVarP(&options.OutputDirFlag, "output", "o", "", i18n.T("the output directory where the missing translation keys will be placed"))
+	verifyStringsCmd.Flags().StringVarP(&options.FilenameFlag, "file", "f", "", i18n.T("the source translation file"))
 	return verifyStringsCmd
 }
 
@@ -88,16 +89,16 @@ func (vs *verifyStrings) Printf(msg string, a ...interface{}) (int, error) {
 func (vs *verifyStrings) Run() error {
 	fileName, filePath, err := common.CheckFile(vs.InputFilename)
 	if err != nil {
-		vs.Println("i18n4go: Error checking input filename: ", vs.InputFilename)
+		vs.Println(i18n.T("i18n4go: Error checking input filename: "), vs.InputFilename)
 		return err
 	}
 
 	targetFilenames := vs.determineTargetFilenames(fileName, filePath)
-	vs.Println("targetFilenames:", targetFilenames)
+	vs.Println(i18n.T("targetFilenames:"), targetFilenames)
 	for _, targetFilename := range targetFilenames {
 		err = vs.verify(vs.InputFilename, targetFilename)
 		if err != nil {
-			vs.Println("i18n4go: Error verifying target filename: ", targetFilename)
+			vs.Println(i18n.T("i18n4go: Error verifying target filename: "), targetFilename)
 		}
 	}
 
@@ -124,22 +125,22 @@ func (vs *verifyStrings) verify(inputFilename string, targetFilename string) err
 
 	inputI18nStringInfos, err := common.LoadI18nStringInfos(inputFilename)
 	if err != nil {
-		vs.Println("i18n4go: Error loading the i18n strings from input filename:", inputFilename)
+		vs.Println(i18n.T("i18n4go: Error loading the i18n strings from input filename:"), inputFilename)
 		return err
 	}
 
 	if len(inputI18nStringInfos) == 0 {
-		return fmt.Errorf("i18n4go: Error input file: %s is empty", inputFilename)
+		return fmt.Errorf(i18n.T("i18n4go: Error input file: {{.Arg0}} is empty", map[string]interface{}{"Arg0": inputFilename}))
 	}
 
 	inputMap, err := common.CreateI18nStringInfoMap(inputI18nStringInfos)
 	if err != nil {
-		return fmt.Errorf("File has duplicated key: %s\n%s", inputFilename, err)
+		return fmt.Errorf(i18n.T("File has duplicated key: {{.Arg0}}\n{{.Arg1}}", map[string]interface{}{"Arg0": inputFilename, "Arg1": err}))
 	}
 
 	targetI18nStringInfos, err := common.LoadI18nStringInfos(targetFilename)
 	if err != nil {
-		vs.Println("i18n4go: Error loading the i18n strings from target filename:", targetFilename)
+		vs.Println(i18n.T("i18n4go: Error loading the i18n strings from target filename:"), targetFilename)
 		return err
 	}
 
@@ -147,51 +148,51 @@ func (vs *verifyStrings) verify(inputFilename string, targetFilename string) err
 	for _, stringInfo := range targetI18nStringInfos {
 		if _, ok := inputMap[stringInfo.ID]; ok {
 			if common.IsTemplatedString(stringInfo.ID) && vs.isTemplatedStringTranslationInvalid(stringInfo) {
-				vs.Println("i18n4go: WARNING target file has invalid templated translations with key ID: ", stringInfo.ID)
+				vs.Println(i18n.T("i18n4go: WARNING target file has invalid templated translations with key ID: "), stringInfo.ID)
 				targetInvalidStringInfos = append(targetInvalidStringInfos, stringInfo)
 			}
 			delete(inputMap, stringInfo.ID)
 		} else {
-			vs.Println("i18n4go: WARNING target file has extra key with ID: ", stringInfo.ID)
+			vs.Println(i18n.T("i18n4go: WARNING target file has extra key with ID: "), stringInfo.ID)
 			targetExtraStringInfos = append(targetExtraStringInfos, stringInfo)
 		}
 	}
 
 	var verficationError error
 	if len(targetExtraStringInfos) > 0 {
-		vs.Println("i18n4go: WARNING target file contains total of extra keys:", len(targetExtraStringInfos))
+		vs.Println(i18n.T("i18n4go: WARNING target file contains total of extra keys:"), len(targetExtraStringInfos))
 
 		diffFilename, err := vs.generateExtraKeysDiffFile(targetExtraStringInfos, targetFilename)
 		if err != nil {
-			vs.Println("i18n4go: ERROR could not create the diff file:", err)
+			vs.Println(i18n.T("i18n4go: ERROR could not create the diff file:"), err)
 			return err
 		}
-		vs.Println("i18n4go: generated diff file:", diffFilename)
-		verficationError = fmt.Errorf("i18n4go: target file has extra i18n strings with IDs: %s", strings.Join(keysForI18nStringInfos(targetExtraStringInfos), ","))
+		vs.Println(i18n.T("i18n4go: generated diff file:"), diffFilename)
+		verficationError = fmt.Errorf(i18n.T("i18n4go: target file has extra i18n strings with IDs: {{.Arg0}}", map[string]interface{}{"Arg0": strings.Join(keysForI18nStringInfos(targetExtraStringInfos), ",")}))
 	}
 
 	if len(targetInvalidStringInfos) > 0 {
-		vs.Println("i18n4go: WARNING target file contains total of invalid translations:", len(targetInvalidStringInfos))
+		vs.Println(i18n.T("i18n4go: WARNING target file contains total of invalid translations:"), len(targetInvalidStringInfos))
 
 		diffFilename, err := vs.generateInvalidTranslationDiffFile(targetInvalidStringInfos, targetFilename)
 		if err != nil {
-			vs.Println("i18n4go: ERROR could not create the diff file:", err)
+			vs.Println(i18n.T("i18n4go: ERROR could not create the diff file:"), err)
 			return err
 		}
-		vs.Println("i18n4go: generated diff file:", diffFilename)
-		verficationError = fmt.Errorf("i18n4go: target file has invalid i18n strings with IDs: %s", strings.Join(keysForI18nStringInfos(targetInvalidStringInfos), ","))
+		vs.Println(i18n.T("i18n4go: generated diff file:"), diffFilename)
+		verficationError = fmt.Errorf(i18n.T("i18n4go: target file has invalid i18n strings with IDs: {{.Arg0}}", map[string]interface{}{"Arg0": strings.Join(keysForI18nStringInfos(targetInvalidStringInfos), ",")}))
 	}
 
 	if len(inputMap) > 0 {
-		vs.Println("i18n4go: ERROR input file does not match target file:", targetFilename)
+		vs.Println(i18n.T("i18n4go: ERROR input file does not match target file:"), targetFilename)
 
 		diffFilename, err := vs.generateMissingKeysDiffFile(valuesForI18nStringInfoMap(inputMap), targetFilename)
 		if err != nil {
-			vs.Println("i18n4go: ERROR could not create the diff file:", err)
+			vs.Println(i18n.T("i18n4go: ERROR could not create the diff file:"), err)
 			return err
 		}
-		vs.Println("i18n4go: generated diff file:", diffFilename)
-		verficationError = fmt.Errorf("i18n4go: target file is missing i18n strings with IDs: %s", strings.Join(keysForI18nStringInfoMap(inputMap), ","))
+		vs.Println(i18n.T("i18n4go: generated diff file:"), diffFilename)
+		verficationError = fmt.Errorf(i18n.T("i18n4go: target file is missing i18n strings with IDs: {{.Arg0}}", map[string]interface{}{"Arg0": strings.Join(keysForI18nStringInfoMap(inputMap), ",")}))
 	}
 
 	return verficationError
@@ -217,7 +218,7 @@ func (vs *verifyStrings) isTemplatedStringTranslationInvalid(stringInfo common.I
 	}
 
 	if len(missingArgs) > 0 {
-		vs.Println("i18n4go: templated string is invalid, missing args in translation:", strings.Join(missingArgs, ","))
+		vs.Println(i18n.T("i18n4go: templated string is invalid, missing args in translation:"), strings.Join(missingArgs, ","))
 		return true
 	}
 

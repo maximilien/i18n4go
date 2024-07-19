@@ -30,6 +30,7 @@ import (
 	"github.com/spf13/cobra"
 
 	"github.com/maximilien/i18n4go/i18n4go/common"
+	"github.com/maximilien/i18n4go/i18n4go/i18n"
 )
 
 type Checkup struct {
@@ -51,15 +52,15 @@ func NewCheckup(options *common.Options) *Checkup {
 func NewCheckupCommand(options *common.Options) *cobra.Command {
 	checkupCmd := &cobra.Command{
 		Use:   "checkup",
-		Short: "Checks the transated files",
+		Short: i18n.T("Checks the transated files"),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return NewCheckup(options).Run()
 		},
 	}
 
-	checkupCmd.Flags().StringVarP(&options.QualifierFlag, "qualifier", "q", "", "[optional] the qualifier string that is used when using the T(...) function, default to nothing but could be set to `i18n` so that all calls would be: i18n.T(...)")
+	checkupCmd.Flags().StringVarP(&options.QualifierFlag, "qualifier", "q", "", i18n.T("[optional] the qualifier string that is used when using the i18n.T(...) function, default to nothing but could be set to `i18n` so that all calls would be: i18n.T(...)"))
 	// TODO: Optional flags shouldn't have set defaults. We should look into removing the default
-	checkupCmd.Flags().StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", ".*test.*", "recursively extract strings from all files in the same directory as filename or dirName")
+	checkupCmd.Flags().StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", ".*test.*", i18n.T("recursively extract strings from all files in the same directory as filename or dirName"))
 	return checkupCmd
 }
 
@@ -88,7 +89,7 @@ func (cu *Checkup) Run() error {
 	sourceStrings, err := cu.findSourceStrings()
 
 	if err != nil {
-		cu.Println(fmt.Sprintf("Couldn't find any source strings: %s", err.Error()))
+		cu.Println(i18n.T("Couldn't find any source strings: {{.Arg0}}", map[string]interface{}{"Arg0": err.Error()}))
 		return err
 	}
 
@@ -96,18 +97,18 @@ func (cu *Checkup) Run() error {
 
 	englishFiles := locales["en_US"]
 	if englishFiles == nil {
-		cu.Println("Could not find an i18n file for locale: en_US")
-		return errors.New("Could not find an i18n file for locale: en_US")
+		cu.Println(i18n.T("Could not find an i18n file for locale: en_US"))
+		return errors.New(i18n.T("Could not find an i18n file for locale: en_US"))
 	}
 
 	englishStrings, err := cu.findI18nStrings(englishFiles)
 
 	if err != nil {
-		cu.Println(fmt.Sprintf("Couldn't find the english strings: %s", err.Error()))
+		cu.Println(i18n.T("Couldn't find the english strings: {{.Arg0}}", map[string]interface{}{"Arg0": err.Error()}))
 		return err
 	}
 
-	err = cu.diffStrings("the code", "en_US", sourceStrings, englishStrings)
+	err = cu.diffStrings(i18n.T("the code"), "en_US", sourceStrings, englishStrings)
 
 	for locale, i18nFiles := range locales {
 		if locale == "en_US" {
@@ -117,7 +118,7 @@ func (cu *Checkup) Run() error {
 		translatedStrings, err := cu.findI18nStrings(i18nFiles)
 
 		if err != nil {
-			cu.Println(fmt.Sprintf("Couldn't get the strings from %s: %s", locale, err.Error()))
+			cu.Println(i18n.T("Couldn't get the strings from {{.Arg0}}: {{.Arg1}}", map[string]interface{}{"Arg0": locale, "Arg1": err.Error()}))
 			return err
 		}
 
@@ -125,7 +126,7 @@ func (cu *Checkup) Run() error {
 	}
 
 	if err == nil {
-		cu.Printf("OK")
+		cu.Printf(i18n.T("OK"))
 	}
 
 	return err
@@ -269,7 +270,7 @@ func (cu *Checkup) findSourceStrings() (sourceStrings map[string]string, err err
 	for _, file := range files {
 		fileStrings, err := cu.inspectFile(file)
 		if err != nil {
-			cu.Println("Error when inspecting go file: ", file)
+			cu.Println(i18n.T("Error when inspecting go file: "), file)
 			return sourceStrings, err
 		}
 
@@ -293,7 +294,7 @@ func getI18nFile(locale, dir string) (filePath string) {
 			name := fileInfo.Name()
 
 			// assume the file path is a json file and the path contains the locale
-			if strings.HasSuffix(name, ".json") && strings.Contains(name, fmt.Sprintf("%s.", locale)) {
+			if strings.HasSuffix(name, ".json") && strings.Contains(name, fmt.Sprintf("{{.Arg0}}.", map[string]interface{}{"Arg0": locale})) {
 				filePath = filepath.Join(dir, fileInfo.Name())
 				break
 			}
@@ -379,15 +380,15 @@ func (cu *Checkup) findI18nStrings(i18nFiles []string) (i18nStrings map[string]s
 func (cu *Checkup) diffStrings(sourceNameOne, sourceNameTwo string, stringsOne, stringsTwo map[string]string) (err error) {
 	for key, _ := range stringsOne {
 		if stringsTwo[key] == "" {
-			cu.Printf("\"%s\" exists in %s, but not in %s\n", key, sourceNameOne, sourceNameTwo)
-			err = errors.New("Strings don't match")
+			cu.Printf(i18n.T("\"{{.Arg0}}\" exists in {{.Arg1}}, but not in {{.Arg2}}\n", map[string]interface{}{"Arg0": key, "Arg1": sourceNameOne, "Arg2": sourceNameTwo}))
+			err = errors.New(i18n.T("Strings don't match"))
 		}
 	}
 
 	for key, _ := range stringsTwo {
 		if stringsOne[key] == "" {
-			cu.Printf("\"%s\" exists in %s, but not in %s\n", key, sourceNameTwo, sourceNameOne)
-			err = errors.New("Strings don't match")
+			cu.Printf(i18n.T("\"{{.Arg0}}\" exists in {{.Arg1}}, but not in {{.Arg2}}\n", map[string]interface{}{"Arg0": key, "Arg1": sourceNameTwo, "Arg2": sourceNameOne}))
+			err = errors.New(i18n.T("Strings don't match"))
 		}
 	}
 

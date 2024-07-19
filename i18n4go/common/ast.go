@@ -19,6 +19,8 @@ import (
 	"fmt"
 
 	"go/ast"
+
+	"github.com/maximilien/i18n4go/i18n4go/i18n"
 )
 
 func ImportsForASTFile(astFile *ast.File) (*ast.GenDecl, error) {
@@ -33,5 +35,5 @@ func ImportsForASTFile(astFile *ast.File) (*ast.GenDecl, error) {
 		}
 	}
 
-	return nil, errors.New(fmt.Sprintf("Could not find imports for root node:\n\t%#v\n", astFile))
+	return nil, errors.New(fmt.Sprintf(i18n.T("Could not find imports for root node:\n\t{{.Arg0}}v\n", map[string]interface{}{"Arg0": astFile})))
 }

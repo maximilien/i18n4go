@@ -3,7 +3,7 @@ package code
 import (
 	"fmt"
 
-	"github.com/maximilien/i18n4go/i18n4go/i18n"
+	i18n "github.com/maximilien/i18n4go/i18n4go/cmds"
 )
 
 func main() {
