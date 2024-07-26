@@ -26,7 +26,7 @@ Contact us:
 Assuming you have a valid [Golang 1.17.x](https://golang.org/dl/) or [later](https://golang.org/dl/) installed for your system, you can quickly get the latest `i18n4go` executable by running the following `go` command:
 
 ```
-$ go install github.com/maximilien/i18n4go/i18n4go
+$ go install github.com/maximilien/i18n4go/i18n4go@latest
 ```
 
 This will build and place the `i18n4go` executable built for your operating system in your `$GOPATH/bin` directory.
@@ -114,7 +114,7 @@ For instance to create `fr_FR` file(s) for French and every other locale_Languag
 ### Help
 --------
 
-Printing the usage help: `$ i18n4go` . 
+Printing the usage help: `$ i18n4go` .
 Printing  usage help for commands: `$ i18n4go <command> --help|-h`
 
 ```
@@ -569,10 +569,11 @@ Optionally, you can use `bin/run` to compile and run the executable in one step.
 
 1. Run `go get golang.org/x/tools/cmd/vet`
 2. Run `go get github.com/xxx ...` to install test dependencies (as you see errors)
-1. Write a [Ginkgo](https://github.com/onsi/ginkgo) test
-1. Run `bin/test` and watch the test fail
-1. Make the test pass
-1. Submit a pull request
+3. Write a [Ginkgo](https://github.com/onsi/ginkgo) test
+4. Run `bin/test` and watch the test fail
+6. Make the test pass
+5. Run `bin/validate` and verify translation checks pass
+7. Submit a pull request
 
 ## Contributing
 ---------------
