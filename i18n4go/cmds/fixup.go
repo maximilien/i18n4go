@@ -88,6 +88,11 @@ func (fix *fixup) Printf(msg string, a ...interface{}) (int, error) {
 
 func (fix *fixup) Run() error {
 	//FIND PROBLEMS HERE AND RETURN AN ERROR
+	var (
+		translationsAdded   bool
+		translationsRemoved bool
+		translationsUpdated bool
+	)
 	source, err := fix.findSourceStrings(fix.options.SourceDirFlag)
 	fix.Source = source
 
@@ -121,10 +126,6 @@ func (fix *fixup) Run() error {
 	}
 
 	//Check english to all other files before source
-	var (
-		translationsAdded   bool
-		translationsRemoved bool
-	)
 	for locale, i18nFile := range locales {
 		if locale != "en_US" {
 			foreignStringInfos, _ := fix.findI18nStrings(i18nFile[0])
@@ -150,6 +151,10 @@ func (fix *fixup) Run() error {
 			if translationsAdded || translationsRemoved {
 				writeStringInfoMapToJSON(foreignStringInfos, i18nFile[0])
 			}
+
+			// reset flags
+			translationsRemoved = false
+			translationsAdded = false
 		}
 	}
 
@@ -229,17 +234,35 @@ func (fix *fixup) Run() error {
 
 		if len(updatedTranslations) > 0 {
 			updateTranslations(translatedStrings, i18nFiles[0], locale, updatedTranslations)
+			translationsUpdated = true
+		} else {
+			translationsUpdated = false
 		}
 
 		if len(additionalTranslations) > 0 {
 			addTranslations(translatedStrings, i18nFiles[0], additionalTranslations)
+			translationsAdded = true
+		} else {
+			translationsAdded = false
 		}
 
 		if len(removedTranslations) > 0 {
 			removeTranslations(translatedStrings, i18nFiles[0], removedTranslations)
+			translationsRemoved = true
+		} else {
+			translationsRemoved = false
 		}
 
-		err = writeStringInfoMapToJSON(translatedStrings, i18nFiles[0])
+		// update only if there is a change
+		if translationsAdded || translationsRemoved || translationsUpdated {
+			err = writeStringInfoMapToJSON(translatedStrings, i18nFiles[0])
+		}
+
+		// reset flags
+		translationsAdded = false
+		translationsUpdated = false
+		translationsRemoved = false
+
 	}
 
 	if err == nil {
