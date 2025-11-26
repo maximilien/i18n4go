@@ -407,11 +407,11 @@ usage: i18n4go -c checkup
 
   -c fixup                   the fixup command which interactively lets users add, update, or remove translations keys from code and resource files.
 
-  --source 		     [optional]the directory where the source go files are located, defaults to current directory
+  --source 		     [optional] the directory where the source go files are located, defaults to current directory
 
   --resource 		     [optional] the directory where the translation files are located, defaults to current directory
 
-  -q, --qualifier 	     [optional] the qualifier string that is used when importing the package for i18n4go to use the i18n.T(...) function
+  -q 			     [optional] the qualifier string that is used when importing the package for i18n4go to use the i18n.T(...) function
 `
 	fmt.Println(fmt.Sprintf(i18n.T("{{.Arg0}}\nVersion {{.Arg1}}", map[string]interface{}{"Arg0": usageString, "Arg1": VERSION})))
 }
