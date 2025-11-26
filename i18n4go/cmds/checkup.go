@@ -63,7 +63,7 @@ func (cu *Checkup) Options() common.Options {
 	return cu.options
 }
 
-func (cu *Checkup) Println(a ...interface{}) (int, error) {
+func (cu *Checkup) Println(a ...any) (int, error) {
 	if cu.options.VerboseFlag {
 		return fmt.Println(a...)
 	}
@@ -71,7 +71,7 @@ func (cu *Checkup) Println(a ...interface{}) (int, error) {
 	return 0, nil
 }
 
-func (cu *Checkup) Printf(msg string, a ...interface{}) (int, error) {
+func (cu *Checkup) Printf(msg string, a ...any) (int, error) {
 	if cu.options.VerboseFlag {
 		return fmt.Printf(msg, a...)
 	}
@@ -84,7 +84,7 @@ func (cu *Checkup) Run() error {
 	sourceStrings, err := cu.findSourceStrings()
 
 	if err != nil {
-		cu.Println(i18n.T("Couldn't find any source strings: {{.Arg0}}", map[string]interface{}{"Arg0": err.Error()}))
+		cu.Println(i18n.T("Couldn't find any source strings: {{.Arg0}}", map[string]any{"Arg0": err.Error()}))
 		return err
 	}
 
@@ -99,7 +99,7 @@ func (cu *Checkup) Run() error {
 	englishStrings, err := cu.findI18nStrings(englishFiles)
 
 	if err != nil {
-		cu.Println(i18n.T("Couldn't find the english strings: {{.Arg0}}", map[string]interface{}{"Arg0": err.Error()}))
+		cu.Println(i18n.T("Couldn't find the english strings: {{.Arg0}}", map[string]any{"Arg0": err.Error()}))
 		return err
 	}
 
@@ -113,7 +113,7 @@ func (cu *Checkup) Run() error {
 		translatedStrings, err := cu.findI18nStrings(i18nFiles)
 
 		if err != nil {
-			cu.Println(i18n.T("Couldn't get the strings from {{.Arg0}}: {{.Arg1}}", map[string]interface{}{"Arg0": locale, "Arg1": err.Error()}))
+			cu.Println(i18n.T("Couldn't get the strings from {{.Arg0}}: {{.Arg1}}", map[string]any{"Arg0": locale, "Arg1": err.Error()}))
 			return err
 		}
 
@@ -176,7 +176,7 @@ func getI18nFile(locale, dir string) (filePath string) {
 			name := fileInfo.Name()
 
 			// assume the file path is a json file and the path contains the locale
-			if strings.HasSuffix(name, ".json") && strings.Contains(name, fmt.Sprintf("{{.Arg0}}.", map[string]interface{}{"Arg0": locale})) {
+			if strings.HasSuffix(name, ".json") && strings.Contains(name, fmt.Sprintf("{{.Arg0}}.", map[string]any{"Arg0": locale})) {
 				filePath = filepath.Join(dir, fileInfo.Name())
 				break
 			}
@@ -262,14 +262,14 @@ func (cu *Checkup) findI18nStrings(i18nFiles []string) (i18nStrings map[string]s
 func (cu *Checkup) diffStrings(sourceNameOne, sourceNameTwo string, stringsOne, stringsTwo map[string]string) (err error) {
 	for key, _ := range stringsOne {
 		if stringsTwo[key] == "" {
-			cu.Printf(i18n.T("\"{{.Arg0}}\" exists in {{.Arg1}}, but not in {{.Arg2}}\n", map[string]interface{}{"Arg0": key, "Arg1": sourceNameOne, "Arg2": sourceNameTwo}))
+			cu.Printf(i18n.T("\"{{.Arg0}}\" exists in {{.Arg1}}, but not in {{.Arg2}}\n", map[string]any{"Arg0": key, "Arg1": sourceNameOne, "Arg2": sourceNameTwo}))
 			err = errors.New(i18n.T("Strings don't match"))
 		}
 	}
 
 	for key, _ := range stringsTwo {
 		if stringsOne[key] == "" {
-			cu.Printf(i18n.T("\"{{.Arg0}}\" exists in {{.Arg1}}, but not in {{.Arg2}}\n", map[string]interface{}{"Arg0": key, "Arg1": sourceNameTwo, "Arg2": sourceNameOne}))
+			cu.Printf(i18n.T("\"{{.Arg0}}\" exists in {{.Arg1}}, but not in {{.Arg2}}\n", map[string]any{"Arg0": key, "Arg1": sourceNameTwo, "Arg2": sourceNameOne}))
 			err = errors.New(i18n.T("Strings don't match"))
 		}
 	}
