@@ -100,12 +100,6 @@ var _ = Describe("fixup with source and resource flags", func() {
 		}
 		stdoutReader = bufio.NewReader(stdoutPipe)
 
-		_, err = cmd.StderrPipe()
-		if err != nil {
-			fmt.Println("Could not get the stderr pipe.")
-			panic(err.Error())
-		}
-
 		err = cmd.Start()
 		if err != nil {
 			fmt.Println("Could not run fixup")
