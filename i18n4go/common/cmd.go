@@ -14,6 +14,10 @@
 
 package common
 
+import (
+	"fmt"
+)
+
 type Options struct {
 	CommandFlag string
 
@@ -53,6 +57,9 @@ type Options struct {
 	InitCodeSnippetFilenameFlag string
 
 	QualifierFlag string
+
+	SourceDirFlag   string
+	ResourceDirFlag string
 }
 
 type I18nStringInfo struct {
@@ -74,8 +81,24 @@ type ExcludedStrings struct {
 }
 
 type PrinterInterface interface {
-	Println(a ...interface{}) (int, error)
-	Printf(msg string, a ...interface{}) (int, error)
+	Println(a ...any) (int, error)
+	Printf(msg string, a ...any) (int, error)
 }
 
 var BLANKS = []string{", ", "\t", "\n", "\n\t", "\t\n"}
+
+func Println(options Options, a ...any) (int, error) {
+	if options.VerboseFlag {
+		return fmt.Println(a...)
+	}
+
+	return 0, nil
+}
+
+func Printf(options Options, msg string, a ...any) (int, error) {
+	if options.VerboseFlag {
+		return fmt.Printf(msg, a...)
+	}
+
+	return 0, nil
+}

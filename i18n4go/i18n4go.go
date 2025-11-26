@@ -292,6 +292,9 @@ func init() {
 
 	flag.StringVar(&options.QualifierFlag, "q", "", i18n.T("[optional] the qualifier string that is used when using the i18n.T(...) function, default to nothing but could be set to `i18n` so that all calls would be: i18n.T(...)"))
 
+	flag.StringVar(&options.SourceDirFlag, "source", ".", i18n.T("[optional] the directory where the source go files are located, defaults to current directory"))
+	flag.StringVar(&options.ResourceDirFlag, "resource", ".", i18n.T("[optional] the directory where the translation files are located, defaults to current directory"))
+
 	flag.Parse()
 }
 
@@ -403,6 +406,12 @@ usage: i18n4go -c checkup
   FIXUP:
 
   -c fixup                   the fixup command which interactively lets users add, update, or remove translations keys from code and resource files.
+
+  --source 		     [optional]the directory where the source go files are located, defaults to current directory
+
+  --resource 		     [optional] the directory where the translation files are located, defaults to current directory
+
+  -q, --qualifier 	     [optional] the qualifier string that is used when importing the package for i18n4go to use the i18n.T(...) function
 `
 	fmt.Println(fmt.Sprintf(i18n.T("{{.Arg0}}\nVersion {{.Arg1}}", map[string]interface{}{"Arg0": usageString, "Arg1": VERSION})))
 }

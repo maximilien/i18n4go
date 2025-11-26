@@ -37,6 +37,8 @@ const (
 	INTERPOLATED_STRING_REGEXP = `%(?:[#v]|[%EGUTXbcdefgopqstvx])`
 )
 
+const DEFAULT_IMPORT_QUALIFIER = "i18n"
+
 var templatedStringRegexp, interpolatedStringRegexp *regexp.Regexp
 
 func ParseStringList(stringList string, delimiter string) []string {
