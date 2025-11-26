@@ -75,7 +75,7 @@ func NewCreateTranslations(options *common.Options) *createTranslations {
 func NewCreateTranslationsCommand(options *common.Options) *cobra.Command {
 	createTranslationsCmd := &cobra.Command{
 		Use:   "create-translations",
-		Short: i18n.T("Creates the transation files"),
+		Short: i18n.T("Creates the translation files"),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return NewCreateTranslations(options).Run()
 		},

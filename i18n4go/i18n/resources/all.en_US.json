@@ -80,8 +80,8 @@
       "translation": "Couldn't get the strings from {{.Arg0}}: {{.Arg1}}"
    },
    {
-      "id": "Creates the transation files",
-      "translation": "Creates the transation files"
+      "id": "Creates the translation files",
+      "translation": "Creates the translation files"
    },
    {
       "id": "Creating and saving i18n strings to .po file:",
@@ -128,8 +128,8 @@
       "translation": "File has duplicated key: {{.Arg0}}\n{{.Arg1}}"
    },
    {
-      "id": "Fixup the transation files",
-      "translation": "Fixup the transation files"
+      "id": "Fixup the translation files",
+      "translation": "Fixup the translation files"
    },
    {
       "id": "Found",

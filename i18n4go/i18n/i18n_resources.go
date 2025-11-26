@@ -11,6 +11,7 @@ import (
 	"strings"
 	"time"
 )
+
 type asset struct {
 	bytes []byte
 	info  os.FileInfo
@@ -135,8 +136,8 @@ var _i18n4goI18nResourcesAllEn_usJson = []byte(`[
       "translation": "Couldn't get the strings from {{.Arg0}}: {{.Arg1}}"
    },
    {
-      "id": "Creates the transation files",
-      "translation": "Creates the transation files"
+      "id": "Creates the translation files",
+      "translation": "Creates the translation files"
    },
    {
       "id": "Creating and saving i18n strings to .po file:",
@@ -183,8 +184,8 @@ var _i18n4goI18nResourcesAllEn_usJson = []byte(`[
       "translation": "File has duplicated key: {{.Arg0}}\n{{.Arg1}}"
    },
    {
-      "id": "Fixup the transation files",
-      "translation": "Fixup the transation files"
+      "id": "Fixup the translation files",
+      "translation": "Fixup the translation files"
    },
    {
       "id": "Found",
@@ -363,8 +364,8 @@ var _i18n4goI18nResourcesAllEn_usJson = []byte(`[
       "translation": "[optional] the qualifier string that is used when importing the package for i18n4go to use the i18n.T(...) function"
    },
    {
-      "id": "[optional] the qualifier string that is used when using the i18n.T(...) function, default to nothing but could be set to `+"`"+`i18n`+"`"+` so that all calls would be: i18n.T(...)",
-      "translation": "[optional] the qualifier string that is used when using the i18n.T(...) function, default to nothing but could be set to `+"`"+`i18n`+"`"+` so that all calls would be: i18n.T(...)"
+      "id": "[optional] the qualifier string that is used when using the i18n.T(...) function, default to nothing but could be set to ` + "`" + `i18n` + "`" + ` so that all calls would be: i18n.T(...)",
+      "translation": "[optional] the qualifier string that is used when using the i18n.T(...) function, default to nothing but could be set to ` + "`" + `i18n` + "`" + ` so that all calls would be: i18n.T(...)"
    },
    {
       "id": "[optional] the substring capturing JSON file name, all strings there will only have their first capturing group saved as a translation",
@@ -786,7 +787,8 @@ var _i18n4goI18nResourcesAllEn_usJson = []byte(`[
       "id": "{{.Arg0}}\nVersion {{.Arg1}}",
       "translation": "{{.Arg0}}\nVersion {{.Arg1}}"
    }
-]`)
+]
+`)
 
 func i18n4goI18nResourcesAllEn_usJsonBytes() ([]byte, error) {
 	return _i18n4goI18nResourcesAllEn_usJson, nil
@@ -798,7 +800,7 @@ func i18n4goI18nResourcesAllEn_usJson() (*asset, error) {
 		return nil, err
 	}
 
-	info := bindataFileInfo{name: "i18n4go/i18n/resources/all.en_US.json", size: 28985, mode: os.FileMode(420), modTime: time.Unix(1764186946, 0)}
+	info := bindataFileInfo{name: "i18n4go/i18n/resources/all.en_US.json", size: 28990, mode: os.FileMode(420), modTime: time.Unix(1764191632, 0)}
 	a := &asset{bytes: bytes, info: info}
 	return a, nil
 }
@@ -862,11 +864,13 @@ var _bindata = map[string]func() (*asset, error){
 // directory embedded in the file by go-bindata.
 // For example if you run go-bindata on data/... and data contains the
 // following hierarchy:
-//     data/
-//       foo.txt
-//       img/
-//         a.png
-//         b.png
+//
+//	data/
+//	  foo.txt
+//	  img/
+//	    a.png
+//	    b.png
+//
 // then AssetDir("data") would return []string{"foo.txt", "img"}
 // AssetDir("data/img") would return []string{"a.png", "b.png"}
 // AssetDir("foo.txt") and AssetDir("notexist") would return an error

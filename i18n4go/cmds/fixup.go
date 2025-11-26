@@ -52,7 +52,7 @@ func NewFixupCommand(options *common.Options) *cobra.Command {
 	fixupCmd := &cobra.Command{
 		Use:   "fixup",
 		Long:  i18n.T("Add, update, or remove translation keys from source files and resources files"),
-		Short: i18n.T("Fixup the transation files"),
+		Short: i18n.T("Fixup the translation files"),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return NewFixup(options).Run()
 		},
