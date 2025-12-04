@@ -27,7 +27,7 @@ if [[ -z $(command -v go-bindata) ]]; then
 fi
 
 pushd $PROJ_DIR >/dev/null
-go-bindata -pkg resources -o resources -o i18n4go/resources/i18n_resources.go -nocompress i18n4go/i18n/resources/*.json
+go-bindata -pkg i18n -o i18n4go/i18n/i18n_resources.go -nocompress i18n4go/i18n/resources/*.json
 echo -e "\nCompleted."
 
 popd >/dev/null

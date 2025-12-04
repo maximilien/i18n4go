@@ -22,12 +22,7 @@ import (
 	"os"
 	"regexp"
 	"sort"
-	"strconv"
 	"strings"
-
-	"go/ast"
-	"go/parser"
-	"go/token"
 
 	"github.com/maximilien/i18n4go/i18n4go/common"
 	"github.com/maximilien/i18n4go/i18n4go/i18n"
@@ -57,13 +52,16 @@ func NewFixupCommand(options *common.Options) *cobra.Command {
 	fixupCmd := &cobra.Command{
 		Use:   "fixup",
 		Long:  i18n.T("Add, update, or remove translation keys from source files and resources files"),
-		Short: i18n.T("Fixup the transation files"),
+		Short: i18n.T("Fixup the translation files"),
 		RunE: func(cmd *cobra.Command, args []string) error {
 			return NewFixup(options).Run()
 		},
 	}
 
 	fixupCmd.Flags().StringVar(&options.IgnoreRegexpFlag, "ignore-regexp", ".*test.*", i18n.T("recursively extract strings from all files in the same directory as filename or dirName"))
+	fixupCmd.Flags().StringVarP(&options.QualifierFlag, "qualifier", "q", "i18n", i18n.T("[optional] the qualifier string that is used when importing the package for i18n4go to use the i18n.T(...) function"))
+	fixupCmd.Flags().StringVar(&options.SourceDirFlag, "source", ".", i18n.T("[optional] the directory where the source go files are located, defaults to current directory"))
+	fixupCmd.Flags().StringVar(&options.ResourceDirFlag, "resource", ".", i18n.T("[optional] the directory where the translation files are located, defaults to current directory"))
 
 	return fixupCmd
 }
@@ -90,7 +88,12 @@ func (fix *fixup) Printf(msg string, a ...interface{}) (int, error) {
 
 func (fix *fixup) Run() error {
 	//FIND PROBLEMS HERE AND RETURN AN ERROR
-	source, err := fix.findSourceStrings()
+	var (
+		translationsAdded   bool
+		translationsRemoved bool
+		translationsUpdated bool
+	)
+	source, err := fix.findSourceStrings(fix.options.SourceDirFlag)
 	fix.Source = source
 
 	if err != nil {
@@ -100,7 +103,7 @@ func (fix *fixup) Run() error {
 		return err
 	}
 
-	locales := findTranslationFiles(".", fix.IgnoreRegexp, fix.options.VerboseFlag)
+	locales := findTranslationFiles(fix.options.ResourceDirFlag, fix.IgnoreRegexp, fix.options.VerboseFlag)
 	englishFiles, ok := locales["en_US"]
 	if !ok {
 		fmt.Println(i18n.T("Unable to find english translation files"))
@@ -132,13 +135,26 @@ func (fix *fixup) Run() error {
 
 			if len(foreignMissingTranslations) > 0 {
 				addTranslations(foreignStringInfos, i18nFile[0], foreignMissingTranslations)
+				translationsAdded = true
+			} else {
+				translationsAdded = false
 			}
 
 			if len(foreignAdditionalTranslations) > 0 {
 				removeTranslations(foreignStringInfos, i18nFile[0], foreignAdditionalTranslations)
+				translationsRemoved = true
+			} else {
+				translationsRemoved = false
 			}
 
-			writeStringInfoMapToJSON(foreignStringInfos, i18nFile[0])
+			// update only if there were changes
+			if translationsAdded || translationsRemoved {
+				writeStringInfoMapToJSON(foreignStringInfos, i18nFile[0])
+			}
+
+			// reset flags
+			translationsRemoved = false
+			translationsAdded = false
 		}
 	}
 
@@ -218,66 +234,50 @@ func (fix *fixup) Run() error {
 
 		if len(updatedTranslations) > 0 {
 			updateTranslations(translatedStrings, i18nFiles[0], locale, updatedTranslations)
+			translationsUpdated = true
+		} else {
+			translationsUpdated = false
 		}
 
 		if len(additionalTranslations) > 0 {
 			addTranslations(translatedStrings, i18nFiles[0], additionalTranslations)
+			translationsAdded = true
+		} else {
+			translationsAdded = false
 		}
 
 		if len(removedTranslations) > 0 {
 			removeTranslations(translatedStrings, i18nFiles[0], removedTranslations)
+			translationsRemoved = true
+		} else {
+			translationsRemoved = false
 		}
 
-		err = writeStringInfoMapToJSON(translatedStrings, i18nFiles[0])
+		// update only if there is a change
+		if translationsAdded || translationsRemoved || translationsUpdated {
+			err = writeStringInfoMapToJSON(translatedStrings, i18nFiles[0])
+		}
+
+		// reset flags
+		translationsAdded = false
+		translationsUpdated = false
+		translationsRemoved = false
+
 	}
 
 	if err == nil {
-		fmt.Printf(i18n.T("OK"))
+		fmt.Print(i18n.T("OK"))
 	}
 
 	return err
 }
 
-func (fix *fixup) inspectFile(file string) (translatedStrings []string, err error) {
-	fset := token.NewFileSet()
-	astFile, err := parser.ParseFile(fset, file, nil, parser.AllErrors)
-	if err != nil {
-		fix.Println(err)
-		return
-	}
-
-	ast.Inspect(astFile, func(n ast.Node) bool {
-		switch x := n.(type) {
-		case *ast.CallExpr:
-			switch x.Fun.(type) {
-			case *ast.Ident:
-				funName := x.Fun.(*ast.Ident).Name
-
-				if funName == "T" || funName == "t" {
-					if stringArg, ok := x.Args[0].(*ast.BasicLit); ok {
-						translatedString, err := strconv.Unquote(stringArg.Value)
-						if err != nil {
-							panic(err.Error())
-						}
-						translatedStrings = append(translatedStrings, translatedString)
-					}
-				}
-			default:
-				//Skip!
-			}
-		}
-		return true
-	})
-
-	return
-}
-
-func (fix *fixup) findSourceStrings() (sourceStrings map[string]int, err error) {
+func (fix *fixup) findSourceStrings(dir string) (sourceStrings map[string]int, err error) {
 	sourceStrings = make(map[string]int)
-	files := getGoFiles(".")
+	files := getGoFiles(dir)
 
 	for _, file := range files {
-		fileStrings, err := fix.inspectFile(file)
+		fileStrings, err := common.InspectFile(file, fix.options)
 		if err != nil {
 			fmt.Println(i18n.T("Error when inspecting go file: "), file)
 			return sourceStrings, err
@@ -327,7 +327,7 @@ func getAdditionalForeignTranslations(englishTranslations, foreignTranslations m
 func getRemovedTranslations(sourceTranslations map[string]int, englishTranslations map[string]common.I18nStringInfo) []string {
 	removedTranslations := []string{}
 
-	for id, _ := range englishTranslations {
+	for id := range englishTranslations {
 		if _, ok := sourceTranslations[id]; !ok {
 			removedTranslations = append(removedTranslations, id)
 		}
