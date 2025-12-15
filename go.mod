@@ -6,7 +6,7 @@ require (
 	github.com/go-bindata/go-bindata/v3 v3.1.3
 	github.com/nicksnyder/go-i18n/v2 v2.6.0
 	github.com/onsi/ginkgo v1.16.5
-	github.com/onsi/gomega v1.38.2
+	github.com/onsi/gomega v1.38.3
 	github.com/pivotal-cf-experimental/jibber_jabber v0.0.0-20151120183258-bcc4c8345a21
 	github.com/spf13/cobra v1.8.1
 	golang.org/x/text v0.31.0
